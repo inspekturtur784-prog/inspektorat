@@ -10,6 +10,10 @@ Route::get('/profile', function () {
     return view('profile');
 });
 
-Route::get('/buletin/{slug?}', function ($slug = null) {
-    return view('buletin');
-})->name('buletin');
+Route::get('/buletin', function () {
+    return view('buletin.index');
+})->name('buletin.index');
+
+Route::get('/buletin/{slug}', function ($slug) {
+    return view('buletin.show', ['slug' => $slug]);
+})->name('buletin.show');

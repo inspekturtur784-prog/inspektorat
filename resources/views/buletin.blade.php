@@ -1,19 +1,4 @@
-{{--
-  buletin.blade.php
-  Halaman reader buletin/majalah digital — gaya "flipbook" seperti
-  pusdiklatwas.bpkp.go.id/publication/magazine, tema Inspektorat.
 
-  CARA PAKAI:
-  1. Simpan file ini di resources/views/buletin.blade.php
-  2. Di routes/web.php tambahkan:
-       Route::get('/buletin/{slug?}', function ($slug = null) {
-           return view('buletin');
-       })->name('buletin');
-  3. Semua konten di bawah ini contoh/dummy — ganti judul, teks, dan
-     angka sesuai buletin instansi kamu. Kalau nanti datanya dari
-     database, tinggal ganti teks statis dengan variabel Blade
-     (contoh sudah saya kasih komentar di beberapa bagian).
---}}
 <!DOCTYPE html>
 <html lang="id">
 <head>
