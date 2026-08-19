@@ -150,6 +150,64 @@
     </div>
 </section>
 
+{{-- ============ D. ARTIKEL / INFORMASI TERBARU ============ --}}
+<section class="articles" id="artikel">
+    <div class="wrap">
+        <div class="section-head">
+            <span class="eyebrow">Informasi Terbaru</span>
+            <h2>Artikel & Kabar dari Inspektorat</h2>
+            <p>Update kegiatan, pengumuman, dan berita seputar pengawasan — dikelola langsung oleh admin.</p>
+        </div>
+
+        @if ($articles->isNotEmpty())
+            <div class="article-grid">
+                @foreach ($articles as $article)
+                    <a href="{{ route('articles.show', $article->slug) }}" class="article-card">
+                        <div class="article-thumb">
+                            <img src="{{ $article->cover_url }}" alt="{{ $article->title }}">
+                        </div>
+                        <div class="article-body">
+                            <span class="eyebrow" style="margin-bottom:0;">{{ $article->category ?? 'Artikel' }}</span>
+                            <h3>{{ $article->title }}</h3>
+                            <span class="article-date">{{ $article->tanggal_indo }}</span>
+                            <span class="article-read">
+                                Baca
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @else
+            <p style="color:var(--slate);">Belum ada artikel yang dipublikasikan. Tambahkan lewat panel Admin.</p>
+        @endif
+    </div>
+</section>
+
+{{-- ============ E. STATISTIK SINGKAT (opsional) ============ --}}
+<section class="stats" id="statistik">
+    <div class="wrap">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">{{ $stats['artikel'] }}</div>
+                <div class="stat-label">Jumlah Artikel</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ $stats['pedoman'] }}</div>
+                <div class="stat-label">Jumlah Pedoman</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ $stats['layanan'] }}</div>
+                <div class="stat-label">Jumlah Layanan</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ $stats['publikasi'] }}</div>
+                <div class="stat-label">Jumlah Publikasi</div>
+            </div>
+        </div>
+    </div>
+</section>
+
 {{-- ============ TEAM STRIP ============ --}}
 <section class="team-strip">
     <img src="{{ asset('images/team-banner.png') }}" alt="Seluruh pegawai Inspektorat Kota Mojokerto berfoto bersama di halaman kantor">
