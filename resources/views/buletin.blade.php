@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -191,7 +190,7 @@
 <body>
 
 <div class="reader-topbar">
-  <a href="{{ url('/publikasi') }}" class="back-link">
+  <a href="{{ route('buletin.index') }}" class="back-link">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
     Kembali ke Publikasi
   </a>
