@@ -18,7 +18,13 @@
                 <a href="{{ route('admin.articles.index') }}" class="{{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
                     Artikel / Informasi
                 </a>
-                {{-- Tambahkan menu admin lain di sini: Pedoman, Layanan, Publikasi, Pegawai, dst. --}}
+                <a href="{{ route('admin.pegawai.index') }}" class="{{ request()->routeIs('admin.pegawai.*') ? 'active' : '' }}">
+                    Data Pegawai
+                </a>
+                <a href="{{ route('admin.galeri.index') }}" class="{{ request()->routeIs('admin.galeri.*') ? 'active' : '' }}">
+                    Galeri
+                </a>
+                {{-- Tambahkan menu admin lain di sini: Pedoman, Layanan, Publikasi, dst. --}}
             </nav>
         </aside>
 

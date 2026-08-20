@@ -6,12 +6,12 @@
     <title>@yield('title', 'Inspektorat Kota Mojokerto')</title>
     <meta name="description" content="@yield('meta_description', 'Website resmi Inspektorat Kota Mojokerto — Zona Integritas menuju wilayah bebas dari korupsi.')">
     <link rel="icon" href="{{ asset('images/logo-mojokerto.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-extra.css') }}">
 </head>
 <body>
     <a href="#konten" class="skip-link">Langsung ke konten</a>
 
-    <header class="site-header">
+    <header class="site-header"
         <div class="wrap">
             <a href="{{ url('/') }}" class="brand">
                 <img src="{{ asset('images/logo-mojokerto.png') }}" alt="Logo Pemerintah Kota Mojokerto">
