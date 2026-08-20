@@ -8,3 +8,7 @@ Route::get('/', function () {
 Route::get('/profile', function () {
     return view('profile');
 });
+
+Route::get('/konsultasi', function () {
+    return view('konsultasi.index');
+})->name('konsultasi');
