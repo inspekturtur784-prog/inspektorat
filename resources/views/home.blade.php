@@ -62,9 +62,9 @@
 
         <div class="definition-list">
             <div class="def-card">
-                <span class="seal-mark">P</span>
-                <h3>Pengertian</h3>
-                <p>Lembaga pengawas internal pemerintah daerah yang berkedudukan langsung di bawah Wali Kota.</p>
+                <span class="seal-mark">K</span>
+                <h3>Kedudukan</h3>
+                <p>Unsur pengawas penyelenggaraan pemerintahan daerah, berkedudukan di bawah dan bertanggung jawab kepada Wali Kota melalui Sekretaris Daerah Kota.</p>
             </div>
             <div class="def-card">
                 <span class="seal-mark">P</span>
@@ -72,14 +72,14 @@
                 <p>Mitra strategis perangkat daerah dalam mewujudkan tata kelola yang taat aturan dan berintegritas.</p>
             </div>
             <div class="def-card">
-                <span class="seal-mark">F</span>
-                <h3>Fungsi</h3>
-                <p>Melaksanakan audit, reviu, evaluasi, pemantauan, dan pengawasan lain sesuai kebijakan Wali Kota.</p>
-            </div>
-            <div class="def-card">
                 <span class="seal-mark">T</span>
                 <h3>Tujuan</h3>
                 <p>Mewujudkan penyelenggaraan pemerintahan yang bersih, akuntabel, dan bebas dari korupsi.</p>
+            </div>
+            <div class="def-card">
+                <span class="seal-mark">F</span>
+                <h3>Fungsi</h3>
+                <p>Melaksanakan audit, reviu, evaluasi, pemantauan, dan pengawasan lain sesuai kebijakan Wali Kota.</p>
             </div>
         </div>
     </div>

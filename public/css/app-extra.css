@@ -361,3 +361,44 @@
 @media (max-width:560px){
   .galeri-grid{grid-template-columns:1fr;}
 }
+
+/* ---------- C. Fungsi — kartu ikon (revisi dari list) ---------- */
+.tf-tugas-pokok{max-width:70ch;}
+.fungsi-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+}
+.fungsi-card{
+  background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px 24px;display:flex;flex-direction:column;gap:12px;
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.fungsi-card:hover{
+  transform:translateY(-4px);box-shadow:0 16px 32px rgba(11,42,74,.1);border-color:var(--gold);
+}
+.fungsi-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:var(--navy);color:var(--gold-soft);
+  display:flex;align-items:center;justify-content:center;
+}
+.fungsi-icon svg{width:21px;height:21px;}
+.fungsi-card h3{font-family:'Fraunces',serif;font-size:16.5px;font-weight:600;color:var(--navy);}
+.fungsi-card p{color:var(--slate);font-size:14px;line-height:1.55;margin:0;}
+
+@media (max-width:900px){
+  .fungsi-grid{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:600px){
+  .fungsi-grid{grid-template-columns:1fr;}
+}
+
+/* ---------- Pejabat dinamis di accordion Struktur Organisasi ---------- */
+.org-pejabat{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  padding-bottom:4px;
+}
+.org-pejabat strong{color:var(--gold-soft);font-weight:600;font-size:14px;flex-basis:100%;margin-bottom:2px;}
+.org-pejabat-chip{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+  color:#fff;font-size:13px;padding:5px 12px;border-radius:999px;
+}
+.org-pejabat-empty{color:#8895A2;font-size:13px;font-style:italic;}

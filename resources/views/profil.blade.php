@@ -95,62 +95,65 @@
         <div class="section-head">
             <span class="eyebrow">C. Tugas & Fungsi</span>
             <h2>Apa yang kami kerjakan</h2>
-            <p>Penjabaran tugas pokok, fungsi, dan jenis pengawasan yang dijalankan Inspektorat.</p>
+            <p>Penjabaran tugas pokok dan fungsi yang dijalankan Inspektorat.</p>
         </div>
 
-        <div class="tf-grid">
-            <div class="tf-block">
-                <span class="vm-label" style="color:var(--gold);border-color:var(--line);">Tugas Pokok</span>
-                <p style="color:var(--slate);font-size:15.5px;line-height:1.75;">
-                    Membantu Wali Kota membina dan mengawasi pelaksanaan Urusan
-                    Pemerintahan yang menjadi kewenangan Daerah dan tugas
-                    pembantuan oleh Perangkat Daerah.
-                </p>
-            </div>
-
-            <div class="tf-block">
-                <span class="vm-label" style="color:var(--gold);border-color:var(--line);">Fungsi</span>
-                <ul class="tf-list">
-                    <li>Perumusan kebijakan teknis bidang pengawasan dan fasilitasi pengawasan.</li>
-                    <li>Pelaksanaan pengawasan internal terhadap kinerja dan keuangan melalui audit, reviu, evaluasi, pemantauan, dan kegiatan pengawasan lainnya.</li>
-                    <li>Pelaksanaan pengawasan untuk audit dengan tujuan tertentu atas penugasan Wali Kota.</li>
-                    <li>Pelaksanaan pengawasan untuk audit investigasi atas penugasan Wali Kota.</li>
-                    <li>Pelaksanaan pengawasan untuk audit kinerja atas penugasan Wali Kota.</li>
-                    <li>Penyusunan laporan hasil pengawasan.</li>
-                    <li>Pelaksanaan administrasi Inspektorat.</li>
-                    <li>Pelaksanaan fungsi lain yang diberikan oleh Wali Kota terkait dengan tugas pokok dan fungsinya.</li>
-                </ul>
-            </div>
+        <div class="tf-tugas-pokok">
+            <span class="vm-label" style="color:var(--gold);border-color:var(--line);">Tugas Pokok</span>
+            <p style="color:var(--slate);font-size:15.5px;line-height:1.75;max-width:70ch;">
+                Membantu Wali Kota membina dan mengawasi pelaksanaan Urusan
+                Pemerintahan yang menjadi kewenangan Daerah dan tugas
+                pembantuan oleh Perangkat Daerah.
+            </p>
         </div>
 
-        <div class="section-head" style="margin-top:56px;margin-bottom:28px;">
-            <span class="eyebrow">Jenis Pengawasan</span>
-            <h2 style="font-size:22px;">Bentuk pengawasan yang kami jalankan</h2>
+        <div class="section-head" style="margin-top:48px;margin-bottom:28px;">
+            <span class="eyebrow">Fungsi</span>
+            <h2 style="font-size:22px;">Enam fungsi utama kami</h2>
         </div>
-        <div class="scope-grid">
-            <div class="scope-item">
-                <span class="scope-num">01</span>
-                <p>Audit dengan Tujuan Tertentu (atas penugasan Wali Kota)</p>
+
+        <div class="fungsi-grid">
+            <div class="fungsi-card">
+                <div class="fungsi-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+                </div>
+                <h3>Perumusan Kebijakan</h3>
+                <p>Merumuskan kebijakan teknis bidang pengawasan dan fasilitasi pengawasan.</p>
             </div>
-            <div class="scope-item">
-                <span class="scope-num">02</span>
-                <p>Audit Investigasi (atas penugasan Wali Kota)</p>
+            <div class="fungsi-card">
+                <div class="fungsi-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                </div>
+                <h3>Pengawasan Internal</h3>
+                <p>Audit, reviu, evaluasi, dan pemantauan kinerja serta keuangan perangkat daerah.</p>
             </div>
-            <div class="scope-item">
-                <span class="scope-num">03</span>
-                <p>Audit Kinerja (atas penugasan Wali Kota)</p>
+            <div class="fungsi-card">
+                <div class="fungsi-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+                </div>
+                <h3>Audit Khusus</h3>
+                <p>Audit dengan tujuan tertentu, audit investigasi, dan audit kinerja atas penugasan Wali Kota.</p>
             </div>
-            <div class="scope-item">
-                <span class="scope-num">04</span>
-                <p>Reviu laporan keuangan & kinerja perangkat daerah</p>
+            <div class="fungsi-card">
+                <div class="fungsi-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h11a2 2 0 0 1 2 2v14l-4-2-4 2-4-2-4 2V6a2 2 0 0 1 2-2z"/><path d="M9 9h6M9 13h6"/></svg>
+                </div>
+                <h3>Pelaporan Hasil</h3>
+                <p>Menyusun laporan hasil pengawasan secara berkala dan menyeluruh.</p>
             </div>
-            <div class="scope-item">
-                <span class="scope-num">05</span>
-                <p>Evaluasi penyelenggaraan pemerintahan daerah</p>
+            <div class="fungsi-card">
+                <div class="fungsi-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg>
+                </div>
+                <h3>Administrasi Inspektorat</h3>
+                <p>Mengelola tata usaha, kepegawaian, dan administrasi internal Inspektorat.</p>
             </div>
-            <div class="scope-item">
-                <span class="scope-num">06</span>
-                <p>Pemantauan tindak lanjut hasil pengawasan</p>
+            <div class="fungsi-card">
+                <div class="fungsi-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                </div>
+                <h3>Fungsi Lainnya</h3>
+                <p>Melaksanakan fungsi lain yang diberikan Wali Kota terkait tugas pokok dan fungsinya.</p>
             </div>
         </div>
     </div>
@@ -187,6 +190,17 @@
                     <span class="org-item-toggle">+</span>
                 </summary>
                 <div class="org-item-body">
+                    <div class="org-pejabat">
+                        <strong>Pejabat:</strong>
+                        @if(isset($pegawaiPerBidang['Inspektur']))
+                            @foreach($pegawaiPerBidang['Inspektur'] as $p)
+                                <span class="org-pejabat-chip">{{ $p->nama }} — {{ $p->jabatan }}</span>
+                            @endforeach
+                        @else
+                            <span class="org-pejabat-empty">Belum ada data, tambahkan di Data Pegawai.</span>
+                        @endif
+                    </div>
+                    
                     <p><strong>Kedudukan:</strong> Pimpinan tertinggi Inspektorat, berkedudukan di bawah dan bertanggung jawab kepada Wali Kota melalui Sekretaris Daerah Kota.</p>
                     <p><strong>Tugas:</strong> Membantu Wali Kota membina dan mengawasi pelaksanaan Urusan Pemerintahan yang menjadi kewenangan Daerah dan tugas pembantuan oleh Perangkat Daerah.</p>
                 </div>
@@ -198,6 +212,17 @@
                     <span class="org-item-toggle">+</span>
                 </summary>
                 <div class="org-item-body">
+                    <div class="org-pejabat">
+                        <strong>Pejabat:</strong>
+                        @if(isset($pegawaiPerBidang['Sekretariat']))
+                            @foreach($pegawaiPerBidang['Sekretariat'] as $p)
+                                <span class="org-pejabat-chip">{{ $p->nama }} — {{ $p->jabatan }}</span>
+                            @endforeach
+                        @else
+                            <span class="org-pejabat-empty">Belum ada data, tambahkan di Data Pegawai.</span>
+                        @endif
+                    </div>
+                    
                     <p><strong>Membawahi:</strong> Subbagian Perencanaan dan Keuangan; Subbagian Umum dan Kepegawaian. Masing-masing dipimpin Kepala Sub Bagian yang bertanggung jawab kepada Sekretaris.</p>
                     <p><strong>Tugas:</strong> Menyelenggarakan penyusunan, perencanaan, dan pengelolaan urusan keuangan, kepegawaian, dan umum, serta mengoordinasikan secara teknis dan administratif pelaksanaan kegiatan dinas.</p>
                     <p><strong>Fungsi Subbag Perencanaan & Keuangan:</strong> penyusunan Renstra & Renja, RKA, DPA/DPPA, Perjanjian Kinerja & IKU, penatausahaan dan pelaporan keuangan, verifikasi SPJ, hingga administrasi gaji pegawai.</p>
@@ -210,6 +235,17 @@
                     <span class="org-item-toggle">+</span>
                 </summary>
                 <div class="org-item-body">
+                    <div class="org-pejabat">
+                        <strong>Pejabat:</strong>
+                        @if(isset($pegawaiPerBidang['Kelompok Jabatan Fungsional']))
+                            @foreach($pegawaiPerBidang['Kelompok Jabatan Fungsional'] as $p)
+                                <span class="org-pejabat-chip">{{ $p->nama }} — {{ $p->jabatan }}</span>
+                            @endforeach
+                        @else
+                            <span class="org-pejabat-empty">Belum ada data, tambahkan di Data Pegawai.</span>
+                        @endif
+                    </div>
+                    
                     <p><strong>Jabatan:</strong> Auditor Ahli Utama, Auditor Ahli Madya, Pengawas Penyelenggaraan Urusan Pemerintahan Daerah (P2UPD) Ahli Madya, Perencana Ahli Madya.</p>
                     <p><strong>Tugas:</strong> Melaksanakan audit, reviu, evaluasi, dan pemantauan tingkat lanjut yang langsung berada di bawah koordinasi Inspektur.</p>
                 </div>
@@ -221,6 +257,17 @@
                     <span class="org-item-toggle">+</span>
                 </summary>
                 <div class="org-item-body">
+                    <div class="org-pejabat">
+                        <strong>Pejabat:</strong>
+                        @if(isset($pegawaiPerBidang['Irban I']))
+                            @foreach($pegawaiPerBidang['Irban I'] as $p)
+                                <span class="org-pejabat-chip">{{ $p->nama }} — {{ $p->jabatan }}</span>
+                            @endforeach
+                        @else
+                            <span class="org-pejabat-empty">Belum ada data, tambahkan di Data Pegawai.</span>
+                        @endif
+                    </div>
+                    
                     <p><strong>Kelompok Jabatan Fungsional:</strong> Auditor Terampil, Auditor Mahir, Auditor Penyelia, Auditor Ahli Pertama, Auditor Ahli Muda, P2UPD Ahli Pertama, P2UPD Ahli Muda.</p>
                     <p><strong>Tugas:</strong> Melaksanakan pengawasan atas perangkat daerah binaan pada wilayah kerja Irban I.</p>
                 </div>
@@ -232,6 +279,17 @@
                     <span class="org-item-toggle">+</span>
                 </summary>
                 <div class="org-item-body">
+                    <div class="org-pejabat">
+                        <strong>Pejabat:</strong>
+                        @if(isset($pegawaiPerBidang['Irban II']))
+                            @foreach($pegawaiPerBidang['Irban II'] as $p)
+                                <span class="org-pejabat-chip">{{ $p->nama }} — {{ $p->jabatan }}</span>
+                            @endforeach
+                        @else
+                            <span class="org-pejabat-empty">Belum ada data, tambahkan di Data Pegawai.</span>
+                        @endif
+                    </div>
+                    
                     <p><strong>Kelompok Jabatan Fungsional:</strong> Auditor Terampil, Auditor Mahir, Auditor Penyelia, Auditor Ahli Pertama, Auditor Ahli Muda, P2UPD Ahli Pertama, P2UPD Ahli Muda.</p>
                     <p><strong>Tugas:</strong> Melaksanakan pengawasan atas perangkat daerah binaan pada wilayah kerja Irban II.</p>
                 </div>
@@ -243,6 +301,17 @@
                     <span class="org-item-toggle">+</span>
                 </summary>
                 <div class="org-item-body">
+                    <div class="org-pejabat">
+                        <strong>Pejabat:</strong>
+                        @if(isset($pegawaiPerBidang['Irban III']))
+                            @foreach($pegawaiPerBidang['Irban III'] as $p)
+                                <span class="org-pejabat-chip">{{ $p->nama }} — {{ $p->jabatan }}</span>
+                            @endforeach
+                        @else
+                            <span class="org-pejabat-empty">Belum ada data, tambahkan di Data Pegawai.</span>
+                        @endif
+                    </div>
+                    
                     <p><strong>Kelompok Jabatan Fungsional:</strong> Auditor Terampil, Auditor Mahir, Auditor Penyelia, Auditor Ahli Pertama, Auditor Ahli Muda, P2UPD Ahli Pertama, P2UPD Ahli Muda.</p>
                     <p><strong>Tugas:</strong> Melaksanakan pengawasan atas perangkat daerah binaan pada wilayah kerja Irban III.</p>
                 </div>
@@ -254,6 +323,17 @@
                     <span class="org-item-toggle">+</span>
                 </summary>
                 <div class="org-item-body">
+                    <div class="org-pejabat">
+                        <strong>Pejabat:</strong>
+                        @if(isset($pegawaiPerBidang['Irban Khusus']))
+                            @foreach($pegawaiPerBidang['Irban Khusus'] as $p)
+                                <span class="org-pejabat-chip">{{ $p->nama }} — {{ $p->jabatan }}</span>
+                            @endforeach
+                        @else
+                            <span class="org-pejabat-empty">Belum ada data, tambahkan di Data Pegawai.</span>
+                        @endif
+                    </div>
+                    
                     <p><strong>Kelompok Jabatan Fungsional:</strong> Auditor Terampil, Auditor Mahir, Auditor Penyelia, Auditor Ahli Pertama, Auditor Ahli Muda, P2UPD Ahli Pertama, P2UPD Ahli Muda.</p>
                     <p><strong>Tugas:</strong> Menangani penugasan pengawasan khusus, termasuk audit investigasi dan audit dengan tujuan tertentu.</p>
                 </div>
@@ -262,7 +342,7 @@
         </div>
 
         <p style="color:#B9C2CC;font-size:13px;margin-top:24px;">
-            *Nama & identitas pejabat pada tiap bagian ditampilkan di halaman Data Pegawai.
+            Data pejabat di atas tersinkron otomatis dengan halaman <a href="{{ url('/profil/data-pegawai') }}" style="color:var(--gold-soft);text-decoration:underline;">Data Pegawai</a>.
         </p>
     </div>
 </section>

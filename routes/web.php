@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\GaleriController;
@@ -18,7 +19,7 @@ use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ---------- Profil (Section A-D ada langsung di halaman ini) ----------
-Route::view('/profil', 'profil');
+Route::get('/profil', [ProfilController::class, 'index']);
 Route::get('/profil/data-pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 
 // ---------- F. Galeri (bagian dari Profil, tapi halaman tersendiri) ----------
