@@ -64,14 +64,14 @@
   }
   .brand{display:flex; align-items:center; gap:12px;}
   .brand-mark{
-    width:40px; height:40px; border-radius:50%;
-    border:1.5px solid var(--ink);
+    width:44px; height:44px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    font-family:'Fraunces', serif; font-weight:700; font-size:17px;
-    position:relative;
+    position:relative; overflow:hidden;
+    background:#fff;
+    border:1.5px solid var(--ink);
   }
-  .brand-mark::after{
-    content:""; position:absolute; inset:4px; border:1px solid var(--brass); border-radius:50%;
+  .brand-mark img{
+    width:100%; height:100%; object-fit:contain; padding:4px;
   }
   .brand-text{display:flex; flex-direction:column; line-height:1.15;}
   .brand-text b{font-family:'Fraunces', serif; font-size:17px; font-weight:700; letter-spacing:.02em;}
@@ -274,6 +274,14 @@
   footer{background:var(--parchment-2); border-top:1px solid var(--line); padding:64px 0 28px;}
   .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:40px;}
   .foot-brand p{font-size:13.5px; color:var(--ink-70); margin-top:14px; max-width:280px;}
+  .foot-social{display:flex; gap:10px; margin-top:20px;}
+  .foot-social a{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--ink-70); transition:all .2s ease;
+  }
+  .foot-social a:hover{color:var(--ink); border-color:var(--ink); background:rgba(243,239,228,.06);}
+  .foot-social svg{width:15px; height:15px;}
   .foot-col h5{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-70); margin-bottom:14px;}
   .foot-col a{display:block; font-size:13.5px; padding:5px 0; color:var(--ink);}
   .foot-col a:hover{color:var(--rust);}
@@ -312,7 +320,7 @@
 <header>
   <div class="wrap nav-row">
     <div class="brand">
-      <div class="brand-mark">I</div>
+      <div class="brand-mark"><img src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto"></div>
       <div class="brand-text">
         <b>INSPEKTORAT</b>
         <span>Aparat Pengawasan Intern</span>
@@ -666,10 +674,21 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <div class="brand">
-          <div class="brand-mark">I</div>
+          <div class="brand-mark"><img src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto"></div>
           <div class="brand-text"><b>INSPEKTORAT</b><span>Pengawasan Intern Pemerintah</span></div>
         </div>
         <p>Portal resmi layanan pengawasan, informasi publik, dan pengaduan masyarakat.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 4h-2a4 4 0 0 0-4 4v2H7v3h2v7h3v-7h2.5l.5-3H12V8a1 1 0 0 1 1-1h2V4z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="M10.5 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>
+          </a>
+        </div>
       </div>
       <div class="foot-col">
         <h5>Layanan</h5>
@@ -679,7 +698,7 @@
       </div>
       <div class="foot-col">
         <h5>Publikasi</h5>
-        <a href="#publikasi">Majalah Pengawasan</a>
+        <a href="{{ url('/buletin') }}">Majalah Pengawasan</a>
         <a href="#informasi">Laporan Kinerja</a>
         <a href="#informasi">Laporan Keuangan</a>
       </div>
@@ -692,7 +711,7 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 Inspektorat. Seluruh hak cipta dilindungi.</span>
-      <span class="mono">Desain template — bukan situs instansi resmi</span>
+      <span class="mono">Portal Resmi Pengawasan Intern</span>
     </div>
   </div>
 </footer>

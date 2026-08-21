@@ -46,6 +46,14 @@
     color:var(--verified); text-transform:uppercase; margin-bottom:8px;
   }
   .topbar h1{ font-size:26px; font-weight:700; }
+  .breadcrumb{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    color:rgba(243,239,228,.55); margin-bottom:14px;
+    display:flex; align-items:center; gap:6px; justify-content:center;
+  }
+  .breadcrumb a:hover{ color:var(--parchment); }
+  .breadcrumb .sep{ color:rgba(243,239,228,.3); }
+  .breadcrumb .current{ color:var(--brass); }
 
   .wrap{ max-width:1000px; margin:0 auto; padding:40px 24px 80px; }
 
@@ -93,6 +101,11 @@
 <body>
 
 <div class="topbar">
+  <div class="breadcrumb">
+    <a href="{{ url('/') }}">Beranda</a>
+    <span class="sep">/</span>
+    <span class="current">Publikasi</span>
+  </div>
   <div class="eyebrow">Terverifikasi &middot; Pengawasan Intern</div>
   <h1>Buletin Pengawasan</h1>
 </div>

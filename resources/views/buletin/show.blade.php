@@ -33,6 +33,16 @@
   .leaf{ color:#0B2A4A; }
   .leaf .ink-light{ color:#0B2A4A; }
 
+  /* ===== BREADCRUMB ===== */
+  .breadcrumb{
+    background:var(--navy-deep); padding:8px 26px;
+    font-family:'IBM Plex Mono',monospace; font-size:11px;
+    color:rgba(243,239,228,.5); display:flex; align-items:center; gap:6px;
+  }
+  .breadcrumb a:hover{ color:var(--parchment); }
+  .breadcrumb .sep{ color:rgba(243,239,228,.25); }
+  .breadcrumb .current{ color:var(--brass); }
+
   /* ===== TOPBAR ===== */
   .reader-topbar{
     background:var(--navy); color:var(--ink);
@@ -176,8 +186,16 @@
 </head>
 <body>
 
+<div class="breadcrumb">
+  <a href="{{ url('/') }}">Beranda</a>
+  <span class="sep">/</span>
+  <a href="{{ route('buletin.index') }}">Publikasi</a>
+  <span class="sep">/</span>
+  <span class="current">{{ $current['title'] }}</span>
+</div>
+
 <div class="reader-topbar">
-  <a href="{{ url('/buletin') }}" class="back-link">
+  <a href="{{ route('buletin.index') }}" class="back-link">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
     Kembali ke Publikasi
   </a>
