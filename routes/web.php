@@ -21,6 +21,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // ---------- Profil (Section A-D ada langsung di halaman ini) ----------
 Route::get('/profil', [ProfilController::class, 'index']);
 Route::get('/profil/data-pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+Route::get('/profil/data-pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
 
 // ---------- F. Galeri (bagian dari Profil, tapi halaman tersendiri) ----------
 Route::get('/profil/galeri', [GaleriController::class, 'index'])->name('galeri.index');

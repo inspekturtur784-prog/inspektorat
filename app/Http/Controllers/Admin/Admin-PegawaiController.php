@@ -32,6 +32,8 @@ class PegawaiController extends Controller
             'jabatan'  => 'required|string|max:150',
             'golongan' => 'nullable|string|max:100',
             'bidang'   => 'nullable|string|max:150',
+            'tugas'    => 'nullable|string',
+            'fungsi'   => 'nullable|string',
             'urutan'   => 'nullable|integer',
             'photo'    => 'nullable|image|max:2048',
         ]);
@@ -60,6 +62,8 @@ class PegawaiController extends Controller
             'jabatan'  => 'required|string|max:150',
             'golongan' => 'nullable|string|max:100',
             'bidang'   => 'nullable|string|max:150',
+            'tugas'    => 'nullable|string',
+            'fungsi'   => 'nullable|string',
             'urutan'   => 'nullable|integer',
             'photo'    => 'nullable|image|max:2048',
         ]);

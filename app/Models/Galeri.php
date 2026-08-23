@@ -23,7 +23,12 @@ class Galeri extends Model
         'tanggal' => 'date',
     ];
 
-    public const KATEGORI = ['Kegiatan', 'Dokumentasi', 'Pengawasan', 'Sosialisasi'];
+    /**
+     * Daftar SARAN kategori (ditampilkan sebagai datalist di form Admin).
+     * Bukan aturan kaku — admin tetap bisa mengetik kategori baru sesuai
+     * kebutuhan, sesuai arahan DUDI.
+     */
+    public const KATEGORI_SARAN = ['Kegiatan', 'Sosialisasi', 'Pengawasan', 'Rapat', 'Dokumentasi'];
 
     protected static function booted(): void
     {

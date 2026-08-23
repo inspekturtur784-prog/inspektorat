@@ -12,16 +12,20 @@ class GaleriController extends Controller
     {
         $kategoriAktif = $request->query('kategori');
 
-        $items = Galeri::kategori($kategoriAktif)->terbaru()->paginate(12)->withQueryString();
+        $items = Galeri::kategori($kategoriAktif)->terbaru()->get();
+
+        // Kategori diambil dari data yang benar-benar ada, jadi otomatis
+        // ikut kalau admin menambah kategori baru — tidak perlu ubah kode.
+        $kategoriList = Galeri::select('kategori')->distinct()->orderBy('kategori')->pluck('kategori');
 
         return view('galeri', [
             'items' => $items,
-            'kategoriList' => Galeri::KATEGORI,
+            'kategoriList' => $kategoriList,
             'kategoriAktif' => $kategoriAktif,
         ]);
     }
 
-    /** Halaman detail satu foto: /profil/galeri/{slug} */
+    /** Halaman detail satu foto (dibuka dari lightbox atau link langsung): /profil/galeri/{slug} */
     public function show(string $slug)
     {
         $galeri = Galeri::where('slug', $slug)->firstOrFail();

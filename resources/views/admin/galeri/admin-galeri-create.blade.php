@@ -16,12 +16,16 @@
 
     <div class="form-group">
         <label for="kategori">Kategori</label>
-        <select id="kategori" name="kategori" required>
-            <option value="">— Pilih kategori —</option>
-            @foreach ($kategoriList as $kat)
-                <option value="{{ $kat }}" {{ old('kategori') === $kat ? 'selected' : '' }}>{{ $kat }}</option>
+        <input type="text" id="kategori" name="kategori" list="kategori-saran"
+               placeholder="mis. Kegiatan, Sosialisasi, Rapat..." value="{{ old('kategori') }}" required>
+        <datalist id="kategori-saran">
+            @foreach ($kategoriSaran as $kat)
+                <option value="{{ $kat }}">
             @endforeach
-        </select>
+        </datalist>
+        <p style="font-size:12.5px;color:var(--slate);margin-top:6px;">
+            Boleh pilih dari saran atau ketik kategori baru sendiri.
+        </p>
     </div>
 
     <div class="form-group">

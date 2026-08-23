@@ -402,3 +402,117 @@
   color:#fff;font-size:13px;padding:5px 12px;border-radius:999px;
 }
 .org-pejabat-empty{color:#8895A2;font-size:13px;font-style:italic;}
+
+/* ---------- Toolbar pencarian & filter Data Pegawai ---------- */
+.pegawai-toolbar{
+  display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
+  margin-bottom:32px;
+}
+.pegawai-search{
+  position:relative;flex:1;min-width:240px;max-width:340px;
+}
+.pegawai-search svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;color:var(--slate);
+}
+.pegawai-search input{
+  width:100%;padding:11px 14px 11px 40px;border-radius:999px;
+  border:1px solid var(--line);background:var(--cream);
+  font-family:inherit;font-size:14px;color:var(--ink);
+}
+.pegawai-search input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+
+/* ---------- Kartu pegawai — tambahan NIP & preview tugas ---------- */
+.pegawai-nip{font-size:12px;color:var(--slate);margin:0 0 8px;font-family:'IBM Plex Mono',monospace;}
+.pegawai-tugas-preview{
+  font-size:13px;color:var(--slate);margin:10px 0 0;line-height:1.5;
+  padding-top:10px;border-top:1px solid var(--line);
+}
+
+/* ---------- Halaman Detail Pegawai ---------- */
+.pegawai-detail{
+  display:grid;grid-template-columns:300px 1fr;gap:44px;align-items:start;
+}
+.pegawai-detail-photo{
+  border-radius:var(--radius);overflow:hidden;aspect-ratio:1/1;background:var(--navy);
+}
+.pegawai-detail-photo img{width:100%;height:100%;object-fit:cover;}
+.pegawai-detail-info h1{
+  font-size:clamp(24px,3vw,32px);margin:10px 0 20px;
+}
+.pegawai-detail-meta{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  padding:20px;background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);
+  margin-bottom:28px;
+}
+.pegawai-detail-meta div{display:flex;flex-direction:column;gap:4px;}
+.pegawai-detail-meta strong{
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--slate);
+}
+.pegawai-detail-meta span{font-size:14.5px;color:var(--navy);font-weight:600;}
+.pegawai-detail-block{margin-bottom:22px;}
+.pegawai-detail-block h3{
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.pegawai-detail-block p{font-size:15.5px;color:var(--ink);line-height:1.7;margin:0;}
+
+@media (max-width:760px){
+  .pegawai-detail{grid-template-columns:1fr;}
+  .pegawai-detail-photo{max-width:220px;}
+  .pegawai-detail-meta{grid-template-columns:1fr 1fr;}
+}
+
+/* ---------- Galeri: kartu jadi <button> (dipicu lightbox, bukan link) ---------- */
+.galeri-card{
+  display:flex;flex-direction:column;text-align:left;
+  border:1px solid var(--line);background:var(--paper);
+  padding:0;font-family:inherit;cursor:pointer;
+}
+.galeri-thumb{display:block;}
+.galeri-caption{display:flex;flex-direction:column;}
+.galeri-caption-title{
+  font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--navy);
+  line-height:1.35;margin:0 0 6px;
+}
+
+/* ---------- Lightbox ---------- */
+.lightbox{
+  position:fixed;inset:0;z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .22s ease;
+  padding:24px;
+}
+.lightbox.active{opacity:1;pointer-events:auto;}
+.lightbox-backdrop{
+  position:absolute;inset:0;background:rgba(6,24,46,.88);backdrop-filter:blur(2px);
+}
+.lightbox-panel{
+  position:relative;z-index:2;background:#fff;border-radius:16px;overflow:hidden;
+  max-width:960px;width:100%;max-height:88vh;
+  display:grid;grid-template-columns:1.4fr 1fr;
+  transform:scale(.96);transition:transform .22s ease;
+}
+.lightbox.active .lightbox-panel{transform:scale(1);}
+.lightbox-image{background:var(--navy-deep);display:flex;align-items:center;justify-content:center;max-height:88vh;overflow:hidden;}
+.lightbox-image img{width:100%;height:100%;object-fit:contain;max-height:88vh;}
+.lightbox-info{padding:32px 30px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;}
+.lightbox-info h3{
+  font-family:'Fraunces',serif;font-size:21px;font-weight:600;color:var(--navy);margin:6px 0 2px;line-height:1.35;
+}
+.lightbox-info p{font-size:14.5px;color:var(--ink);line-height:1.65;margin:8px 0 4px;}
+.lightbox-close{
+  position:absolute;top:14px;right:14px;z-index:3;
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:rgba(6,24,46,.55);color:#fff;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .2s ease;
+}
+.lightbox-close:hover{background:var(--navy-deep);}
+.lightbox-close svg{width:17px;height:17px;}
+
+@media (max-width:760px){
+  .lightbox-panel{grid-template-columns:1fr;max-height:92vh;overflow-y:auto;}
+  .lightbox-image{max-height:42vh;}
+  .lightbox-image img{max-height:42vh;}
+}

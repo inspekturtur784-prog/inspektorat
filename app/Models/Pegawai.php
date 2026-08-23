@@ -15,6 +15,8 @@ class Pegawai extends Model
         'jabatan',
         'golongan',
         'bidang',
+        'tugas',
+        'fungsi',
         'photo',
         'urutan',
     ];

@@ -17,11 +17,13 @@
 
     <div class="form-group">
         <label for="kategori">Kategori</label>
-        <select id="kategori" name="kategori" required>
-            @foreach ($kategoriList as $kat)
-                <option value="{{ $kat }}" {{ old('kategori', $galeri->kategori) === $kat ? 'selected' : '' }}>{{ $kat }}</option>
+        <input type="text" id="kategori" name="kategori" list="kategori-saran"
+               value="{{ old('kategori', $galeri->kategori) }}" required>
+        <datalist id="kategori-saran">
+            @foreach ($kategoriSaran as $kat)
+                <option value="{{ $kat }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
 
     <div class="form-group">

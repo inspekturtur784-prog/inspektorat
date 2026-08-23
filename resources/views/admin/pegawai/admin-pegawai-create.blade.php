@@ -30,6 +30,16 @@
     </div>
 
     <div class="form-group">
+        <label for="tugas">Tugas</label>
+        <textarea id="tugas" name="tugas" placeholder="Ringkasan tugas jabatan ini...">{{ old('tugas') }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="fungsi">Fungsi</label>
+        <textarea id="fungsi" name="fungsi" placeholder="Ringkasan fungsi jabatan ini...">{{ old('fungsi') }}</textarea>
+    </div>
+
+    <div class="form-group">
         <label for="nip">NIP (opsional, kosongkan jika tidak dipublikasikan)</label>
         <input type="text" id="nip" name="nip" value="{{ old('nip') }}">
     </div>
