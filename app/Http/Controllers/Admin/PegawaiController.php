@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pegawai;
+use App\Services\ImageConverter;
 use Illuminate\Http\Request;
 
 /**
@@ -38,10 +39,12 @@ class PegawaiController extends Controller
             'photo'    => 'nullable|image|max:2048',
         ]);
 
+        // Foto otomatis dikompresi & dikonversi ke WebP (sama seperti Galeri).
         if ($request->hasFile('photo')) {
-            $filename = time() . '_' . $request->file('photo')->getClientOriginalName();
-            $request->file('photo')->move(public_path('images/pegawai'), $filename);
-            $data['photo'] = $filename;
+            $data['photo'] = ImageConverter::toWebp(
+                $request->file('photo'),
+                public_path('images/pegawai')
+            );
         }
 
         Pegawai::create($data);
@@ -69,9 +72,10 @@ class PegawaiController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $filename = time() . '_' . $request->file('photo')->getClientOriginalName();
-            $request->file('photo')->move(public_path('images/pegawai'), $filename);
-            $data['photo'] = $filename;
+            $data['photo'] = ImageConverter::toWebp(
+                $request->file('photo'),
+                public_path('images/pegawai')
+            );
         }
 
         $pegawai->update($data);

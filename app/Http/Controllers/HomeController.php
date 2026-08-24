@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\PengaturanProfil;
 
 class HomeController extends Controller
 {
@@ -19,6 +20,7 @@ class HomeController extends Controller
     public function index()
     {
         $articles = Article::published()->limit(3)->get();
+        $p = PengaturanProfil::semua();
 
         // Statistik: Jumlah Artikel sudah dari data asli (tabel articles).
         // Pedoman / Layanan / Publikasi masih placeholder — tinggal ganti
@@ -30,6 +32,6 @@ class HomeController extends Controller
             'publikasi' => 8,
         ];
 
-        return view('home', compact('articles', 'stats'));
+        return view('home', compact('articles', 'stats', 'p'));
     }
 }

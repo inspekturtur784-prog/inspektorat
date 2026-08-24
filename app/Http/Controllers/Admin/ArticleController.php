@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Services\ImageConverter;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * CRUD Artikel untuk sisi Admin.
@@ -37,10 +37,12 @@ class ArticleController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
+        // Foto sampul otomatis dikompresi & dikonversi ke WebP.
         if ($request->hasFile('cover_image')) {
-            $filename = time() . '_' . $request->file('cover_image')->getClientOriginalName();
-            $request->file('cover_image')->move(public_path('images/articles'), $filename);
-            $data['cover_image'] = $filename;
+            $data['cover_image'] = ImageConverter::toWebp(
+                $request->file('cover_image'),
+                public_path('images/articles')
+            );
         }
 
         $data['is_published'] = $request->boolean('is_published');
@@ -68,10 +70,12 @@ class ArticleController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
+        // Foto sampul otomatis dikompresi & dikonversi ke WebP.
         if ($request->hasFile('cover_image')) {
-            $filename = time() . '_' . $request->file('cover_image')->getClientOriginalName();
-            $request->file('cover_image')->move(public_path('images/articles'), $filename);
-            $data['cover_image'] = $filename;
+            $data['cover_image'] = ImageConverter::toWebp(
+                $request->file('cover_image'),
+                public_path('images/articles')
+            );
         }
 
         $data['is_published'] = $request->boolean('is_published');

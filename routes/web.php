@@ -9,6 +9,9 @@ use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Http\Controllers\Admin\PegawaiController as AdminPegawaiController;
 use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
+use App\Http\Controllers\Admin\PengaturanProfilController;
+use App\Http\Controllers\Admin\TugasFungsiController;
+use App\Http\Controllers\Admin\StrukturBagianController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +21,7 @@ use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// ---------- Profil (Section A-D ada langsung di halaman ini) ----------
+// ---------- Profil (Section A-D ada langsung di halaman ini, sekarang dari database) ----------
 Route::get('/profil', [ProfilController::class, 'index']);
 Route::get('/profil/data-pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 Route::get('/profil/data-pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
@@ -40,10 +43,32 @@ Route::view('/kontak', 'coming-soon', ['title' => 'Kontak Kami']);
 // ---------- Artikel (publik) ----------
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 
-// ---------- Admin: CRUD Artikel, Data Pegawai, Galeri ----------
+// ---------- Admin ----------
 // PENTING: tambahkan middleware login admin di sini sebelum production,
 // contoh: Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () { ... }
 Route::prefix('admin')->name('admin.')->group(function () {
+
+    // Tentang Inspektorat, Visi & Misi, Tugas Pokok (1 halaman form)
+    Route::get('/pengaturan', [PengaturanProfilController::class, 'edit'])->name('pengaturan.edit');
+    Route::put('/pengaturan', [PengaturanProfilController::class, 'update'])->name('pengaturan.update');
+
+    // Kartu Fungsi (Tugas & Fungsi)
+    Route::get('/tugas-fungsi', [TugasFungsiController::class, 'index'])->name('tugasfungsi.index');
+    Route::get('/tugas-fungsi/tambah', [TugasFungsiController::class, 'create'])->name('tugasfungsi.create');
+    Route::post('/tugas-fungsi', [TugasFungsiController::class, 'store'])->name('tugasfungsi.store');
+    Route::get('/tugas-fungsi/{tugasFungsi}/edit', [TugasFungsiController::class, 'edit'])->name('tugasfungsi.edit');
+    Route::put('/tugas-fungsi/{tugasFungsi}', [TugasFungsiController::class, 'update'])->name('tugasfungsi.update');
+    Route::delete('/tugas-fungsi/{tugasFungsi}', [TugasFungsiController::class, 'destroy'])->name('tugasfungsi.destroy');
+
+    // Struktur Organisasi
+    Route::get('/struktur', [StrukturBagianController::class, 'index'])->name('struktur.index');
+    Route::get('/struktur/tambah', [StrukturBagianController::class, 'create'])->name('struktur.create');
+    Route::post('/struktur', [StrukturBagianController::class, 'store'])->name('struktur.store');
+    Route::get('/struktur/{struktur}/edit', [StrukturBagianController::class, 'edit'])->name('struktur.edit');
+    Route::put('/struktur/{struktur}', [StrukturBagianController::class, 'update'])->name('struktur.update');
+    Route::delete('/struktur/{struktur}', [StrukturBagianController::class, 'destroy'])->name('struktur.destroy');
+
+    // Artikel
     Route::get('/artikel', [AdminArticleController::class, 'index'])->name('articles.index');
     Route::get('/artikel/tambah', [AdminArticleController::class, 'create'])->name('articles.create');
     Route::post('/artikel', [AdminArticleController::class, 'store'])->name('articles.store');
@@ -51,6 +76,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/artikel/{article}', [AdminArticleController::class, 'update'])->name('articles.update');
     Route::delete('/artikel/{article}', [AdminArticleController::class, 'destroy'])->name('articles.destroy');
 
+    // Data Pegawai
     Route::get('/pegawai', [AdminPegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/tambah', [AdminPegawaiController::class, 'create'])->name('pegawai.create');
     Route::post('/pegawai', [AdminPegawaiController::class, 'store'])->name('pegawai.store');
@@ -58,6 +84,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/pegawai/{pegawai}', [AdminPegawaiController::class, 'update'])->name('pegawai.update');
     Route::delete('/pegawai/{pegawai}', [AdminPegawaiController::class, 'destroy'])->name('pegawai.destroy');
 
+    // Galeri
     Route::get('/galeri', [AdminGaleriController::class, 'index'])->name('galeri.index');
     Route::get('/galeri/tambah', [AdminGaleriController::class, 'create'])->name('galeri.create');
     Route::post('/galeri', [AdminGaleriController::class, 'store'])->name('galeri.store');

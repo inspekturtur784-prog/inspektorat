@@ -48,13 +48,7 @@
         <div class="about-copy">
             <span class="eyebrow" style="color:var(--gold);">Mengenal Kami</span>
             <h2 style="font-size:clamp(24px,3vw,32px);margin:14px 0 18px;">Inspektorat itu apa, sebenarnya?</h2>
-            <p>
-                Inspektorat adalah unsur pengawas penyelenggaraan pemerintahan daerah,
-                yang bekerja langsung di bawah dan bertanggung jawab kepada Wali Kota.
-                Tugas kami sederhana namun krusial: memastikan setiap kebijakan,
-                program, dan penggunaan anggaran daerah berjalan sesuai aturan —
-                demi Kota Mojokerto yang bersih dan terpercaya.
-            </p>
+            <p>{{ $p['tentang_intro'] ?? '' }}</p>
             <a href="{{ url('/profil') }}" class="btn btn-gold" style="background:var(--navy);color:#fff;">
                 Selengkapnya tentang Profil
             </a>
@@ -64,22 +58,22 @@
             <div class="def-card">
                 <span class="seal-mark">K</span>
                 <h3>Kedudukan</h3>
-                <p>Unsur pengawas penyelenggaraan pemerintahan daerah, berkedudukan di bawah dan bertanggung jawab kepada Wali Kota melalui Sekretaris Daerah Kota.</p>
+                <p>{{ $p['kedudukan'] ?? '' }}</p>
             </div>
             <div class="def-card">
                 <span class="seal-mark">P</span>
                 <h3>Peran</h3>
-                <p>Mitra strategis perangkat daerah dalam mewujudkan tata kelola yang taat aturan dan berintegritas.</p>
+                <p>{{ $p['peran'] ?? '' }}</p>
             </div>
             <div class="def-card">
                 <span class="seal-mark">T</span>
                 <h3>Tujuan</h3>
-                <p>Mewujudkan penyelenggaraan pemerintahan yang bersih, akuntabel, dan bebas dari korupsi.</p>
+                <p>{{ $p['tujuan'] ?? '' }}</p>
             </div>
             <div class="def-card">
                 <span class="seal-mark">F</span>
                 <h3>Fungsi</h3>
-                <p>Melaksanakan audit, reviu, evaluasi, pemantauan, dan pengawasan lain sesuai kebijakan Wali Kota.</p>
+                <p>{{ $p['fungsi_singkat'] ?? '' }}</p>
             </div>
         </div>
     </div>
