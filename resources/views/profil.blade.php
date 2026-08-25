@@ -28,7 +28,7 @@
             <p>{{ $p['tentang_intro'] ?? '' }}</p>
         </div>
 
-        <div class="definition-list definition-list-4">
+        <div class="definition-list definition-list-3">
             <div class="def-card">
                 <span class="seal-mark">K</span>
                 <h3>Kedudukan</h3>
@@ -44,12 +44,10 @@
                 <h3>Tujuan</h3>
                 <p>{{ $p['tujuan'] ?? '' }}</p>
             </div>
-            <div class="def-card">
-                <span class="seal-mark">F</span>
-                <h3>Fungsi</h3>
-                <p>{{ $p['fungsi_singkat'] ?? '' }}</p>
-            </div>
         </div>
+        <p style="color:var(--slate);font-size:13.5px;margin-top:20px;">
+            Penjelasan lengkap Fungsi ada di bagian <a href="#tugas-fungsi" style="color:var(--navy);text-decoration:underline;">Tugas & Fungsi</a> di bawah.
+        </p>
     </div>
 </section>
 

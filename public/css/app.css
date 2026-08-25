@@ -91,7 +91,7 @@ h1,h2,h3{
   padding-top:14px;padding-bottom:14px;
 }
 .brand{display:flex;align-items:center;gap:12px;color:#fff;}
-.brand img{height:40px;width:40px;object-fit:contain;}
+.brand img{height:52px;width:52px;object-fit:contain;}
 .brand-text{line-height:1.15;}
 .brand-text strong{
   display:block;font-family:'Fraunces',serif;font-size:16.5px;font-weight:600;
@@ -280,7 +280,7 @@ footer{background:var(--navy-deep);color:#B9C2CC;padding:56px 0 28px;}
   padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);
 }
 .footer-brand{display:flex;gap:12px;align-items:flex-start;}
-.footer-brand img{height:38px;width:38px;}
+.footer-brand img{height:50px;width:50px;}
 .footer-brand strong{color:#fff;font-family:'Fraunces',serif;font-size:16px;display:block;}
 .footer-brand p{font-size:14px;margin-top:8px;max-width:34ch;}
 footer h4{

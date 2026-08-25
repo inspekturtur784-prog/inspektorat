@@ -589,3 +589,12 @@
 }
 .org-detail-link svg{width:13px;height:13px;transition:transform .2s ease;}
 .org-detail-link:hover svg{transform:translateX(4px);}
+
+/* ---------- Section A Profil: 3 kolom (Fungsi dipindah, lengkapnya di Section C) ---------- */
+.definition-list-3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:760px){
+  .definition-list-3{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:560px){
+  .definition-list-3{grid-template-columns:1fr;}
+}

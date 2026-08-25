@@ -53,10 +53,9 @@
                             <p>Aparat Pengawasan Intern Pemerintah yang mengawal tata kelola pemerintahan Kota Mojokerto agar bersih, akuntabel, dan bebas dari korupsi.</p>
                         </div>
                     </div>
-                    {{-- Ganti src di bawah dengan link embed Google Maps lokasi kantor Inspektorat yang asli --}}
                     <div class="footer-map">
                         <iframe
-                            src="https://www.google.com/maps?q=Kota+Mojokerto&output=embed"
+                            src="https://www.google.com/maps?q=Jl.+Benteng+Pancasila+No.+23,+Magersari,+Kota+Mojokerto,+Jawa+Timur+61314&output=embed"
                             loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                             title="Lokasi Kantor Inspektorat Kota Mojokerto"></iframe>
                     </div>
@@ -75,9 +74,9 @@
                 <div>
                     <h4>Kontak</h4>
                     <ul>
-                        <li>Jl. Gajah Mada, Kota Mojokerto</li>
+                        <li>Jl. Benteng Pancasila No. 23, Magersari, Kota Mojokerto, Jawa Timur 61314</li>
                         <li>inspektorat@mojokertokota.go.id</li>
-                        <li>(0321) 000-000</li>
+                        <li>(0321) 399630</li>
                     </ul>
                     <div class="footer-social" aria-label="Media sosial">
                         <a href="#" aria-label="Instagram" title="Instagram">
