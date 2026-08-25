@@ -21,13 +21,20 @@
                     <span>Kota Mojokerto</span>
                 </span>
             </a>
-            <nav class="main-nav" aria-label="Navigasi utama">
+            <nav class="main-nav" id="mainNav" aria-label="Navigasi utama">
                 <a href="{{ url('/') }}">Beranda</a>
+
                 <a href="{{ url('/profil') }}">Profil</a>
+
                 <a href="{{ url('/layanan') }}">Layanan</a>
                 <a href="{{ url('/berita') }}">Berita</a>
                 <a href="{{ url('/kontak') }}" class="nav-cta">Kontak Kami</a>
             </nav>
+
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mainNav">
+                <svg class="nav-toggle-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+                <svg class="nav-toggle-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M6 6l12 12M6 18L18 6"/></svg>
+            </button>
         </div>
     </header>
 
@@ -98,5 +105,32 @@
             </div>
         </div>
     </footer>
+    <script>
+    (function () {
+        var toggle = document.getElementById('navToggle');
+        var nav = document.getElementById('mainNav');
+        if (!toggle || !nav) return;
+
+        var openIcon = toggle.querySelector('.nav-toggle-open');
+        var closeIcon = toggle.querySelector('.nav-toggle-close');
+
+        toggle.addEventListener('click', function () {
+            var isOpen = nav.classList.toggle('nav-open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            openIcon.style.display = isOpen ? 'none' : 'block';
+            closeIcon.style.display = isOpen ? 'block' : 'none';
+        });
+
+        // Tutup menu otomatis kalau salah satu link diklik.
+        nav.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                nav.classList.remove('nav-open');
+                toggle.setAttribute('aria-expanded', 'false');
+                openIcon.style.display = 'block';
+                closeIcon.style.display = 'none';
+            });
+        });
+    })();
+    </script>
 </body>
 </html>

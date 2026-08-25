@@ -300,12 +300,38 @@ a:focus-visible,button:focus-visible{
   outline:2px solid var(--gold);outline-offset:3px;border-radius:4px;
 }
 
+/* ---------- Nav toggle (hamburger) — disembunyikan di desktop ---------- */
+.nav-toggle{
+  display:none;background:none;border:none;color:#fff;padding:6px;cursor:pointer;
+}
+.nav-toggle svg{width:24px;height:24px;display:block;}
+
 /* ---------- Responsive ---------- */
 @media (max-width:980px){
   .about-grid{grid-template-columns:1fr;gap:36px;}
   .service-grid{grid-template-columns:1fr 1fr;}
   .footer-grid{grid-template-columns:1fr;gap:28px;}
-  .main-nav{display:none;}
+
+  .nav-toggle{display:block;}
+  .site-header{position:sticky;}
+  .main-nav{
+    display:none;
+    position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;gap:0;
+    background:var(--navy-deep);
+    border-top:1px solid rgba(255,255,255,.08);
+    box-shadow:0 18px 30px rgba(0,0,0,.25);
+  }
+  .main-nav.nav-open{display:flex;}
+  .main-nav a{
+    padding:15px 28px;width:100%;box-sizing:border-box;
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .main-nav a::after{display:none;}
+  .nav-cta{
+    margin:14px 28px;width:calc(100% - 56px);text-align:center;
+    border-color:var(--gold);
+  }
 }
 @media (max-width:620px){
   .service-grid{grid-template-columns:1fr;}

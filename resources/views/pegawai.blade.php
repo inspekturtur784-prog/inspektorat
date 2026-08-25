@@ -5,6 +5,8 @@
 
 @section('content')
 
+@include('partials.breadcrumb', ['items' => ['Profil' => url('/profil')], 'current' => 'Data Pegawai'])
+
 <section style="padding:90px 0 30px;background:var(--paper);border-bottom:1px solid var(--line);">
     <div class="wrap" style="max-width:720px;">
         <span class="eyebrow">Profil Inspektorat</span>
@@ -19,10 +21,10 @@
     <div class="wrap">
 
         {{-- Pencarian & Filter --}}
-        <form method="GET" action="{{ url('/profil/data-pegawai') }}" class="pegawai-toolbar">
+        <form method="GET" action="{{ url('/profil/data-pegawai') }}" class="pegawai-toolbar" id="pegawaiSearchForm">
             <div class="pegawai-search">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-                <input type="text" name="cari" value="{{ $cari }}" placeholder="Cari nama pegawai...">
+                <input type="text" name="cari" id="pegawaiSearchInput" value="{{ $cari }}" placeholder="Cari pegawai berdasarkan nama...">
                 @if ($bidangAktif)
                     <input type="hidden" name="bidang" value="{{ $bidangAktif }}">
                 @endif
@@ -37,6 +39,19 @@
                 @endforeach
             </div>
         </form>
+
+        <script>
+        (function () {
+            var input = document.getElementById('pegawaiSearchInput');
+            var form = document.getElementById('pegawaiSearchForm');
+            if (!input || !form) return;
+            var timer = null;
+            input.addEventListener('input', function () {
+                clearTimeout(timer);
+                timer = setTimeout(function () { form.submit(); }, 500);
+            });
+        })();
+        </script>
 
         @if ($pegawais->isEmpty())
             <p style="color:var(--slate);margin-top:32px;">Tidak ada pegawai yang cocok dengan pencarian/filter ini.</p>

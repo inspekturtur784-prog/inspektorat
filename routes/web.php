@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\StrukturController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\GaleriController;
@@ -12,6 +13,8 @@ use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
 use App\Http\Controllers\Admin\PengaturanProfilController;
 use App\Http\Controllers\Admin\TugasFungsiController;
 use App\Http\Controllers\Admin\StrukturBagianController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +26,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ---------- Profil (Section A-D ada langsung di halaman ini, sekarang dari database) ----------
 Route::get('/profil', [ProfilController::class, 'index']);
+Route::get('/profil/struktur/{struktur}', [StrukturController::class, 'show'])->name('struktur.show');
 Route::get('/profil/data-pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 Route::get('/profil/data-pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
 
@@ -43,10 +47,18 @@ Route::view('/kontak', 'coming-soon', ['title' => 'Kontak Kami']);
 // ---------- Artikel (publik) ----------
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 
-// ---------- Admin ----------
-// PENTING: tambahkan middleware login admin di sini sebelum production,
-// contoh: Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () { ... }
+// ---------- Admin: Login / Logout (TIDAK butuh login untuk akses ini) ----------
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login')->middleware('guest');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit')->middleware('guest');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout')->middleware('auth');
+});
+
+// ---------- Admin: semua halaman di bawah ini WAJIB login ----------
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+
+    Route::get('/ganti-password', [AdminPasswordController::class, 'edit'])->name('password.edit');
+    Route::put('/ganti-password', [AdminPasswordController::class, 'update'])->name('password.update');
 
     // Tentang Inspektorat, Visi & Misi, Tugas Pokok (1 halaman form)
     Route::get('/pengaturan', [PengaturanProfilController::class, 'edit'])->name('pengaturan.edit');

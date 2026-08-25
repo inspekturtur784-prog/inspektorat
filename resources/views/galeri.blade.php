@@ -5,6 +5,8 @@
 
 @section('content')
 
+@include('partials.breadcrumb', ['items' => ['Profil' => url('/profil')], 'current' => 'Galeri'])
+
 <section style="padding:90px 0 30px;background:var(--paper);border-bottom:1px solid var(--line);">
     <div class="wrap" style="max-width:720px;">
         <span class="eyebrow">F. Galeri</span>

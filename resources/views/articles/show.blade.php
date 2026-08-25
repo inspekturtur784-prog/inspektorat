@@ -4,6 +4,7 @@
 @section('meta_description', $article->excerpt)
 
 @section('content')
+@include('partials.breadcrumb', ['current' => $article->title])
 <section style="padding:64px 0 40px;">
     <div class="wrap" style="max-width:760px;">
         <span class="eyebrow">{{ $article->category ?? 'Artikel' }}</span>

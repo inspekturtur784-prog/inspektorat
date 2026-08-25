@@ -5,6 +5,11 @@
 
 @section('content')
 
+@include('partials.breadcrumb', [
+    'items' => ['Profil' => url('/profil'), 'Data Pegawai' => url('/profil/data-pegawai')],
+    'current' => $pegawai->nama,
+])
+
 <section style="padding:64px 0 40px;background:var(--paper);">
     <div class="wrap" style="max-width:720px;">
         <a href="{{ url('/profil/data-pegawai') }}" class="profil-link" style="margin-bottom:20px;display:inline-flex;">

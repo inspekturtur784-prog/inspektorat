@@ -5,6 +5,8 @@
 
 @section('content')
 
+@include('partials.breadcrumb', ['current' => 'Profil'])
+
 {{-- ============ HEADER HALAMAN ============ --}}
 <section style="padding:90px 0 30px;background:var(--paper);border-bottom:1px solid var(--line);">
     <div class="wrap" style="max-width:720px;">
@@ -26,7 +28,7 @@
             <p>{{ $p['tentang_intro'] ?? '' }}</p>
         </div>
 
-        <div class="definition-list" style="grid-template-columns:repeat(4,1fr);">
+        <div class="definition-list definition-list-4">
             <div class="def-card">
                 <span class="seal-mark">K</span>
                 <h3>Kedudukan</h3>
@@ -171,6 +173,10 @@
                             @if ($bagian->tugas)
                                 <p><strong>Tugas:</strong> {{ $bagian->tugas }}</p>
                             @endif
+                            <a href="{{ route('struktur.show', $bagian) }}" class="org-detail-link">
+                                Lihat detail lengkap bagian ini
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </a>
                         </div>
                     </details>
                 @endforeach

@@ -516,3 +516,76 @@
   .lightbox-image{max-height:42vh;}
   .lightbox-image img{max-height:42vh;}
 }
+
+/* ---------- Responsive fix: definition-list 4 kolom di Profil ---------- */
+.definition-list-4{grid-template-columns:repeat(4,1fr);}
+@media (max-width:900px){
+  .definition-list-4{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:560px){
+  .definition-list-4{grid-template-columns:1fr;}
+}
+
+/* ---------- Breadcrumb ---------- */
+.breadcrumb{
+  background:var(--cream);border-bottom:1px solid var(--line);
+  padding:12px 0;
+}
+.breadcrumb ol{
+  list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;
+  gap:6px;align-items:center;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;
+}
+.breadcrumb li{display:flex;align-items:center;gap:6px;color:var(--slate);}
+.breadcrumb li:not(:last-child)::after{
+  content:"›";color:var(--slate);opacity:.5;margin-left:6px;
+}
+.breadcrumb a{color:var(--slate);transition:color .15s ease;}
+.breadcrumb a:hover{color:var(--navy);text-decoration:underline;}
+.breadcrumb li[aria-current="page"]{color:var(--navy);font-weight:600;}
+
+@media (max-width:620px){
+  .breadcrumb ol{font-size:11px;}
+}
+
+/* ---------- Halaman Detail Struktur (Bagian > Jabatan > Pegawai > Tugas) ---------- */
+.struktur-pegawai-list{
+  display:flex;flex-direction:column;gap:14px;
+}
+.struktur-pegawai-item{
+  display:flex;gap:20px;align-items:flex-start;
+  background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.struktur-pegawai-item:hover{
+  transform:translateY(-3px);box-shadow:0 14px 28px rgba(11,42,74,.1);border-color:var(--gold);
+}
+.struktur-pegawai-photo{
+  width:64px;height:64px;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--navy);
+}
+.struktur-pegawai-info{flex:1;}
+.struktur-pegawai-info h3{
+  font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--navy);margin:4px 0 8px;
+}
+.struktur-pegawai-info p{
+  font-size:13.5px;color:var(--slate);line-height:1.6;margin:4px 0 0;
+}
+.struktur-pegawai-info p strong{color:var(--ink);}
+.struktur-pegawai-arrow{
+  width:18px;height:18px;color:var(--slate);flex-shrink:0;margin-top:22px;
+  transition:transform .18s ease;
+}
+.struktur-pegawai-item:hover .struktur-pegawai-arrow{transform:translateX(4px);color:var(--gold);}
+
+@media (max-width:560px){
+  .struktur-pegawai-item{flex-direction:column;}
+  .struktur-pegawai-arrow{display:none;}
+}
+
+/* ---------- Link "Lihat detail lengkap" di accordion Struktur ---------- */
+.org-detail-link{
+  display:inline-flex;align-items:center;gap:6px;margin-top:6px;
+  font-size:13.5px;font-weight:600;color:var(--gold-soft);
+}
+.org-detail-link svg{width:13px;height:13px;transition:transform .2s ease;}
+.org-detail-link:hover svg{transform:translateX(4px);}

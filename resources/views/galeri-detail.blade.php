@@ -5,6 +5,11 @@
 
 @section('content')
 
+@include('partials.breadcrumb', [
+    'items' => ['Profil' => url('/profil'), 'Galeri' => url('/profil/galeri')],
+    'current' => $galeri->judul,
+])
+
 <section style="padding:64px 0 40px;">
     <div class="wrap" style="max-width:820px;">
         <span class="eyebrow">{{ $galeri->kategori }}</span>
