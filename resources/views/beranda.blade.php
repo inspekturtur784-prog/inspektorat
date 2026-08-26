@@ -64,12 +64,12 @@
   }
   .brand{display:flex; align-items:center; gap:12px;}
   .brand-mark{
-    width:44px; height:44px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    position:relative; overflow:hidden;
-    background:#fff;
-    border:1.5px solid var(--ink);
-  }
+  height:40px;
+  display:flex; align-items:center; justify-content:center;
+}
+.brand-mark img{
+  height:100%; width:auto; object-fit:contain;
+}
   .brand-mark img{
     width:100%; height:100%; object-fit:contain; padding:4px;
   }
