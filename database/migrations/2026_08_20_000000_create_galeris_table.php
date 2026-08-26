@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('galeris', function (Blueprint $table) {
+            $table->id();
+            $table->string('judul');
+            $table->string('slug')->unique();
+            $table->enum('kategori', ['Kegiatan', 'Dokumentasi', 'Pengawasan', 'Sosialisasi']);
+            $table->date('tanggal');
+            $table->text('deskripsi')->nullable();
+            $table->string('foto'); // nama file .webp, disimpan di public/images/galeri
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('galeris');
+    }
+};
