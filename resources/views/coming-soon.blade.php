@@ -3,6 +3,7 @@
 @section('title', ($title ?? 'Halaman') . ' — Inspektorat Kota Mojokerto')
 
 @section('content')
+@include('partials.breadcrumb', ['current' => $title ?? 'Halaman'])
 <section style="padding:160px 0;text-align:center;">
     <div class="wrap">
         <span class="eyebrow" style="justify-content:center;">Segera Hadir</span>

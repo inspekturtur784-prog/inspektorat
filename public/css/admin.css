@@ -1,0 +1,57 @@
+/* Admin panel — dipisah dari app.css milik halaman publik supaya tidak bentrok */
+.admin-body{margin:0;background:#F2F1EC;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);}
+.admin-shell{display:flex;min-height:100vh;}
+
+.admin-sidebar{
+  width:240px;flex-shrink:0;background:var(--navy-deep);color:#fff;
+  padding:24px 18px;display:flex;flex-direction:column;gap:28px;
+}
+.admin-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;}
+.admin-brand img{height:32px;width:32px;}
+.admin-sidebar nav{display:flex;flex-direction:column;gap:6px;}
+.admin-sidebar nav a{
+  color:#B9C2CC;padding:10px 12px;border-radius:8px;font-size:14px;
+}
+.admin-sidebar nav a:hover,.admin-sidebar nav a.active{background:rgba(255,255,255,.08);color:#fff;}
+
+.admin-main{flex:1;padding:36px 40px;max-width:1000px;}
+.admin-alert{
+  background:#E7F4E8;border:1px solid #9FCFA4;color:#1F6B2A;
+  padding:12px 16px;border-radius:10px;margin-bottom:22px;font-size:14px;
+}
+
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;}
+.admin-header h1{font-family:'Fraunces',serif;font-size:24px;color:var(--navy);margin:0;}
+
+.admin-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.admin-table th,.admin-table td{text-align:left;padding:12px 16px;font-size:14px;border-bottom:1px solid #ECEAE2;}
+.admin-table th{background:#FAF9F5;color:var(--slate);font-weight:600;text-transform:uppercase;font-size:11.5px;letter-spacing:.05em;}
+.admin-table tr:last-child td{border-bottom:none;}
+.badge{padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;}
+.badge-on{background:#E7F4E8;color:#1F6B2A;}
+.badge-off{background:#F4E7E7;color:#A3312B;}
+
+.admin-form{background:#fff;padding:28px;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);max-width:640px;}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;color:var(--navy);}
+.form-group input[type=text],
+.form-group input[type=date],
+.form-group input[type=file],
+.form-group select,
+.form-group textarea{
+  width:100%;padding:10px 12px;border:1px solid #DDD8C9;border-radius:8px;
+  font-family:inherit;font-size:14px;background:#FEFDFB;
+}
+.form-group textarea{min-height:120px;resize:vertical;}
+.checkbox-row{display:flex;align-items:center;gap:8px;}
+.checkbox-row input{width:auto;}
+
+.btn-admin{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 20px;
+  border-radius:999px;font-weight:600;font-size:14px;border:none;cursor:pointer;
+}
+.btn-admin-primary{background:var(--navy);color:#fff;}
+.btn-admin-primary:hover{background:var(--navy-soft);}
+.btn-admin-danger{background:#A3312B;color:#fff;}
+.btn-admin-ghost{background:#EDEBE2;color:var(--ink);}
+.row-actions{display:flex;gap:8px;}
