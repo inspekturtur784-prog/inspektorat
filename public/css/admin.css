@@ -6,7 +6,7 @@
   width:240px;flex-shrink:0;background:var(--navy-deep);color:#fff;
   padding:24px 18px;display:flex;flex-direction:column;gap:28px;
 }
-.admin-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;}
+.admin-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;text-decoration:none;color:#fff;}
 .admin-brand img{height:32px;width:32px;}
 .admin-sidebar nav{display:flex;flex-direction:column;gap:6px;}
 .admin-sidebar nav a{
@@ -55,3 +55,59 @@
 .btn-admin-danger{background:#A3312B;color:#fff;}
 .btn-admin-ghost{background:#EDEBE2;color:var(--ink);}
 .row-actions{display:flex;gap:8px;}
+
+/* ---------- Sidebar footer: user info + ganti password + logout ---------- */
+.admin-sidebar{justify-content:space-between;}
+.admin-sidebar-footer{
+  display:flex;flex-direction:column;gap:4px;
+  padding-top:16px;border-top:1px solid rgba(255,255,255,.1);
+}
+.admin-user{padding:6px 12px 10px;}
+.admin-user-name{display:block;color:#fff;font-size:13.5px;font-weight:600;}
+.admin-user-email{display:block;color:#8895A2;font-size:12px;}
+.admin-sidebar-link{
+  color:#B9C2CC;padding:9px 12px;border-radius:8px;font-size:13.5px;
+  text-align:left;background:none;border:none;cursor:pointer;font-family:inherit;
+  width:100%;display:block;
+}
+.admin-sidebar-link:hover{background:rgba(255,255,255,.08);color:#fff;}
+.admin-logout-btn{color:#E3B3B0;}
+.admin-logout-btn:hover{background:rgba(163,49,43,.2);color:#fff;}
+
+/* ---------- Sidebar: label grup & sub-item (struktur Dashboard > Profil > ...) ---------- */
+.admin-nav-label{
+  display:block;padding:16px 12px 6px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:#6B7785;
+}
+.admin-nav-sub{padding-left:22px !important;font-size:13px !important;}
+
+/* ---------- Dashboard: kartu statistik & quick links ---------- */
+.dash-stats{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;
+}
+.dash-stat-card{
+  background:#fff;border:1px solid #ECEAE2;border-radius:12px;
+  padding:20px 18px;display:flex;flex-direction:column;gap:6px;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.dash-stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(11,42,74,.08);}
+.dash-stat-number{font-family:'Fraunces',serif;font-size:30px;font-weight:700;color:var(--navy);}
+.dash-stat-label{font-size:12.5px;color:var(--slate);}
+
+.dash-quicklinks{display:flex;flex-wrap:wrap;gap:10px;}
+.dash-quicklink{
+  padding:10px 18px;border-radius:999px;background:#fff;border:1px solid #ECEAE2;
+  font-size:13.5px;color:var(--navy);font-weight:600;
+}
+.dash-quicklink:hover{border-color:var(--gold);background:var(--cream);}
+
+@media (max-width:900px){
+  .dash-stats{grid-template-columns:1fr 1fr;}
+}
+
+/* ---------- Badge jumlah pesan belum dibaca ---------- */
+.admin-nav-badge{
+  background:var(--red);color:#fff;font-size:11px;font-weight:700;
+  padding:2px 7px;border-radius:999px;line-height:1.4;
+}

@@ -598,3 +598,53 @@
 @media (max-width:560px){
   .definition-list-3{grid-template-columns:1fr;}
 }
+
+/* ---------- Halaman Kontak Kami ---------- */
+.kontak-grid{
+  display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:start;
+}
+.kontak-info{display:flex;flex-direction:column;gap:22px;}
+.kontak-info-item{display:flex;gap:16px;align-items:flex-start;}
+.kontak-info-icon{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  background:var(--navy);color:var(--gold-soft);
+  display:flex;align-items:center;justify-content:center;
+}
+.kontak-info-icon svg{width:20px;height:20px;}
+.kontak-info-item h3{
+  font-family:'Fraunces',serif;font-size:15.5px;font-weight:600;color:var(--navy);margin:0 0 4px;
+}
+.kontak-info-item p{font-size:14px;color:var(--slate);line-height:1.6;margin:0;}
+
+.kontak-map{
+  border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);margin-top:6px;
+}
+.kontak-map iframe{width:100%;height:220px;border:0;display:block;}
+
+.kontak-form-wrap{
+  background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);
+  padding:32px 30px;
+}
+.kontak-form .form-group input,
+.kontak-form .form-group textarea{
+  width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:8px;
+  font-family:inherit;font-size:14px;background:#fff;
+}
+.kontak-form .form-group{margin-bottom:18px;}
+.kontak-form .form-group label{
+  display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;
+}
+.kontak-error{color:#A3312B;font-size:12.5px;margin-top:5px;}
+.kontak-alert-success{
+  background:#E7F4E8;border:1px solid #9FCFA4;color:#1F6B2A;
+  padding:12px 16px;border-radius:10px;font-size:13.5px;margin-bottom:20px;
+}
+.kontak-submit-btn{
+  width:100%;justify-content:center;border:none;cursor:pointer;
+  background:var(--navy);color:#fff;
+}
+.kontak-submit-btn:hover{background:var(--navy-soft);}
+
+@media (max-width:900px){
+  .kontak-grid{grid-template-columns:1fr;gap:36px;}
+}

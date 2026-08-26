@@ -26,7 +26,7 @@
 
                 <a href="{{ url('/profil') }}">Profil</a>
 
-                <a href="{{ url('/layanan') }}">Layanan</a>
+                <a href="{{ url('/#layanan') }}">Layanan</a>
                 <a href="{{ url('/berita') }}">Berita</a>
                 <a href="{{ url('/kontak') }}" class="nav-cta">Kontak Kami</a>
             </nav>
