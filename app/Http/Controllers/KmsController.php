@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class KmsController extends Controller
 {
-    // Halaman utama Knowledge Base
     public function index(Request $request)
     {
         $keyword = $request->input('cari');
@@ -25,12 +24,12 @@ class KmsController extends Controller
         return view('kms.index', compact('kategoris', 'dokumens', 'keyword'));
     }
 
-    // Halaman daftar dokumen per kategori
     public function kategori($slug)
     {
-        $kategori = Kategori::where('slug', $slug)->firstOrFail();
-        $dokumens = $kategori->dokumens;
+        $kategori = Kategori::where('slug', $slug)
+            ->with(['subkategoris.grupDokumens.dokumens', 'subkategoris.dokumensLangsung'])
+            ->firstOrFail();
 
-        return view('kms.kategori', compact('kategori', 'dokumens'));
+        return view('kms.kategori', compact('kategori'));
     }
 }

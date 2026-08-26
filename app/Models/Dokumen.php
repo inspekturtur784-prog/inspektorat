@@ -12,6 +12,7 @@ class Dokumen extends Model
     protected $fillable = [
         'kategori_id',
         'subkategori_id',
+        'grup_dokumen_id',
         'judul',
         'deskripsi',
         'file_path',
@@ -27,5 +28,10 @@ class Dokumen extends Model
     public function subkategori()
     {
         return $this->belongsTo(Subkategori::class);
+    }
+
+    public function grupDokumen()
+    {
+        return $this->belongsTo(GrupDokumen::class);
     }
 }

@@ -108,13 +108,14 @@
 
     @if($kategori->slug === 'spip')
     <section class="px-6 md:px-12 pb-24">
-        <div class="max-w-3xl">
-            <div class="border-t border-[#06182E]/10 pt-12 mb-10">
-                <p class="font-mono text-xs gold uppercase tracking-widest mb-3">Panduan</p>
-                <h2 class="font-display text-3xl md:text-4xl maroon mb-2">Petunjuk Teknis Penilaian SPIP</h2>
-            </div>
+        <div class="border-t border-[#06182E]/10 pt-12 mb-10">
+            <p class="font-mono text-xs gold uppercase tracking-widest mb-3">Panduan</p>
+            <h2 class="font-display text-3xl md:text-4xl maroon mb-2">Petunjuk Teknis Penilaian SPIP</h2>
+        </div>
 
-            <div class="space-y-12">
+        <div class="grid lg:grid-cols-3 gap-10">
+
+            <div class="lg:col-span-2 space-y-12">
 
                 <div>
                     <h3 class="font-mono text-xs uppercase tracking-widest text-[#06182E]/40 mb-4">01 — Pengertian</h3>
@@ -191,7 +192,7 @@
                             Hasil awal Survei Maturitas SPIP masih perlu diuji secara rinci dengan data lapangan. Pengumpulan data rinci maturitas SPIP dapat dilakukan dengan teknik pengumpulan data lainnya seperti wawancara, reviu dokumen, atau observasi — untuk meyakinkan bahwa hasil survai persepsi telah mencerminkan kondisi tingkat maturitas SPIP yang sebenarnya.
                         </p>
                         <p>
-                            Dalam rangka pelaksanaan wawancara, telah disediakan form wawancara yang harus diisi oleh responden sesuai perannya masing-masing (lihat kotak referensi di bawah).
+                            Dalam rangka pelaksanaan wawancara, telah disediakan form wawancara yang harus diisi oleh responden sesuai perannya masing-masing (lihat kotak referensi di samping).
                         </p>
                         <p>
                             Data dukung kuisioner maturitas SPIP dikirimkan melalui Cloud Storage Inspektorat, diletakkan di dalam folder <span class="font-medium text-[#06182E]">"SPIP"</span> yang telah disiapkan.
@@ -199,45 +200,48 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-[#06182E]/10">
+            </div>
+
+            <div class="lg:col-span-1">
+                <div class="lg:sticky lg:top-6 bg-white border border-[#06182E]/10">
                     <div class="px-5 py-4 border-b border-[#06182E]/10 bg-[#06182E]">
                         <p class="font-mono text-xs uppercase tracking-widest text-[#D4AF6A]">Link & Referensi Terkait</p>
                     </div>
                     <ul class="divide-y divide-[#06182E]/10">
                         <li>
-                            <a href="https://bit.ly/questionermaturitasSPIP" target="_blank" class="flex items-center justify-between px-5 py-4 hover:bg-[#EEF1EF] transition group">
-                                <span class="text-sm text-[#06182E]">Kuisioner Maturitas SPIP</span>
-                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition">bit.ly/questionermaturitasSPIP →</span>
+                            <a href="https://bit.ly/questionermaturitasSPIP" target="_blank" class="block px-5 py-4 hover:bg-[#EEF1EF] transition group">
+                                <span class="text-sm text-[#06182E] block mb-1">Kuisioner Maturitas SPIP</span>
+                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition inline-block">bit.ly/questionermaturitasSPIP →</span>
                             </a>
                         </li>
                         <li>
-                            <a href="https://cloud.mojokertokota.go.id/index.php/login" target="_blank" class="flex items-center justify-between px-5 py-4 hover:bg-[#EEF1EF] transition group">
-                                <span class="text-sm text-[#06182E]">Cloud Storage — Upload Data Dukung</span>
-                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition">cloud.mojokertokota.go.id →</span>
+                            <a href="https://cloud.mojokertokota.go.id/index.php/login" target="_blank" class="block px-5 py-4 hover:bg-[#EEF1EF] transition group">
+                                <span class="text-sm text-[#06182E] block mb-1">Cloud Storage — Upload Data Dukung</span>
+                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition inline-block">cloud.mojokertokota.go.id →</span>
                             </a>
                         </li>
                         <li>
-                            <a href="https://bit.ly/Wawancara-SPIP-Pimpinan" target="_blank" class="flex items-center justify-between px-5 py-4 hover:bg-[#EEF1EF] transition group">
-                                <span class="text-sm text-[#06182E]">Form Wawancara — Pimpinan PD</span>
-                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition">bit.ly/Wawancara-SPIP-Pimpinan →</span>
+                            <a href="https://bit.ly/Wawancara-SPIP-Pimpinan" target="_blank" class="block px-5 py-4 hover:bg-[#EEF1EF] transition group">
+                                <span class="text-sm text-[#06182E] block mb-1">Form Wawancara — Pimpinan PD</span>
+                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition inline-block">bit.ly/Wawancara-SPIP-Pimpinan →</span>
                             </a>
                         </li>
                         <li>
-                            <a href="https://bit.ly/SPIP-pegawai" target="_blank" class="flex items-center justify-between px-5 py-4 hover:bg-[#EEF1EF] transition group">
-                                <span class="text-sm text-[#06182E]">Form Wawancara — Struktural & Staf</span>
-                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition">bit.ly/SPIP-pegawai →</span>
+                            <a href="https://bit.ly/SPIP-pegawai" target="_blank" class="block px-5 py-4 hover:bg-[#EEF1EF] transition group">
+                                <span class="text-sm text-[#06182E] block mb-1">Form Wawancara — Struktural & Staf</span>
+                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition inline-block">bit.ly/SPIP-pegawai →</span>
                             </a>
                         </li>
                         <li>
-                            <a href="https://bit.ly/Penilaian_kematangan-MR" target="_blank" class="flex items-center justify-between px-5 py-4 hover:bg-[#EEF1EF] transition group">
-                                <span class="text-sm text-[#06182E]">Kuisioner Maturitas Manajemen Risiko</span>
-                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition">bit.ly/Penilaian_kematangan-MR →</span>
+                            <a href="https://bit.ly/Penilaian_kematangan-MR" target="_blank" class="block px-5 py-4 hover:bg-[#EEF1EF] transition group">
+                                <span class="text-sm text-[#06182E] block mb-1">Kuisioner Maturitas Manajemen Risiko</span>
+                                <span class="font-mono text-xs gold group-hover:translate-x-1 transition inline-block">bit.ly/Penilaian_kematangan-MR →</span>
                             </a>
                         </li>
                     </ul>
                 </div>
-
             </div>
+
         </div>
     </section>
     @endif

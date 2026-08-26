@@ -14,6 +14,9 @@
         .maroon { color: #0B2A4A; }
         .bg-maroon { background-color: #0B2A4A; }
         .gold { color: #B08D57; }
+        details > summary { list-style: none; cursor: pointer; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] .chevron { transform: rotate(90deg); }
     </style>
 </head>
 <body>
@@ -88,18 +91,39 @@
                     <span class="font-mono text-xs font-semibold" style="color: {{ $accent }}">{{ sprintf('%02d', $index + 1) }} /</span>
                     <h3 class="font-display text-lg font-semibold" style="color: {{ $accent }}">{{ $sub->nama }}</h3>
                 </div>
-                <ul class="p-5 space-y-3">
-                    @forelse($sub->dokumens as $dokumen)
-                        <li>
-                            <a href="#" class="text-sm text-[#06182E] hover:underline flex items-start gap-2 group">
-                                <span class="font-mono text-xs mt-0.5" style="color: {{ $accent }}">&#9642;</span>
-                                <span class="group-hover:translate-x-0.5 transition">{{ $dokumen->judul }}</span>
-                            </a>
-                        </li>
-                    @empty
-                        <li class="text-sm text-[#06182E]/40 italic">Belum ada dokumen</li>
-                    @endforelse
-                </ul>
+
+                <div class="p-5 space-y-1">
+
+                    @foreach($sub->dokumensLangsung as $dokumen)
+                        <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank" class="text-sm text-[#06182E] hover:underline flex items-start gap-2 group py-1.5">
+                            <span class="font-mono text-xs mt-0.5" style="color: {{ $accent }}">&#9642;</span>
+                            <span class="group-hover:translate-x-0.5 transition">{{ $dokumen->judul }}</span>
+                        </a>
+                    @endforeach
+
+                    @foreach($sub->grupDokumens as $grup)
+                        <details class="py-1.5">
+                            <summary class="text-sm font-medium flex items-center gap-2 text-[#06182E]/70 hover:text-[#06182E]">
+                                <span class="chevron font-mono text-xs transition-transform" style="color: {{ $accent }}">&#9656;</span>
+                                <span>{{ $grup->nama }}</span>
+                                <span class="font-mono text-[10px] text-[#06182E]/30">({{ $grup->dokumens->count() }})</span>
+                            </summary>
+                            <div class="pl-6 mt-1 space-y-1 border-l ml-1.5" style="border-color: {{ $accent }}30;">
+                                @foreach($grup->dokumens as $dokumen)
+                                    <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank" class="text-sm text-[#06182E]/80 hover:underline flex items-start gap-2 group py-1">
+                                        <span class="font-mono text-xs mt-0.5" style="color: {{ $accent }}">&#9642;</span>
+                                        <span class="group-hover:translate-x-0.5 transition">{{ $dokumen->judul }}</span>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </details>
+                    @endforeach
+
+                    @if($sub->dokumensLangsung->isEmpty() && $sub->grupDokumens->isEmpty())
+                        <p class="text-sm text-[#06182E]/40 italic py-1.5">Belum ada dokumen</p>
+                    @endif
+
+                </div>
             </div>
         @empty
             <p class="text-[#06182E]/50 italic col-span-full">Belum ada sub-kategori untuk kategori ini.</p>

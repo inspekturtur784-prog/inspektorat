@@ -20,4 +20,14 @@ class Subkategori extends Model
     {
         return $this->hasMany(Dokumen::class);
     }
+
+    public function grupDokumens()
+    {
+        return $this->hasMany(GrupDokumen::class);
+    }
+
+    public function dokumensLangsung()
+    {
+        return $this->hasMany(Dokumen::class)->whereNull('grup_dokumen_id');
+    }
 }
