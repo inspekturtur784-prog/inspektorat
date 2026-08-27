@@ -11,29 +11,25 @@ use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Http\Controllers\Admin\PegawaiController as AdminPegawaiController;
 use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
 use App\Http\Controllers\Admin\PengaturanProfilController;
-<<<<<<< HEAD
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-=======
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PesanController as AdminPesanController;
->>>>>>> buletin_pengawasan_inspektorat
 use App\Http\Controllers\Admin\TugasFungsiController;
 use App\Http\Controllers\Admin\StrukturBagianController;
-use App\Http\Controllers\KontakController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
-use App\Http\Controllers\Admin\PesanController as AdminPesanController;
 use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
+use App\Http\Controllers\BeritaController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes — Inspektorat Kota Mojokerto
 |--------------------------------------------------------------------------
+| File ini sebelumnya punya banyak route yang KETULIS DOBEL (hasil merge
+| GitHub yang "accept both changes" alih-alih milih salah satu). Semua
+| duplikat sudah dibuang di sini, cuma disisakan satu versi per route.
 */
 
 // ---------- Beranda ----------
-// Sebelumnya route '/' didefinisikan 2x (closure + HomeController).
-// Yang dipakai cuma yang pertama terdaftar, jadi disatukan ke HomeController.
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/pengaduan', function () {
@@ -41,9 +37,6 @@ Route::get('/pengaduan', function () {
 })->name('pengaduan');
 
 // ---------- Profil ----------
-// Sebelumnya ada 2 versi: '/profile' (closure, view kosong) dan '/profil' (controller asli).
-// Disatukan jadi satu sumber kebenaran: '/profil' lewat ProfilController.
-// '/profile' tetap di-redirect ke '/profil' untuk jaga-jaga kalau ada link lama yang masih dipakai.
 Route::redirect('/profile', '/profil', 301);
 
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
@@ -56,13 +49,18 @@ Route::get('/profil/galeri', [GaleriController::class, 'index'])->name('galeri.i
 Route::get('/profil/galeri/{slug}', [GaleriController::class, 'show'])->name('galeri.show');
 
 // ---------- Layanan ----------
-Route::view('/layanan', 'coming-soon', ['title' => 'Layanan Utama']);
+Route::redirect('/layanan', '/#layanan');
 Route::view('/layanan/konsultansi', 'coming-soon', ['title' => 'Konsultansi Online']);
 Route::view('/layanan/kms', 'coming-soon', ['title' => 'KMS / Pedoman']);
+// PENTING: ini yang tadinya bikin /layanan/buletin nyasar ke halaman
+// "coming soon". Sekarang cuma ada SATU baris untuk /layanan/buletin,
+// dan dia redirect ke halaman buletin yang asli (/buletin).
+Route::redirect('/layanan/buletin', '/buletin', 301);
 Route::view('/layanan/skm', 'coming-soon', ['title' => 'SKM Inspektorat']);
 
-Route::view('/berita', 'coming-soon', ['title' => 'Berita']);
-Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
+Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
+Route::get('/kontak', [KontakController::class, 'show'])->name('kontak.show');
+Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
 
 // ---------- Artikel (publik) ----------
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('articles.show');
@@ -243,12 +241,6 @@ $editions = [
 
 ];
 
-// Sebelumnya ada 2 versi buletin: '/buletin' (sistem lengkap di atas) dan
-// '/layanan/buletin' (view statis terpisah). Disatukan: '/layanan/buletin'
-// sekarang redirect ke '/buletin' supaya link lama tetap jalan, tapi
-// sumber datanya cuma satu.
-Route::redirect('/layanan/buletin', '/buletin', 301);
-
 // /buletin — daftar semua edisi
 Route::get('/buletin', function () use ($editions) {
     return view('buletin.index', [
@@ -268,37 +260,7 @@ Route::get('/buletin/{slug}', function ($slug) use ($editions) {
 
 })->name('buletin.show');
 
-<<<<<<< HEAD
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// ---------- Profil (Section A-D ada langsung di halaman ini, sekarang dari database) ----------
-Route::get('/profil', [ProfilController::class, 'index']);
-Route::get('/profil/struktur/{struktur}', [StrukturController::class, 'show'])->name('struktur.show');
-Route::get('/profil/data-pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-Route::get('/profil/data-pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
-
-// ---------- F. Galeri (bagian dari Profil, tapi halaman tersendiri) ----------
-Route::get('/profil/galeri', [GaleriController::class, 'index'])->name('galeri.index');
-Route::get('/profil/galeri/{slug}', [GaleriController::class, 'show'])->name('galeri.show');
-
-// ---------- Layanan ----------
-Route::redirect('/layanan', '/#layanan');
-Route::view('/layanan/konsultansi', 'coming-soon', ['title' => 'Konsultansi Online']);
-Route::view('/layanan/kms', 'coming-soon', ['title' => 'KMS / Pedoman']);
-Route::view('/layanan/buletin', 'coming-soon', ['title' => 'Buletin Pengawasan']);
-Route::view('/layanan/skm', 'coming-soon', ['title' => 'SKM Inspektorat']);
-
-Route::view('/berita', 'coming-soon', ['title' => 'Berita']);
-Route::get('/kontak', [KontakController::class, 'show'])->name('kontak.show');
-Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
-
-// ---------- Artikel (publik) ----------
-Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('articles.show');
-
-// ---------- Admin: Login / Logout (TIDAK butuh login untuk akses ini) ----------
-=======
 // ---------- Admin: Login / Logout ----------
->>>>>>> buletin_pengawasan_inspektorat
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login')->middleware('guest');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit')->middleware('guest');
@@ -306,25 +268,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // ---------- Admin: WAJIB LOGIN ----------
-// PERBAIKAN: sebelumnya route tugas-fungsi, struktur, artikel, pegawai, dan
-// galeri ada DI LUAR grup ini (setelah "});" tertutup lebih awal), jadi
-// tidak ke-protect middleware('auth') dan tidak dapat prefix /admin.
-// Sekarang semuanya digabung dalam satu grup yang sama.
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
- HEAD
-    Route::get('/pesan', [AdminPesanController::class, 'index'])->name('pesan.index');
-    Route::get('/pesan/{pesan}', [AdminPesanController::class, 'show'])->name('pesan.show');
-
-buletin_pengawasan_inspektorat
-    Route::get('/ganti-password', [AdminPasswordController::class, 'edit'])->name('password.edit');
-    Route::put('/ganti-password', [AdminPasswordController::class, 'update'])->name('password.update');
-
     Route::get('/pesan', [AdminPesanController::class, 'index'])->name('pesan.index');
     Route::get('/pesan/{pesan}', [AdminPesanController::class, 'show'])->name('pesan.show');
     Route::delete('/pesan/{pesan}', [AdminPesanController::class, 'destroy'])->name('pesan.destroy');
+
+    Route::get('/ganti-password', [AdminPasswordController::class, 'edit'])->name('password.edit');
+    Route::put('/ganti-password', [AdminPasswordController::class, 'update'])->name('password.update');
 
     // Tentang Inspektorat, Visi & Misi, Tugas Pokok (1 halaman form)
     Route::get('/pengaturan', [PengaturanProfilController::class, 'edit'])->name('pengaturan.edit');
