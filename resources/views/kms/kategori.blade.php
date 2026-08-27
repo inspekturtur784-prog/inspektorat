@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <div class="px-6 md:px-12 pb-24 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="px-6 md:px-12 pb-24 grid gap-6 {{ $kategori->subkategoris->count() === 1 ? 'max-w-md mx-auto' : 'md:grid-cols-2 lg:grid-cols-3' }}">
         @php
             $accents = ['#0B2A4A', '#12335A', '#06182E', '#1E4E7A'];
         @endphp
