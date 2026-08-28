@@ -1,8 +1,9 @@
 {{--
   resources/views/buletin/show.blade.php
-  Reader "buku terbuka" per edisi. Data edisi ($current, $totalPages)
-  dikirim dari routes/web.php, BUKAN didefinisikan di file ini —
-  supaya file ini aman di-copy-paste tanpa risiko bagian atas kepotong.
+  Reader "buku terbuka" per edisi. Halaman sampul tampil SENDIRIAN (1 halaman
+  penuh, seperti membuka sampul buku), baru halaman berikutnya tampil
+  berpasangan 2-2 (spread) seperti buku yang sudah terbuka.
+  Data edisi ($current, $totalPages) dikirim dari routes/web.php.
 --}}
 <!DOCTYPE html>
 <html lang="id">
@@ -29,7 +30,6 @@
   h1,h2,h3{font-family:'Fraunces',serif; letter-spacing:-.01em;}
   button{font-family:inherit;}
 
-  /* konten halaman ("kertas") tetap terang & gelap teks, walau panggung gelap */
   .leaf{ color:#0B2A4A; }
   .leaf .ink-light{ color:#0B2A4A; }
 
@@ -59,7 +59,7 @@
   .dl-btn:hover{background:#8c3122;}
   .dl-btn svg{width:13px; height:13px;}
 
-  /* ===== STAGE (panggung gelap) ===== */
+  /* ===== STAGE ===== */
   .stage{
     position:relative; min-height:calc(100vh - 60px);
     display:flex; align-items:center; justify-content:center;
@@ -97,10 +97,20 @@
   .stage-nav.left{left:26px;}
   .stage-nav.right{right:26px;}
 
-  .spread{
+  /* ---- VIEW (spread biasa = 2 halaman) ---- */
+  .view{
     display:flex; box-shadow:0 40px 90px -30px rgba(0,0,0,.75);
     max-width:920px; width:100%;
   }
+  /* ---- VIEW tunggal (cover) = 1 halaman ---- */
+  .view.single{
+    max-width:460px; margin:0 auto;
+  }
+  .view.single .leaf{
+    width:100%; border-radius:6px;
+  }
+  .view.single .leaf::after{ display:none; }
+
   .leaf{
     background:var(--paper); width:50%; aspect-ratio:3/4;
     padding:36px 34px; position:relative; overflow:hidden;
@@ -113,15 +123,31 @@
   .page-idx{position:absolute; bottom:16px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:rgba(20,33,61,.4);}
   .leaf.left-page .page-idx{left:26px;}
   .leaf.right-page .page-idx{right:26px;}
+  .view.single .page-idx{ left:50%; transform:translateX(-50%); }
 
   .leaf.dark{ background:var(--navy); color:var(--ink); }
   .leaf.dark .page-idx{ color:rgba(243,239,228,.4); }
 
-  .cov{ text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; }
-  .cov .logo{ width:78px; height:78px; border:2.5px solid var(--brass); border-radius:50%; margin-bottom:20px; display:flex; align-items:center; justify-content:center; color:var(--brass); font-family:'Fraunces',serif; font-weight:700; font-size:13px;}
+  .cov{ text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; position:relative; z-index:1; }
+  .cov .logo-img{ width:150px; height:auto; margin:0 0 22px; display:block; }
   .cov .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.16em; color:var(--brass); text-transform:uppercase; margin-bottom:12px;}
   .cov h1{ font-size:24px; font-weight:700; color:var(--ink); line-height:1.16;}
   .cov .edisi{ margin-top:22px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; color:rgba(243,239,228,.65); border-top:1px solid rgba(243,239,228,.2); padding-top:10px;}
+
+  /* ---- dekorasi cover ---- */
+  .cov-bg{ position:absolute; inset:0; z-index:0; }
+  .cov-corner{ position:absolute; width:30px; height:30px; border:1.5px solid rgba(184,144,31,.55); z-index:1; }
+  .cov-corner.tl{ top:22px; left:22px; border-right:none; border-bottom:none; }
+  .cov-corner.br{ bottom:22px; right:22px; border-left:none; border-top:none; }
+  .cov-vert{
+    position:absolute; top:44px; bottom:44px; z-index:1;
+    font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.32em;
+    text-transform:uppercase; color:rgba(243,239,228,.32); writing-mode:vertical-rl;
+    display:flex; align-items:center;
+  }
+  .cov-vert.left{ left:16px; }
+  .cov-vert.right{ right:16px; transform:rotate(180deg); }
+  .cov .edisi::before{ content:"◆"; display:block; font-size:7px; color:var(--brass); margin-bottom:8px; }
 
   .photo-panel{ position:relative; width:100%; height:100%; overflow:hidden; }
   .photo-panel svg{ position:absolute; inset:0; width:100%; height:100%; }
@@ -153,6 +179,27 @@
 
   .who{ margin-top:auto; padding-top:14px; border-top:1px solid rgba(20,33,61,.14); font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--verified);}
 
+  .big-quote{ height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+  .big-quote .qmark{ font-family:'Fraunces',serif; font-size:58px; color:var(--brass); line-height:1; margin-bottom:8px; }
+  .big-quote blockquote{ font-family:'Fraunces',serif; font-style:italic; font-weight:600; font-size:20px; line-height:1.45; color:#0B2A4A; max-width:92%; }
+  .big-quote .src{ margin-top:20px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:rgba(20,33,61,.45); }
+
+  .masthead{ height:100%; display:flex; flex-direction:column; }
+  .masthead h3{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--verified); margin-bottom:6px;}
+  .masthead .hint{ font-size:10px; color:rgba(20,33,61,.45); margin-bottom:18px; }
+  .masthead .row{ display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-top:1px dotted rgba(20,33,61,.14); font-size:10.5px;}
+  .masthead .row:first-child{ border-top:none; }
+  .masthead .role{ color:rgba(20,33,61,.55);}
+  .masthead .name{ font-weight:600; color:#0B2A4A; text-align:right;}
+  .masthead .foot{ margin-top:auto; padding-top:14px; font-size:9.5px; color:rgba(20,33,61,.45); border-top:1px solid rgba(20,33,61,.14);}
+
+  .closing-page{ height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .closing-page h2{ font-size:19px; margin-bottom:12px; color:var(--ink);}
+  .closing-page p{ font-size:11.5px; color:rgba(243,239,228,.7); margin-bottom:20px; max-width:85%;}
+  .closing-page a.btn{ font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; border:1px solid rgba(243,239,228,.35); padding:9px 18px; border-radius:4px; color:var(--ink);}
+  .closing-page a.btn:hover{ background:rgba(243,239,228,.08); }
+  .closing-page .qr{ width:60px; height:60px; margin-top:22px; opacity:.55; }
+
   .ctrl-bar{
     position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
     background:rgba(20,20,22,.9); backdrop-filter:blur(6px);
@@ -170,7 +217,7 @@
     .stage{ padding:30px 16px 110px; }
     .stage-nav{ width:36px; height:36px; }
     .stage-nav.left{ left:6px; } .stage-nav.right{ right:6px; }
-    .spread{ max-width:100%; }
+    .view{ max-width:100%; }
     .leaf{ padding:22px 18px; }
     .cov h1{ font-size:18px; }
     .toc .vert{ font-size:17px; left:14px; }
@@ -178,9 +225,10 @@
     .art h2{ font-size:14px; }
   }
   @media (max-width:640px){
-    .spread{ flex-direction:column; }
-    .leaf{ width:100%; aspect-ratio:auto; min-height:64vh; }
+    .view:not(.single){ flex-direction:column; }
+    .view:not(.single) .leaf{ width:100%; aspect-ratio:auto; min-height:64vh; }
     .leaf.left-page::after, .leaf.right-page::after{ display:none; }
+    .view.single{ max-width:92vw; }
   }
 </style>
 </head>
@@ -217,42 +265,52 @@
   <div id="zoomWrap">
   <div id="spreadWrap">
 
-    {{-- SPREAD 1 — Cover + Dari Redaksi --}}
-    <div class="spread" data-spread="0">
-      <div class="leaf left-page dark">
+    {{-- HALAMAN 01 — Cover (tunggal, tidak dibelah) --}}
+    <div class="view single" data-pages="1">
+      <div class="leaf dark">
+        <div class="cov-bg">
+          <svg viewBox="0 0 460 640" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="covGlow" cx="50%" cy="34%" r="55%">
+                <stop offset="0%" stop-color="#B8901F" stop-opacity="0.32"/>
+                <stop offset="55%" stop-color="#B8901F" stop-opacity="0.08"/>
+                <stop offset="100%" stop-color="#B8901F" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="460" height="640" fill="url(#covGlow)"/>
+            <g stroke="#F3EFE4" stroke-opacity="0.055" stroke-width="1">
+              <line x1="0" y1="130" x2="460" y2="130"/>
+              <line x1="0" y1="260" x2="460" y2="260"/>
+              <line x1="0" y1="390" x2="460" y2="390"/>
+              <line x1="0" y1="520" x2="460" y2="520"/>
+              <line x1="115" y1="0" x2="115" y2="640"/>
+              <line x1="230" y1="0" x2="230" y2="640"/>
+              <line x1="345" y1="0" x2="345" y2="640"/>
+            </g>
+          </svg>
+        </div>
+        <div class="cov-corner tl"></div>
+        <div class="cov-corner br"></div>
+        <div class="cov-vert left">Buletin Pengawasan</div>
+        <div class="cov-vert right">Inspektorat Kota Mojokerto</div>
         <div class="cov">
-          <div class="logo">INSP</div>
+          <img class="logo-img" src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto">
           <div class="eyebrow">Terverifikasi</div>
           <h1>{{ $current['title'] }}</h1>
           <div class="edisi">{{ $current['label'] }}</div>
         </div>
         <span class="page-idx">01</span>
       </div>
-      <div class="leaf right-page">
-        <div class="photo-panel" style="height:58%;">
-          <svg viewBox="0 0 300 260" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#23375c"/><stop offset="1" stop-color="#0B2A4A"/></linearGradient></defs>
-            <rect width="300" height="260" fill="url(#g1)"/>
-            <g opacity="0.85">
-              <rect x="30" y="150" width="26" height="90" fill="#1c2f52"/>
-              <rect x="62" y="120" width="26" height="120" fill="#233a63"/>
-              <rect x="94" y="165" width="26" height="75" fill="#1c2f52"/>
-              <rect x="126" y="90" width="26" height="150" fill="#2b4470"/>
-              <rect x="158" y="135" width="26" height="105" fill="#1c2f52"/>
-            </g>
-            <circle cx="245" cy="55" r="26" fill="#B8901F" opacity="0.85"/>
-          </svg>
-          <span class="photo-cap">Ilustrasi</span>
-        </div>
-        <div class="kicker" style="margin-top:16px;">Dari Redaksi</div>
-        <p style="font-size:11.5px; color:rgba(20,33,61,.7); margin-top:8px; text-align:justify;">{{ $current['intro'] }}</p>
-        <span class="page-idx">02</span>
-      </div>
     </div>
 
-    {{-- SPREAD 2 — Daftar Isi + Foto --}}
-    <div class="spread" data-spread="1" style="display:none;">
-      <div class="leaf left-page toc">
+    {{-- SPREAD — 02 Dari Redaksi | 03 Daftar Isi --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <div class="kicker">Dari Redaksi</div>
+        <p style="font-size:12.5px; color:rgba(20,33,61,.75); margin-top:10px; text-align:justify;">{{ $current['intro'] }}</p>
+        <span class="page-idx">02</span>
+      </div>
+      <div class="leaf right-page toc">
         <div class="vert">CONTENTS</div>
         <div class="toc-list">
           @foreach ($current['toc'] as $row)
@@ -261,23 +319,28 @@
         </div>
         <span class="page-idx">03</span>
       </div>
-      <div class="leaf right-page">
+    </div>
+
+    {{-- SPREAD — 04 Foto | 05 Artikel Utama --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
         <div class="photo-panel" style="height:100%;">
           <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-            <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a5a8f"/><stop offset="1" stop-color="#0B2A4A"/></linearGradient></defs>
-            <rect width="300" height="400" fill="url(#g2)"/>
-            <circle cx="150" cy="150" r="70" fill="none" stroke="#F3EFE4" stroke-opacity="0.25" stroke-width="2"/>
-            <path d="M125 150l17 17 34-36" fill="none" stroke="#B8901F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#23375c"/><stop offset="1" stop-color="#0B2A4A"/></linearGradient></defs>
+            <rect width="300" height="400" fill="url(#g1)"/>
+            <g opacity="0.85">
+              <rect x="30" y="230" width="26" height="130" fill="#1c2f52"/>
+              <rect x="62" y="190" width="26" height="170" fill="#233a63"/>
+              <rect x="94" y="250" width="26" height="110" fill="#1c2f52"/>
+              <rect x="126" y="150" width="26" height="210" fill="#2b4470"/>
+            </g>
+            <circle cx="245" cy="90" r="30" fill="#B8901F" opacity="0.85"/>
           </svg>
           <span class="photo-cap">Ilustrasi</span>
         </div>
         <span class="page-idx">04</span>
       </div>
-    </div>
-
-    {{-- SPREAD 3 — Artikel Utama + Foto --}}
-    <div class="spread" data-spread="2" style="display:none;">
-      <div class="leaf left-page art">
+      <div class="leaf right-page art">
         <span class="kicker">{{ $current['art_kicker'] }}</span>
         <h2>{{ $current['art_title'] }}</h2>
         <p>{{ $current['art_p1'] }}</p>
@@ -285,7 +348,11 @@
         <p>{{ $current['art_p2'] }}</p>
         <span class="page-idx">05</span>
       </div>
-      <div class="leaf right-page">
+    </div>
+
+    {{-- SPREAD — 06 Foto | 07 Infografis / Sorotan --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
         <div class="photo-panel" style="height:100%;">
           <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
             <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b3a1a"/><stop offset="1" stop-color="#0B2A4A"/></linearGradient></defs>
@@ -297,11 +364,7 @@
         </div>
         <span class="page-idx">06</span>
       </div>
-    </div>
-
-    {{-- SPREAD 4 — Infografis + Wawancara --}}
-    <div class="spread" data-spread="3" style="display:none;">
-      <div class="leaf left-page">
+      <div class="leaf right-page">
         <span class="kicker" style="color:var(--verified);">Sorotan</span>
         <h2 style="font-size:18px; margin:10px 0 4px;">{{ $current['stats_title'] }}</h2>
         <div class="bars">
@@ -316,13 +379,93 @@
         <p style="margin-top:16px; font-size:11px; color:rgba(20,33,61,.7);">{{ $current['stats_note'] }}</p>
         <span class="page-idx">07</span>
       </div>
-      <div class="leaf right-page">
+    </div>
+
+    {{-- SPREAD — 08 Wawancara | 09 Refleksi Lapangan (foto) --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
         <span class="kicker">Wawancara</span>
         <h2 style="font-size:16px; margin:8px 0 12px;">{{ $current['iv_title'] }}</h2>
         <p style="font-size:11.5px; font-weight:600; margin-bottom:4px; color:#0B2A4A;">{{ $current['iv_q'] }}</p>
         <p style="font-size:11.5px; color:rgba(20,33,61,.7); margin-bottom:10px;">{{ $current['iv_a'] }}</p>
         <div class="who">— {{ $current['iv_who'] }}</div>
         <span class="page-idx">08</span>
+      </div>
+      <div class="leaf right-page">
+        <div class="photo-panel" style="height:100%;">
+          <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0B2A4A"/><stop offset="1" stop-color="#2b4470"/></linearGradient></defs>
+            <rect width="300" height="400" fill="url(#g4)"/>
+            <g stroke="#F3EFE4" stroke-opacity="0.18" stroke-width="1.5">
+              <line x1="0" y1="90" x2="300" y2="90"/>
+              <line x1="0" y1="190" x2="300" y2="190"/>
+              <line x1="0" y1="290" x2="300" y2="290"/>
+            </g>
+            <polyline points="20,300 80,250 130,280 180,190 230,220 300,140" fill="none" stroke="#B8901F" stroke-width="4"/>
+            <circle cx="230" cy="220" r="6" fill="#B8901F"/>
+            <circle cx="300" cy="140" r="6" fill="#B8901F"/>
+          </svg>
+          <span class="photo-cap">Refleksi Lapangan</span>
+        </div>
+        <span class="page-idx">09</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 10 Kutipan Besar | 11 Foto --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <div class="big-quote">
+          <div class="qmark">&ldquo;</div>
+          <blockquote>{{ $current['art_pull'] }}</blockquote>
+          <div class="src mono">{{ $current['label'] }}</div>
+        </div>
+        <span class="page-idx">10</span>
+      </div>
+      <div class="leaf right-page">
+        <div class="photo-panel" style="height:100%;">
+          <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a5a8f"/><stop offset="1" stop-color="#0B2A4A"/></linearGradient></defs>
+            <rect width="300" height="400" fill="url(#g2)"/>
+            <circle cx="150" cy="150" r="70" fill="none" stroke="#F3EFE4" stroke-opacity="0.25" stroke-width="2"/>
+            <path d="M125 150l17 17 34-36" fill="none" stroke="#B8901F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="photo-cap">Ilustrasi</span>
+        </div>
+        <span class="page-idx">11</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 12 Susunan Redaksi | 13 Penutup --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <div class="masthead">
+          <h3 class="mono">Susunan Redaksi</h3>
+          <div class="hint">*Ganti nama di bawah sesuai susunan redaksi tim Anda</div>
+          <div class="row"><span class="role">Pembina</span><span class="name">[Nama Pembina]</span></div>
+          <div class="row"><span class="role">Penanggung Jawab</span><span class="name">[Nama]</span></div>
+          <div class="row"><span class="role">Pemimpin Redaksi</span><span class="name">[Nama]</span></div>
+          <div class="row"><span class="role">Redaktur Pelaksana</span><span class="name">[Nama]</span></div>
+          <div class="row"><span class="role">Reporter</span><span class="name">[Nama]</span></div>
+          <div class="row"><span class="role">Desain &amp; Tata Letak</span><span class="name">[Nama]</span></div>
+          <div class="row"><span class="role">Dokumentasi</span><span class="name">[Nama]</span></div>
+          <div class="foot mono">Inspektorat Kota Mojokerto · {{ $current['label'] }}</div>
+        </div>
+        <span class="page-idx">12</span>
+      </div>
+      <div class="leaf right-page dark">
+        <div class="closing-page">
+          <h2>Terima Kasih Sudah Membaca</h2>
+          <p>Jelajahi edisi lain dari Buletin Pengawasan Inspektorat Kota Mojokerto, atau sampaikan masukan lewat kanal pengaduan resmi kami.</p>
+          <a href="{{ route('buletin.index') }}" class="btn">Lihat Edisi Lain</a>
+          <svg class="qr" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <rect width="60" height="60" fill="none" stroke="#F3EFE4" stroke-width="1.5"/>
+            <rect x="6" y="6" width="14" height="14" fill="#F3EFE4"/>
+            <rect x="40" y="6" width="14" height="14" fill="#F3EFE4"/>
+            <rect x="6" y="40" width="14" height="14" fill="#F3EFE4"/>
+            <rect x="26" y="26" width="8" height="8" fill="#F3EFE4"/>
+          </svg>
+        </div>
+        <span class="page-idx">13</span>
       </div>
     </div>
 
@@ -338,7 +481,7 @@
   <button class="ctrl-btn" id="ctrlPrev" aria-label="Sebelumnya">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
-  <span class="ctrl-page mono" id="pageLabel">Hal 1-2 / {{ $totalPages }}</span>
+  <span class="ctrl-page mono" id="pageLabel">Hal 1 / {{ $totalPages }}</span>
   <button class="ctrl-btn" id="ctrlNext" aria-label="Berikutnya">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
   </button>
@@ -356,40 +499,52 @@
 </div>
 
 <script>
-  const spreads = document.querySelectorAll('.spread');
-  const totalSpreads = spreads.length;
-  const totalPages = totalSpreads * 2;
+  const views = Array.from(document.querySelectorAll('.view'));
+  const totalViews = views.length;
+  function pagesOf(v){ return parseInt(v.dataset.pages || '2', 10); }
+  const totalPages = views.reduce((sum, v) => sum + pagesOf(v), 0);
   let current = 0;
   let zoom = 1;
+  let animating = false;
 
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const ctrlPrev = document.getElementById('ctrlPrev');
   const ctrlNext = document.getElementById('ctrlNext');
   const pageLabel = document.getElementById('pageLabel');
-  const spreadWrap = document.getElementById('spreadWrap');
   const zoomWrap = document.getElementById('zoomWrap');
   const stage = document.getElementById('stage');
 
-  function render(){
-    spreads.forEach((s,i) => s.style.display = i === current ? 'flex' : 'none');
-    const startPage = current * 2 + 1;
-    pageLabel.textContent = 'Hal ' + startPage + '-' + (startPage+1) + ' / ' + totalPages;
-    prevBtn.disabled = ctrlPrev.disabled = current === 0;
-    nextBtn.disabled = ctrlNext.disabled = current === totalSpreads - 1;
+  function startPageFor(index){
+    let p = 1;
+    for (let i = 0; i < index; i++) p += pagesOf(views[i]);
+    return p;
   }
 
-  let animating = false;
+  function render(){
+    views.forEach((v, i) => v.style.display = i === current ? 'flex' : 'none');
+    const start = startPageFor(current);
+    const count = pagesOf(views[current]);
+    pageLabel.textContent = count === 1
+      ? ('Hal ' + start + ' / ' + totalPages)
+      : ('Hal ' + start + '-' + (start + count - 1) + ' / ' + totalPages);
+    prevBtn.disabled = ctrlPrev.disabled = current === 0;
+    nextBtn.disabled = ctrlNext.disabled = current === totalViews - 1;
+  }
+
+  function flipSourceLeaf(view, dir){
+    if (view.classList.contains('single')) return view.querySelector('.leaf');
+    return dir === 'next' ? view.querySelector('.right-page') : view.querySelector('.left-page');
+  }
+
   function go(i){
-    const target = Math.max(0, Math.min(totalSpreads-1, i));
+    const target = Math.max(0, Math.min(totalViews - 1, i));
     if (target === current || animating) return;
     animating = true;
 
     const dir = target > current ? 'next' : 'prev';
-    const activeSpread = spreads[current];
-    const leaf = dir === 'next'
-      ? activeSpread.querySelector('.right-page')
-      : activeSpread.querySelector('.left-page');
+    const activeView = views[current];
+    const leaf = flipSourceLeaf(activeView, dir);
 
     const leafRect = leaf.getBoundingClientRect();
     const stageRect = stage.getBoundingClientRect();
@@ -401,7 +556,11 @@
     flipEl.style.width = leafRect.width + 'px';
     flipEl.style.height = leafRect.height + 'px';
     flipEl.style.transformOrigin = dir === 'next' ? 'left center' : 'right center';
-    flipEl.style.borderRadius = dir === 'next' ? '0 3px 3px 0' : '3px 0 0 3px';
+    flipEl.style.borderRadius = leaf.classList.contains('right-page')
+      ? '0 3px 3px 0'
+      : leaf.classList.contains('left-page')
+        ? '3px 0 0 3px'
+        : '6px';
     stage.appendChild(flipEl);
 
     requestAnimationFrame(() => {
@@ -421,13 +580,13 @@
     }, 470);
   }
 
-  prevBtn.addEventListener('click', () => go(current-1));
-  nextBtn.addEventListener('click', () => go(current+1));
-  ctrlPrev.addEventListener('click', () => go(current-1));
-  ctrlNext.addEventListener('click', () => go(current+1));
+  prevBtn.addEventListener('click', () => go(current - 1));
+  nextBtn.addEventListener('click', () => go(current + 1));
+  ctrlPrev.addEventListener('click', () => go(current - 1));
+  ctrlNext.addEventListener('click', () => go(current + 1));
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') go(current-1);
-    if (e.key === 'ArrowRight') go(current+1);
+    if (e.key === 'ArrowLeft') go(current - 1);
+    if (e.key === 'ArrowRight') go(current + 1);
   });
 
   document.getElementById('zoomIn').addEventListener('click', () => {
