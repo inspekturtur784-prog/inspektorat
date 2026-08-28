@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Galeri extends Model
@@ -25,10 +26,11 @@ class Galeri extends Model
 
     /**
      * Daftar SARAN kategori (ditampilkan sebagai datalist di form Admin).
-     * Bukan aturan kaku — admin tetap bisa mengetik kategori baru sesuai
-     * kebutuhan, sesuai arahan DUDI.
      */
     public const KATEGORI_SARAN = ['Kegiatan', 'Sosialisasi', 'Pengawasan', 'Rapat', 'Dokumentasi'];
+
+    // Menambahkan alias KATEGORI agar controller tidak memicu Undefined Constant Error
+    public const KATEGORI = self::KATEGORI_SARAN;
 
     protected static function booted(): void
     {
@@ -51,17 +53,24 @@ class Galeri extends Model
 
     public function getFotoUrlAttribute(): string
     {
-        return $this->foto
-            ? asset('images/galeri/' . $this->foto)
-            : asset('images/galeri/placeholder.webp');
+        if ($this->foto) {
+            return Storage::url($this->foto);
+        }
+
+        return asset('images/galeri/placeholder.webp');
     }
 
     public function getTanggalIndoAttribute(): string
     {
+        if (!$this->tanggal) {
+            return '—';
+        }
+
         $bulan = [
-            1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',
-            7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember',
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
         ];
+
         return $this->tanggal->day . ' ' . $bulan[$this->tanggal->month] . ' ' . $this->tanggal->year;
     }
 }

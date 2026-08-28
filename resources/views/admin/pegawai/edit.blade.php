@@ -51,11 +51,13 @@
     </div>
 
     <div class="form-group">
-        <label for="photo">Foto</label>
-        @if ($pegawai->photo)
-            <img src="{{ $pegawai->photo_url }}" alt="" style="width:90px;height:90px;object-fit:cover;border-radius:8px;margin-bottom:10px;display:block;">
+        <label for="foto">Foto</label>
+        @if (!empty($pegawai->foto_url))
+            <img src="{{ $pegawai->foto_url }}" alt="Preview Foto" style="width:90px; height:90px; object-fit:cover; border-radius:8px; margin-bottom:10px; display:block;">
+        @elseif (!empty($pegawai->foto))
+            <img src="{{ asset('storage/' . $pegawai->foto) }}" alt="Preview Foto" style="width:90px; height:90px; object-fit:cover; border-radius:8px; margin-bottom:10px; display:block;">
         @endif
-        <input type="file" id="photo" name="photo" accept="image/*">
+        <input type="file" id="foto" name="foto" accept="image/*">
     </div>
 
     <button type="submit" class="btn-admin btn-admin-primary">Simpan Perubahan</button>

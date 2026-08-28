@@ -24,9 +24,6 @@ use App\Http\Controllers\BeritaController;
 |--------------------------------------------------------------------------
 | Web Routes — Inspektorat Kota Mojokerto
 |--------------------------------------------------------------------------
-| File ini sebelumnya punya banyak route yang KETULIS DOBEL (hasil merge
-| GitHub yang "accept both changes" alih-alih milih salah satu). Semua
-| duplikat sudah dibuang di sini, cuma disisakan satu versi per route.
 */
 
 // ---------- Beranda ----------
@@ -44,7 +41,7 @@ Route::get('/profil/struktur/{struktur}', [StrukturController::class, 'show'])->
 Route::get('/profil/data-pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 Route::get('/profil/data-pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
 
-// F. Galeri (bagian dari Profil, tapi halaman tersendiri)
+// Galeri Publik
 Route::get('/profil/galeri', [GaleriController::class, 'index'])->name('galeri.index');
 Route::get('/profil/galeri/{slug}', [GaleriController::class, 'show'])->name('galeri.show');
 
@@ -52,9 +49,6 @@ Route::get('/profil/galeri/{slug}', [GaleriController::class, 'show'])->name('ga
 Route::redirect('/layanan', '/#layanan');
 Route::view('/layanan/konsultansi', 'coming-soon', ['title' => 'Konsultansi Online']);
 Route::view('/layanan/kms', 'coming-soon', ['title' => 'KMS / Pedoman']);
-// PENTING: ini yang tadinya bikin /layanan/buletin nyasar ke halaman
-// "coming soon". Sekarang cuma ada SATU baris untuk /layanan/buletin,
-// dan dia redirect ke halaman buletin yang asli (/buletin).
 Route::redirect('/layanan/buletin', '/buletin', 301);
 Route::view('/layanan/skm', 'coming-soon', ['title' => 'SKM Inspektorat']);
 
@@ -66,8 +60,6 @@ Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store')
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 
 // ---------- Buletin ----------
-// Data semua edisi buletin — dipakai bareng oleh route daftar (/buletin)
-// dan route reader per-edisi (/buletin/{slug}), supaya gak dobel nulis.
 $editions = [
 
     'edisi-01-2026' => [
@@ -241,24 +233,23 @@ $editions = [
 
 ];
 
-// /buletin — daftar semua edisi
 Route::get('/buletin', function () use ($editions) {
     return view('buletin.index', [
         'editions' => $editions,
     ]);
 })->name('buletin.index');
 
-// /buletin/{slug} — reader satu edisi
 Route::get('/buletin/{slug}', function ($slug) use ($editions) {
-
     $current = $editions[$slug] ?? $editions['edisi-01-2026'];
 
     return view('buletin.show', [
         'current' => $current,
         'totalPages' => 8,
     ]);
-
 })->name('buletin.show');
+
+// Redirect login bawaan Laravel
+Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
 
 // ---------- Admin: Login / Logout ----------
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -279,11 +270,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/ganti-password', [AdminPasswordController::class, 'edit'])->name('password.edit');
     Route::put('/ganti-password', [AdminPasswordController::class, 'update'])->name('password.update');
 
-    // Tentang Inspektorat, Visi & Misi, Tugas Pokok (1 halaman form)
     Route::get('/pengaturan', [PengaturanProfilController::class, 'edit'])->name('pengaturan.edit');
     Route::put('/pengaturan', [PengaturanProfilController::class, 'update'])->name('pengaturan.update');
 
-    // Kartu Fungsi (Tugas & Fungsi)
     Route::get('/tugas-fungsi', [TugasFungsiController::class, 'index'])->name('tugasfungsi.index');
     Route::get('/tugas-fungsi/tambah', [TugasFungsiController::class, 'create'])->name('tugasfungsi.create');
     Route::post('/tugas-fungsi', [TugasFungsiController::class, 'store'])->name('tugasfungsi.store');
@@ -291,7 +280,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/tugas-fungsi/{tugasFungsi}', [TugasFungsiController::class, 'update'])->name('tugasfungsi.update');
     Route::delete('/tugas-fungsi/{tugasFungsi}', [TugasFungsiController::class, 'destroy'])->name('tugasfungsi.destroy');
 
-    // Struktur Organisasi
     Route::get('/struktur', [StrukturBagianController::class, 'index'])->name('struktur.index');
     Route::get('/struktur/tambah', [StrukturBagianController::class, 'create'])->name('struktur.create');
     Route::post('/struktur', [StrukturBagianController::class, 'store'])->name('struktur.store');
@@ -299,7 +287,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/struktur/{struktur}', [StrukturBagianController::class, 'update'])->name('struktur.update');
     Route::delete('/struktur/{struktur}', [StrukturBagianController::class, 'destroy'])->name('struktur.destroy');
 
-    // Artikel
     Route::get('/artikel', [AdminArticleController::class, 'index'])->name('articles.index');
     Route::get('/artikel/tambah', [AdminArticleController::class, 'create'])->name('articles.create');
     Route::post('/artikel', [AdminArticleController::class, 'store'])->name('articles.store');
@@ -307,7 +294,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/artikel/{article}', [AdminArticleController::class, 'update'])->name('articles.update');
     Route::delete('/artikel/{article}', [AdminArticleController::class, 'destroy'])->name('articles.destroy');
 
-    // Data Pegawai
     Route::get('/pegawai', [AdminPegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/tambah', [AdminPegawaiController::class, 'create'])->name('pegawai.create');
     Route::post('/pegawai', [AdminPegawaiController::class, 'store'])->name('pegawai.store');
@@ -315,7 +301,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/pegawai/{pegawai}', [AdminPegawaiController::class, 'update'])->name('pegawai.update');
     Route::delete('/pegawai/{pegawai}', [AdminPegawaiController::class, 'destroy'])->name('pegawai.destroy');
 
-    // Galeri
     Route::get('/galeri', [AdminGaleriController::class, 'index'])->name('galeri.index');
     Route::get('/galeri/tambah', [AdminGaleriController::class, 'create'])->name('galeri.create');
     Route::post('/galeri', [AdminGaleriController::class, 'store'])->name('galeri.store');

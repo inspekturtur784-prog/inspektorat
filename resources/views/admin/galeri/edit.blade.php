@@ -20,15 +20,17 @@
         <input type="text" id="kategori" name="kategori" list="kategori-saran"
                value="{{ old('kategori', $galeri->kategori) }}" required>
         <datalist id="kategori-saran">
-            @foreach ($kategoriSaran as $kat)
-                <option value="{{ $kat }}">
-            @endforeach
+            @if (isset($kategoriSaran) && count($kategoriSaran) > 0)
+                @foreach ($kategoriSaran as $kat)
+                    <option value="{{ $kat }}">
+                @endforeach
+            @endif
         </datalist>
     </div>
 
     <div class="form-group">
         <label for="tanggal">Tanggal</label>
-        <input type="date" id="tanggal" name="tanggal" value="{{ old('tanggal', $galeri->tanggal->format('Y-m-d')) }}" required>
+        <input type="date" id="tanggal" name="tanggal" value="{{ old('tanggal', is_string($galeri->tanggal) ? $galeri->tanggal : $galeri->tanggal?->format('Y-m-d')) }}" required>
     </div>
 
     <div class="form-group">
@@ -38,10 +40,12 @@
 
     <div class="form-group">
         <label for="foto">Foto</label>
-        <img src="{{ $galeri->foto_url }}" alt="" style="width:140px;border-radius:8px;margin-bottom:10px;display:block;">
+        @if (!empty($galeri->foto_url))
+            <img src="{{ $galeri->foto_url }}" alt="" style="width:140px;border-radius:8px;margin-bottom:10px;display:block;">
+        @endif
         <input type="file" id="foto" name="foto" accept="image/*">
         <p style="font-size:12.5px;color:var(--slate);margin-top:6px;">
-            Kosongkan jika tidak ingin mengganti foto. Foto baru otomatis dikonversi ke WebP.
+            Kosongkan jika tidak ingin mengganti foto.
         </p>
     </div>
 

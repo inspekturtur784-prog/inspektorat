@@ -6,11 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Pegawai;
 use App\Services\ImageConverter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 /**
  * CRUD Data Pegawai untuk sisi Admin.
- * NOTE: pasang middleware auth di route group-nya sebelum production
- * (lihat komentar di routes/web.php, sama seperti Admin\ArticleController).
  */
 class PegawaiController extends Controller
 {
@@ -37,19 +36,25 @@ class PegawaiController extends Controller
             'fungsi'   => 'nullable|string',
             'urutan'   => 'nullable|integer',
             'photo'    => 'nullable|image|max:2048',
+            'foto'     => 'nullable|image|max:2048',
         ]);
 
-        // Foto otomatis dikompresi & dikonversi ke WebP (sama seperti Galeri).
-        if ($request->hasFile('photo')) {
-            $data['photo'] = ImageConverter::toWebp(
-                $request->file('photo'),
+        // Fleksibilitas penangkapan input foto/photo dari form
+        $file = $request->file('photo') ?? $request->file('foto');
+
+        if ($file) {
+            $fileName = ImageConverter::toWebp(
+                $file,
                 public_path('images/pegawai')
             );
+            // Simpan nama file ke kolom 'photo' dan 'foto' agar kompatibel dengan model
+            $data['photo'] = $fileName;
+            $data['foto']  = $fileName;
         }
 
         Pegawai::create($data);
 
-        return redirect()->route('admin.pegawai.index')->with('status', 'Data pegawai berhasil ditambahkan.');
+        return redirect()->route('admin.pegawai.index')->with('success', 'Data pegawai berhasil ditambahkan.');
     }
 
     public function edit(Pegawai $pegawai)
@@ -69,23 +74,40 @@ class PegawaiController extends Controller
             'fungsi'   => 'nullable|string',
             'urutan'   => 'nullable|integer',
             'photo'    => 'nullable|image|max:2048',
+            'foto'     => 'nullable|image|max:2048',
         ]);
 
-        if ($request->hasFile('photo')) {
-            $data['photo'] = ImageConverter::toWebp(
-                $request->file('photo'),
+        $file = $request->file('photo') ?? $request->file('foto');
+
+        if ($file) {
+            // Hapus foto lama di folder public/images/pegawai jika ada
+            $oldPhoto = $pegawai->photo ?? $pegawai->foto;
+            if ($oldPhoto && File::exists(public_path('images/pegawai/' . $oldPhoto))) {
+                File::delete(public_path('images/pegawai/' . $oldPhoto));
+            }
+
+            $fileName = ImageConverter::toWebp(
+                $file,
                 public_path('images/pegawai')
             );
+            $data['photo'] = $fileName;
+            $data['foto']  = $fileName;
         }
 
         $pegawai->update($data);
 
-        return redirect()->route('admin.pegawai.index')->with('status', 'Data pegawai berhasil diperbarui.');
+        return redirect()->route('admin.pegawai.index')->with('success', 'Data pegawai berhasil diperbarui.');
     }
 
     public function destroy(Pegawai $pegawai)
     {
+        // Hapus berkas fisik foto sebelum hapus data dari database
+        $oldPhoto = $pegawai->photo ?? $pegawai->foto;
+        if ($oldPhoto && File::exists(public_path('images/pegawai/' . $oldPhoto))) {
+            File::delete(public_path('images/pegawai/' . $oldPhoto));
+        }
+
         $pegawai->delete();
-        return redirect()->route('admin.pegawai.index')->with('status', 'Data pegawai berhasil dihapus.');
+        return redirect()->route('admin.pegawai.index')->with('success', 'Data pegawai berhasil dihapus.');
     }
 }
