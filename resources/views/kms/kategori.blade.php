@@ -22,11 +22,14 @@
 <body>
 
     <header class="border-b-2 border-[#06182E] px-6 md:px-12 py-5 flex justify-between items-center">
-        <div>
-            <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
-            <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg hover:text-[#0B2A4A] transition block">
-                Knowledge Management System
-            </a>
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto" class="h-12 w-auto">
+            <div>
+                <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
+                <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg hover:text-[#0B2A4A] transition block">
+                    Knowledge Management System
+                </a>
+            </div>
         </div>
         <p class="font-mono text-xs text-right hidden lg:block text-[#06182E]/60">
             Arsip Digital<br>Terverifikasi

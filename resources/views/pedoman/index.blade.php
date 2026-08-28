@@ -19,11 +19,14 @@
 <body>
 
     <header class="border-b-2 border-[#06182E] px-6 md:px-12 py-5 flex justify-between items-center">
-        <div>
-            <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
-            <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg hover:text-[#0B2A4A] transition block">
-                Knowledge Management System
-            </a>
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto" class="h-12 w-auto">
+            <div>
+                <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
+                <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg hover:text-[#0B2A4A] transition block">
+                    Knowledge Management System
+                </a>
+            </div>
         </div>
         <p class="font-mono text-xs text-right hidden lg:block text-[#06182E]/60">
             Arsip Digital<br>Terverifikasi
@@ -52,6 +55,43 @@
             Kumpulan peraturan, produk hukum, dan pedoman teknis pengawasan Inspektorat Kota Mojokerto.
         </p>
     </section>
+
+    <section class="px-6 md:px-12 mb-16">
+        <div class="bg-maroon rounded-sm p-8 md:p-10 relative overflow-hidden bg-gradient-to-br from-[#0B2A4A] to-[#06182E]">
+            <div class="absolute top-0 right-0 font-mono text-[10px] text-white/20 p-3">NO. REG-KMS/2026</div>
+            <h2 class="font-display text-white text-3xl md:text-4xl mb-6">Cari dokumen apa hari ini?</h2>
+            <form action="{{ route('pedoman.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3">
+                <input
+                    type="text"
+                    name="cari"
+                    value="{{ $keyword ?? '' }}"
+                    placeholder="Ketik judul atau kata kunci..."
+                    class="font-mono flex-1 px-4 py-3 rounded-sm border-2 border-transparent focus:border-[#D4AF6A] outline-none"
+                >
+                <button type="submit" class="bg-[#D4AF6A] hover:bg-[#c19a52] text-[#06182E] px-8 py-3 rounded-sm font-medium tracking-wide transition">
+                    Telusuri
+                </button>
+            </form>
+        </div>
+    </section>
+
+    @if($keyword)
+        <section class="px-6 md:px-12 mb-16">
+            <p class="font-mono text-xs gold uppercase tracking-widest mb-2">Hasil pencarian</p>
+            <h3 class="font-display text-2xl mb-6">"{{ $keyword }}"</h3>
+            @forelse($dokumens as $dokumen)
+                <a href="{{ route('pedoman.detail', [$dokumen->kategori->slug, $dokumen->id]) }}" class="border-b border-[#06182E]/10 py-4 flex justify-between items-center hover:bg-white transition px-2 -mx-2">
+                    <div>
+                        <p class="font-medium">{{ $dokumen->judul }}</p>
+                        <p class="text-sm text-[#06182E]/50">{{ $dokumen->kategori->nama }}</p>
+                    </div>
+                    <span class="font-mono text-xs gold">→</span>
+                </a>
+            @empty
+                <p class="text-[#06182E]/50 italic">Tidak ada dokumen ditemukan untuk kata kunci ini.</p>
+            @endforelse
+        </section>
+    @endif
 
     <section class="px-6 md:px-12 pb-24">
         <p class="font-mono text-xs gold uppercase tracking-widest mb-6">Kategori Pedoman</p>

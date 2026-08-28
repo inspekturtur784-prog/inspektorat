@@ -20,11 +20,14 @@
 <body>
 
     <header class="border-b-2 border-[#06182E] px-6 md:px-12 py-5 flex justify-between items-center">
-        <div>
-            <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
-            <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg hover:text-[#0B2A4A] transition block">
-                Knowledge Management System
-            </a>
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto" class="h-12 w-auto">
+            <div>
+                <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
+                <a href="https://kms-inspektorat.mojokertokota.go.id/" class="font-display font-semibold text-lg hover:text-[#0B2A4A] transition block">
+                    Knowledge Management System
+                </a>
+            </div>
         </div>
         <p class="font-mono text-xs text-right hidden lg:block text-[#06182E]/60">
             Arsip Digital<br>Terverifikasi
@@ -74,13 +77,13 @@
             <p class="font-mono text-xs gold uppercase tracking-widest mb-2">Hasil pencarian</p>
             <h3 class="font-display text-2xl mb-6">"{{ $keyword }}"</h3>
             @forelse($dokumens as $dokumen)
-                <div class="border-b border-[#06182E]/10 py-4 flex justify-between items-center">
+                <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank" class="border-b border-[#06182E]/10 py-4 flex justify-between items-center hover:bg-white transition px-2 -mx-2">
                     <div>
                         <p class="font-medium">{{ $dokumen->judul }}</p>
                         <p class="text-sm text-[#06182E]/50">{{ $dokumen->kategori->nama }}</p>
                     </div>
                     <span class="font-mono text-xs gold">→</span>
-                </div>
+                </a>
             @empty
                 <p class="text-[#06182E]/50 italic">Tidak ada dokumen ditemukan untuk kata kunci ini.</p>
             @endforelse

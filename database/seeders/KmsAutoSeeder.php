@@ -22,7 +22,7 @@ class KmsAutoSeeder extends Seeder
                 continue;
             }
 
-            // 1. Scan PDF langsung di folder sub-kategori (tanpa grup)
+            // 1. Scan file langsung di folder sub-kategori (tanpa grup)
             $files = Storage::disk('public')->files($basePath);
             foreach ($files as $filePath) {
                 $this->simpanDokumen($filePath, $sub->kategori_id, $sub->id, null);
@@ -51,7 +51,9 @@ class KmsAutoSeeder extends Seeder
 
     private function simpanDokumen($filePath, $kategoriId, $subkategoriId, $grupId)
     {
-        if (strtolower(pathinfo($filePath, PATHINFO_EXTENSION)) !== 'pdf') {
+        $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+        if (!in_array($ext, ['pdf', 'mp4'])) {
             return;
         }
 
@@ -67,7 +69,7 @@ class KmsAutoSeeder extends Seeder
             [
                 'kategori_id' => $kategoriId,
                 'judul' => $judul,
-                'file_type' => 'pdf',
+                'file_type' => $ext,
             ]
         );
 
