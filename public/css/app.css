@@ -340,3 +340,18 @@ a:focus-visible,button:focus-visible{
   .integrity-seal{width:88px;height:88px;right:16px;bottom:20px;}
   .seal-core{font-size:9px;padding:0 8px;}
 }
+/* ---------- SKM: radio group ---------- */
+.skm-radio-group{
+  display:flex;flex-direction:column;gap:10px;
+}
+.skm-radio-group-inline{
+  flex-direction:row;flex-wrap:wrap;gap:18px;
+}
+.skm-radio{
+  display:flex;align-items:center;gap:8px;
+  font-weight:400;font-size:14.5px;color:var(--ink);
+  cursor:pointer;
+}
+.skm-radio input[type=radio]{
+  width:auto;accent-color:var(--navy);cursor:pointer;
+}

@@ -19,7 +19,7 @@ use App\Http\Controllers\Admin\StrukturBagianController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 use App\Http\Controllers\BeritaController;
-
+use App\Http\Controllers\SkmController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes — Inspektorat Kota Mojokerto

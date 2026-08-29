@@ -39,9 +39,16 @@
                         style="width:100%; padding:11px 14px; border:1px solid var(--line, #E5E0D3); border-radius:8px; font-size:15px;">
                 </div>
 
-                <label style="display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--slate, #6b7280); margin:14px 0 22px;">
-                    <input type="checkbox" name="remember"> Ingat saya
-                </label>
+                {{-- Fitur Tampilkan Password & Ingat Saya --}}
+                <div style="display:flex; flex-direction:column; gap:10px; margin:14px 0 22px;">
+                    <label style="display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--slate, #6b7280); cursor:pointer;">
+                        <input type="checkbox" id="showPassword" style="cursor:pointer;"> Tampilkan Password
+                    </label>
+
+                    <label style="display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--slate, #6b7280); cursor:pointer;">
+                        <input type="checkbox" name="remember" style="cursor:pointer;"> Ingat saya
+                    </label>
+                </div>
 
                 <button type="submit"
                     style="width:100%; padding:12px; background:var(--navy, #0F2A4A); color:#fff; border:0; border-radius:8px; font-weight:600; font-size:15px; cursor:pointer;">
@@ -55,5 +62,11 @@
         </p>
     </div>
 
+    <script>
+        document.getElementById('showPassword').addEventListener('change', function() {
+            const passwordInput = document.getElementById('password');
+            passwordInput.type = this.checked ? 'text' : 'password';
+        });
+    </script>
 </body>
 </html>
