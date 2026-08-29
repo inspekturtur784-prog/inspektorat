@@ -48,10 +48,10 @@
         <a href="{{ route('kms.index') }}" class="font-mono text-xs gold hover:underline">&larr; Kembali ke KMS</a>
     </div>
 
-    <div class="px-6 md:px-12 pt-6 pb-4 flex flex-wrap gap-x-6 gap-y-3 border-b border-[#06182E]/10">
+    <div class="px-6 md:px-12 pt-6 pb-4 flex overflow-x-auto gap-x-6 border-b border-[#06182E]/10" style="scrollbar-width: none;">
         @foreach(\App\Models\PedomanKategori::all() as $k)
             <a href="{{ route('pedoman.kategori', $k->slug) }}"
-               class="font-medium pb-3 -mb-px text-sm md:text-base {{ $k->id === $kategori->id ? 'maroon border-b-2 border-[#0B2A4A]' : 'text-[#06182E]/40 hover:text-[#06182E]' }}">
+               class="font-medium pb-3 -mb-px text-sm md:text-base whitespace-nowrap flex-shrink-0 {{ $k->id === $kategori->id ? 'maroon border-b-2 border-[#0B2A4A]' : 'text-[#06182E]/40 hover:text-[#06182E]' }}">
                 {{ $k->nama }}
             </a>
         @endforeach
