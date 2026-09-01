@@ -223,9 +223,22 @@ section{padding:96px 0;}
 .services .eyebrow::before{background:var(--gold-soft);}
 .services .section-head h2{color:#fff;}
 .services .section-head p{color:#B9C2CC;}
+
+/* Layanan: slider horizontal (bisa digeser/swipe) */
 .service-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  padding-bottom:14px;
+  margin-bottom:-14px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:var(--gold) rgba(255,255,255,.08);
 }
+.service-grid::-webkit-scrollbar{height:6px;}
+.service-grid::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:999px;}
+.service-grid::-webkit-scrollbar-thumb{background:var(--gold);border-radius:999px;}
 .service-card{
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.14);
@@ -233,6 +246,8 @@ section{padding:96px 0;}
   padding:28px 24px;
   display:flex;flex-direction:column;gap:14px;
   transition:border-color .2s ease,background .2s ease,transform .2s ease;
+  flex:0 0 260px;
+  scroll-snap-align:start;
 }
 .service-card:hover{
   border-color:var(--gold);
@@ -309,7 +324,6 @@ a:focus-visible,button:focus-visible{
 /* ---------- Responsive ---------- */
 @media (max-width:980px){
   .about-grid{grid-template-columns:1fr;gap:36px;}
-  .service-grid{grid-template-columns:1fr 1fr;}
   .footer-grid{grid-template-columns:1fr;gap:28px;}
 
   .nav-toggle{display:block;}
@@ -334,11 +348,11 @@ a:focus-visible,button:focus-visible{
   }
 }
 @media (max-width:620px){
-  .service-grid{grid-template-columns:1fr;}
   .definition-list{grid-template-columns:1fr;}
   .hero-inner{padding-top:96px;}
   .integrity-seal{width:88px;height:88px;right:16px;bottom:20px;}
   .seal-core{font-size:9px;padding:0 8px;}
+  .service-card{flex-basis:220px;}
 }
 /* ---------- SKM: radio group ---------- */
 .skm-radio-group{
