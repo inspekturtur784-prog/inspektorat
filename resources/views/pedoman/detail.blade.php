@@ -23,7 +23,7 @@
             <div>
                 <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
                 <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg hover:text-[#0B2A4A] transition block">
-                    Knowledge Management System
+                    Knowledge Management System &amp; Pedoman
                 </a>
             </div>
         </div>
