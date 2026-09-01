@@ -5,6 +5,10 @@
 .admin-sidebar{
   width:240px;flex-shrink:0;background:var(--navy-deep);color:#fff;
   padding:24px 18px;display:flex;flex-direction:column;gap:28px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
 }
 .admin-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;text-decoration:none;color:#fff;}
 .admin-brand img{height:32px;width:32px;}
@@ -41,6 +45,7 @@
 .form-group textarea{
   width:100%;padding:10px 12px;border:1px solid #DDD8C9;border-radius:8px;
   font-family:inherit;font-size:14px;background:#FEFDFB;
+  box-sizing:border-box;
 }
 .form-group textarea{min-height:120px;resize:vertical;}
 .checkbox-row{display:flex;align-items:center;gap:8px;}
@@ -84,16 +89,16 @@
 
 /* ---------- Dashboard: kartu statistik & quick links ---------- */
 .dash-stats{
-  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;
+  display:grid;grid-template-columns:repeat(6,1fr);gap:14px;
 }
 .dash-stat-card{
   background:#fff;border:1px solid #ECEAE2;border-radius:12px;
-  padding:20px 18px;display:flex;flex-direction:column;gap:6px;
+  padding:20px 16px;display:flex;flex-direction:column;gap:6px;
   transition:transform .15s ease,box-shadow .15s ease;
 }
 .dash-stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(11,42,74,.08);}
-.dash-stat-number{font-family:'Fraunces',serif;font-size:30px;font-weight:700;color:var(--navy);}
-.dash-stat-label{font-size:12.5px;color:var(--slate);}
+.dash-stat-number{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--navy);}
+.dash-stat-label{font-size:12px;color:var(--slate);line-height:1.4;}
 
 .dash-quicklinks{display:flex;flex-wrap:wrap;gap:10px;}
 .dash-quicklink{
@@ -102,7 +107,10 @@
 }
 .dash-quicklink:hover{border-color:var(--gold);background:var(--cream);}
 
-@media (max-width:900px){
+@media (max-width:1100px){
+  .dash-stats{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:640px){
   .dash-stats{grid-template-columns:1fr 1fr;}
 }
 
@@ -111,3 +119,6 @@
   background:var(--red);color:#fff;font-size:11px;font-weight:700;
   padding:2px 7px;border-radius:999px;line-height:1.4;
 }
+
+/* ---------- Form lebar khusus (halaman Tentang & Visi Misi) ---------- */
+.admin-form-wide{max-width:820px;}

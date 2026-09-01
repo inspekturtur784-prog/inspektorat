@@ -7,6 +7,19 @@
     <a href="{{ route('admin.struktur.create') }}" class="btn-admin btn-admin-primary">+ Tambah Bagian</a>
 </div>
 
+{{-- Pesan Notifikasi Sukses --}}
+@if(session('success'))
+    <div class="alert alert-success" style="margin-bottom: 20px; padding: 10px 15px; background-color: #d4edda; color: #155724; border-radius: 6px;">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('status'))
+    <div class="alert alert-success" style="margin-bottom: 20px; padding: 10px 15px; background-color: #d4edda; color: #155724; border-radius: 6px;">
+        {{ session('status') }}
+    </div>
+@endif
+
 <table class="admin-table">
     <thead>
         <tr>
@@ -32,7 +45,7 @@
                 <td>{{ $item->bidang_key ?? '—' }}</td>
                 <td class="row-actions">
                     <a href="{{ route('admin.struktur.edit', $item) }}" class="btn-admin btn-admin-ghost">Edit</a>
-                    <form action="{{ route('admin.struktur.destroy', $item) }}" method="POST" onsubmit="return confirm('Hapus bagian ini?');">
+                    <form action="{{ route('admin.struktur.destroy', $item) }}" method="POST" onsubmit="return confirm('Hapus bagian ini?');" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn-admin btn-admin-danger">Hapus</button>
@@ -40,12 +53,14 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="5">Belum ada bagian struktur organisasi.</td></tr>
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">Belum ada bagian struktur organisasi. Klik "+ Tambah Bagian" untuk menambahkan.</td>
+            </tr>
         @endforelse
     </tbody>
 </table>
 
-<p style="font-size:13px;color:var(--slate);margin-top:16px;">
+<p style="font-size:13px; color:var(--slate, #666); margin-top:16px;">
     "Bidang Key" harus persis sama dengan isi kolom "Bagian/Unit" di halaman Data Pegawai,
     supaya nama pejabat otomatis muncul di bagian ini.
 </p>

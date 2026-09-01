@@ -172,6 +172,11 @@
                     </a>
                 @endforeach
             </div>
+            <div style="text-align:center;margin-top:36px;">
+                <a href="{{ route('berita.index') }}" class="btn btn-gold" style="background:var(--navy);color:#fff;">
+                    Lihat Semua Artikel
+                </a>
+            </div>
         @else
             <p style="color:var(--slate);">Belum ada artikel yang dipublikasikan. Tambahkan lewat panel Admin.</p>
         @endif

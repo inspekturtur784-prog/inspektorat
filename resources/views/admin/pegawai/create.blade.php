@@ -46,12 +46,12 @@
 
     <div class="form-group">
         <label for="urutan">Urutan Tampil (angka kecil tampil lebih dulu, mis. Inspektur = 1)</label>
-        <input type="text" id="urutan" name="urutan" value="{{ old('urutan', 99) }}">
+        <input type="number" id="urutan" name="urutan" value="{{ old('urutan', 99) }}">
     </div>
 
     <div class="form-group">
-        <label for="photo">Foto</label>
-        <input type="file" id="photo" name="photo" accept="image/*">
+        <label for="foto">Foto</label>
+        <input type="file" id="foto" name="foto" accept="image/*">
     </div>
 
     <button type="submit" class="btn-admin btn-admin-primary">Simpan Pegawai</button>

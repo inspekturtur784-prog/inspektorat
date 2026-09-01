@@ -213,6 +213,58 @@
   .ctrl-page{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:rgba(243,239,228,.9); padding:0 12px; white-space:nowrap; }
   .ctrl-sep{ width:1px; height:20px; background:rgba(255,255,255,.14); margin:0 6px; }
 
+  /* ===== WIDGET AKSESIBILITAS ===== */
+  .a11y-btn{
+    position:fixed; left:20px; bottom:26px; z-index:60;
+    width:48px; height:48px; border-radius:50%;
+    background:var(--rust); color:#fff; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 24px rgba(0,0,0,.4);
+  }
+  .a11y-btn svg{ width:23px; height:23px; }
+  .a11y-panel{
+    position:fixed; left:20px; bottom:82px; z-index:61;
+    width:290px; max-width:calc(100vw - 40px);
+    background:#fff; border-radius:10px; overflow:hidden;
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
+    display:none; flex-direction:column;
+    font-family:'IBM Plex Sans',sans-serif; color:#14213D;
+  }
+  .a11y-panel.open{ display:flex; }
+  .a11y-head{
+    background:var(--rust); color:#fff; padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-size:12.5px; font-weight:600;
+  }
+  .a11y-head button{ background:none; border:none; color:#fff; cursor:pointer; display:flex; flex-shrink:0; }
+  .a11y-head button svg{ width:17px; height:17px; }
+  .a11y-body{ padding:14px; }
+  .a11y-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .a11y-item{
+    background:#F5F5F5; border:1.5px solid transparent; border-radius:8px;
+    padding:14px 8px; display:flex; flex-direction:column; align-items:center; gap:8px;
+    cursor:pointer; font-size:10.5px; font-weight:600; text-align:center; color:#14213D;
+    transition:all .15s ease;
+  }
+  .a11y-item svg{ width:21px; height:21px; }
+  .a11y-item:hover{ background:#ECECEC; }
+  .a11y-item.active{ border-color:var(--rust); background:#fff; }
+  .a11y-reset{
+    width:100%; margin-top:12px; padding:9px; border-radius:6px; border:1px solid var(--line);
+    background:none; font-size:11px; font-weight:600; color:var(--rust); cursor:pointer;
+  }
+  .a11y-reset:hover{ background:#faf0ee; }
+
+  /* efek yang benar-benar diterapkan ke halaman */
+  html.a11y-contrast body{ filter:contrast(1.35) brightness(1.05); }
+  html.a11y-links a{ outline:2px solid #A63D2C !important; background:#fff59d !important; color:#14213D !important; }
+  html.a11y-bigtext{ font-size:118%; }
+  html.a11y-spacing body{ letter-spacing:.03em; line-height:1.9; }
+  html.a11y-noanim *{ animation-duration:.001s !important; animation-delay:0s !important; transition-duration:.001s !important; }
+  html.a11y-noimages img,
+  html.a11y-noimages .photo-panel svg,
+  html.a11y-noimages .cov-bg{ visibility:hidden !important; }
+
   @media (max-width:860px){
     .stage{ padding:30px 16px 110px; }
     .stage-nav{ width:36px; height:36px; }
@@ -498,6 +550,52 @@
   </button>
 </div>
 
+{{-- ===== WIDGET AKSESIBILITAS ===== --}}
+<button class="a11y-btn" id="a11yBtn" aria-label="Menu Aksesibilitas">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="4.2" r="1.7" fill="currentColor" stroke="none"/>
+    <path d="M5 8.2h14M12 8.2v6.2M8 22l1.6-7.6M16 22l-1.6-7.6M7.2 12.4L12 13.4l4.8-1"/>
+  </svg>
+</button>
+
+<div class="a11y-panel" id="a11yPanel">
+  <div class="a11y-head">
+    <span>Menu Aksesibilitas (CTRL+U)</span>
+    <button id="a11yClose" aria-label="Tutup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="a11y-body">
+    <div class="a11y-grid">
+      <div class="a11y-item" data-a11y="contrast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 000 18z" fill="currentColor" stroke="none"/></svg>
+        Kontras +
+      </div>
+      <div class="a11y-item" data-a11y="links">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 14a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1"/><path d="M14 10a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg>
+        Sorot Tautan
+      </div>
+      <div class="a11y-item" data-a11y="bigtext">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V5h9v2M8.5 5v14M11.5 19h-6M15 13l3-6 3 6M15.8 11h4.4"/></svg>
+        Teks Lebih Besar
+      </div>
+      <div class="a11y-item" data-a11y="spacing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4M17 12h4M9 8l-2 4 2 4M15 8l2 4-2 4"/></svg>
+        Spasi Teks
+      </div>
+      <div class="a11y-item" data-a11y="noanim">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="4" width="3" height="16" rx="1"/><rect x="15" y="4" width="3" height="16" rx="1"/></svg>
+        Animasi Dijeda
+      </div>
+      <div class="a11y-item" data-a11y="noimages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6" fill="currentColor" stroke="none"/><path d="M3 16l5-5 4 4 3-3 6 6"/><line x1="4" y1="20" x2="20" y2="4"/></svg>
+        Sembunyikan Gambar
+      </div>
+    </div>
+    <button class="a11y-reset" id="a11yReset">Reset Semua</button>
+  </div>
+</div>
+
 <script>
   const views = Array.from(document.querySelectorAll('.view'));
   const totalViews = views.length;
@@ -563,8 +661,12 @@
         : '6px';
     stage.appendChild(flipEl);
 
+    const reduceMotion = window.__a11yReduceMotion === true;
+
     requestAnimationFrame(() => {
-      flipEl.style.transition = 'transform .46s cubic-bezier(.5,0,.35,1), opacity .46s ease .2s';
+      flipEl.style.transition = reduceMotion
+        ? 'none'
+        : 'transform .46s cubic-bezier(.5,0,.35,1), opacity .46s ease .2s';
       flipEl.style.transform = 'rotateY(' + (dir === 'next' ? '-98deg' : '98deg') + ')';
       flipEl.style.opacity = '0';
     });
@@ -572,12 +674,12 @@
     setTimeout(() => {
       current = target;
       render();
-    }, 230);
+    }, reduceMotion ? 0 : 230);
 
     setTimeout(() => {
       flipEl.remove();
       animating = false;
-    }, 470);
+    }, reduceMotion ? 20 : 470);
   }
 
   prevBtn.addEventListener('click', () => go(current - 1));
@@ -603,6 +705,49 @@
   });
 
   render();
+</script>
+
+<script>
+  (function(){
+    const btn = document.getElementById('a11yBtn');
+    const panel = document.getElementById('a11yPanel');
+    const closeBtn = document.getElementById('a11yClose');
+    const resetBtn = document.getElementById('a11yReset');
+    const items = document.querySelectorAll('.a11y-item');
+    const root = document.documentElement;
+
+    function togglePanel(){ panel.classList.toggle('open'); }
+
+    btn.addEventListener('click', togglePanel);
+    closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+    document.addEventListener('keydown', function(e){
+      if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+        togglePanel();
+      }
+    });
+
+    items.forEach(function(item){
+      item.addEventListener('click', function(){
+        const key = item.dataset.a11y;
+        root.classList.toggle('a11y-' + key);
+        item.classList.toggle('active');
+
+        if (key === 'noanim') {
+          window.__a11yReduceMotion = root.classList.contains('a11y-noanim');
+        }
+      });
+    });
+
+    resetBtn.addEventListener('click', function(){
+      items.forEach(function(item){
+        root.classList.remove('a11y-' + item.dataset.a11y);
+        item.classList.remove('active');
+      });
+      window.__a11yReduceMotion = false;
+    });
+  })();
 </script>
 
 </body>
