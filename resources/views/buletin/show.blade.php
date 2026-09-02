@@ -24,7 +24,7 @@
     --stage: var(--navy-deep);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  body{background:var(--stage); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; line-height:1.5; overflow-x:hidden;}
+  body{background:var(--stage); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; line-height:1.5; overflow-x:hidden; transition:background .3s ease;}
   a{color:inherit; text-decoration:none;}
   .mono{font-family:'IBM Plex Mono',monospace;}
   h1,h2,h3{font-family:'Fraunces',serif; letter-spacing:-.01em;}
@@ -38,6 +38,7 @@
     background:var(--navy-deep); padding:8px 26px;
     font-family:'IBM Plex Mono',monospace; font-size:11px;
     color:rgba(243,239,228,.5); display:flex; align-items:center; gap:6px;
+    transition:background .3s ease, color .3s ease;
   }
   .breadcrumb a:hover{ color:var(--parchment); }
   .breadcrumb .sep{ color:rgba(243,239,228,.25); }
@@ -49,6 +50,7 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:14px 26px; flex-wrap:wrap; gap:10px;
     border-bottom:1px solid rgba(243,239,228,.12);
+    transition:background .3s ease, color .3s ease, border-color .3s ease;
   }
   .back-link{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500; color:rgba(243,239,228,.8);}
   .back-link:hover{color:#fff;}
@@ -66,6 +68,7 @@
     padding:50px 90px 100px;
     background:radial-gradient(ellipse at 50% 35%, var(--navy-soft) 0%, var(--navy-deep) 72%);
     perspective:2200px;
+    transition:background .3s ease;
   }
 
   #zoomWrap{ width:100%; max-width:920px; }
@@ -89,7 +92,7 @@
     width:44px; height:44px; border-radius:50%;
     background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
     color:rgba(243,239,228,.85); display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:background .2s ease;
+    cursor:pointer; transition:background .2s ease, color .2s ease, border-color .2s ease;
   }
   .stage-nav:hover{background:rgba(255,255,255,.14);}
   .stage-nav:disabled{opacity:.25; cursor:default;}
@@ -107,7 +110,7 @@
     max-width:460px; margin:0 auto;
   }
   .view.single .leaf{
-    width:100%; border-radius:6px;
+    width:100%; border-radius:6px; aspect-ratio:3/4;
   }
   .view.single .leaf::after{ display:none; }
 
@@ -205,19 +208,21 @@
     background:rgba(20,20,22,.9); backdrop-filter:blur(6px);
     border:1px solid rgba(255,255,255,.1); border-radius:30px;
     padding:8px 10px; display:flex; align-items:center; gap:4px; z-index:20;
+    transition:background .3s ease, border-color .3s ease;
   }
-  .ctrl-btn{ width:34px; height:34px; border-radius:50%; background:transparent; border:none; color:rgba(243,239,228,.8); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s ease; }
+  .ctrl-btn{ width:34px; height:34px; border-radius:50%; background:transparent; border:none; color:rgba(243,239,228,.8); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s ease, color .3s ease; }
   .ctrl-btn:hover{ background:rgba(255,255,255,.1); }
   .ctrl-btn:disabled{ opacity:.3; cursor:default; }
   .ctrl-btn svg{ width:16px; height:16px; }
-  .ctrl-page{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:rgba(243,239,228,.9); padding:0 12px; white-space:nowrap; }
-  .ctrl-sep{ width:1px; height:20px; background:rgba(255,255,255,.14); margin:0 6px; }
+  .ctrl-page{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:rgba(243,239,228,.9); padding:0 12px; white-space:nowrap; transition:color .3s ease; }
+  .ctrl-sep{ width:1px; height:20px; background:rgba(255,255,255,.14); margin:0 6px; transition:background .3s ease; }
 
   /* ===== WIDGET AKSESIBILITAS ===== */
+  :root{ --a11y-blue:#2A5CE6; }
   .a11y-btn{
     position:fixed; left:20px; bottom:26px; z-index:60;
     width:48px; height:48px; border-radius:50%;
-    background:var(--rust); color:#fff; border:none; cursor:pointer;
+    background:var(--a11y-blue); color:#fff; border:none; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 10px 24px rgba(0,0,0,.4);
   }
@@ -232,7 +237,7 @@
   }
   .a11y-panel.open{ display:flex; }
   .a11y-head{
-    background:var(--rust); color:#fff; padding:14px 16px;
+    background:var(--a11y-blue); color:#fff; padding:14px 16px;
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     font-size:12.5px; font-weight:600;
   }
@@ -248,22 +253,54 @@
   }
   .a11y-item svg{ width:21px; height:21px; }
   .a11y-item:hover{ background:#ECECEC; }
-  .a11y-item.active{ border-color:var(--rust); background:#fff; }
+  .a11y-item.active{ border-color:var(--a11y-blue); background:#fff; }
   .a11y-reset{
     width:100%; margin-top:12px; padding:9px; border-radius:6px; border:1px solid var(--line);
-    background:none; font-size:11px; font-weight:600; color:var(--rust); cursor:pointer;
+    background:none; font-size:11px; font-weight:600; color:var(--a11y-blue); cursor:pointer;
   }
-  .a11y-reset:hover{ background:#faf0ee; }
+  .a11y-reset:hover{ background:#eef2fd; }
 
   /* efek yang benar-benar diterapkan ke halaman */
   html.a11y-contrast body{ filter:contrast(1.35) brightness(1.05); }
-  html.a11y-links a{ outline:2px solid #A63D2C !important; background:#fff59d !important; color:#14213D !important; }
+  html.a11y-links a{ outline:2px solid var(--a11y-blue) !important; background:#fff59d !important; color:#14213D !important; }
   html.a11y-bigtext{ font-size:118%; }
   html.a11y-spacing body{ letter-spacing:.03em; line-height:1.9; }
   html.a11y-noanim *{ animation-duration:.001s !important; animation-delay:0s !important; transition-duration:.001s !important; }
   html.a11y-noimages img,
   html.a11y-noimages .photo-panel svg,
   html.a11y-noimages .cov-bg{ visibility:hidden !important; }
+
+  /* ===== MODE SIANG / MALAM ===== */
+  html.light-mode body{ background:#DCD3BA; }
+  html.light-mode .breadcrumb{ background:#F3EFE4; color:rgba(11,42,74,.55); }
+  html.light-mode .breadcrumb a:hover{ color:#0B2A4A; }
+  html.light-mode .breadcrumb .sep{ color:rgba(11,42,74,.25); }
+  html.light-mode .reader-topbar{ background:#FBF9F3; color:#0B2A4A; border-bottom:1px solid rgba(11,42,74,.12); }
+  html.light-mode .back-link{ color:rgba(11,42,74,.72); }
+  html.light-mode .back-link:hover{ color:#0B2A4A; }
+  html.light-mode .topbar-title span{ color:var(--rust); }
+  html.light-mode .stage{ background:radial-gradient(ellipse at 50% 35%, #EFE9D8 0%, #DCD3BA 72%); }
+  html.light-mode .stage-nav{ background:rgba(11,42,74,.06); border-color:rgba(11,42,74,.16); color:rgba(11,42,74,.8); }
+  html.light-mode .stage-nav:hover{ background:rgba(11,42,74,.14); }
+  html.light-mode .ctrl-bar{ background:rgba(255,255,255,.92); border:1px solid rgba(11,42,74,.12); }
+  html.light-mode .ctrl-btn{ color:rgba(11,42,74,.78); }
+  html.light-mode .ctrl-btn:hover{ background:rgba(11,42,74,.08); }
+  html.light-mode .ctrl-page{ color:rgba(11,42,74,.9); }
+  html.light-mode .ctrl-sep{ background:rgba(11,42,74,.16); }
+
+  .theme-btn{
+    position:fixed; right:20px; bottom:26px; z-index:60;
+    width:48px; height:48px; border-radius:50%;
+    background:var(--navy); color:#fff; border:1px solid rgba(255,255,255,.14); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 24px rgba(0,0,0,.4);
+    transition:background .3s ease, color .3s ease, border-color .3s ease;
+  }
+  .theme-btn svg{ width:22px; height:22px; }
+  .theme-btn .icon-sun{ display:none; }
+  html.light-mode .theme-btn{ background:#fff; color:#0B2A4A; border-color:rgba(11,42,74,.16); }
+  html.light-mode .theme-btn .icon-moon{ display:none; }
+  html.light-mode .theme-btn .icon-sun{ display:flex; }
 
   @media (max-width:860px){
     .stage{ padding:30px 16px 110px; }
@@ -281,6 +318,8 @@
     .view:not(.single) .leaf{ width:100%; aspect-ratio:auto; min-height:64vh; }
     .leaf.left-page::after, .leaf.right-page::after{ display:none; }
     .view.single{ max-width:92vw; }
+    .theme-btn{ width:42px; height:42px; right:14px; bottom:14px; }
+    .a11y-btn{ width:42px; height:42px; left:14px; bottom:14px; }
   }
 </style>
 </head>
@@ -487,7 +526,216 @@
       </div>
     </div>
 
-    {{-- SPREAD — 12 Susunan Redaksi | 13 Penutup --}}
+    {{-- SPREAD — 12 Ringkasan Eksekutif | 13 Foto --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <span class="kicker" style="color:var(--verified);">Ringkasan Eksekutif</span>
+        <h2 style="font-size:17px; margin:10px 0 14px;">Inti Edisi Ini</h2>
+        <p>{{ Str::limit($current['art_p1'], 140) }}</p>
+        <p>{{ Str::limit($current['art_p2'], 140) }}</p>
+        <div class="pull" style="font-size:12px;">{{ Str::limit($current['art_pull'], 90) }}</div>
+        <span class="page-idx">12</span>
+      </div>
+      <div class="leaf right-page">
+        <div class="photo-panel" style="height:100%;">
+          <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#233a63"/><stop offset="1" stop-color="#06182E"/></linearGradient></defs>
+            <rect width="300" height="400" fill="url(#g5)"/>
+            <g stroke="#B8901F" stroke-opacity="0.5" stroke-width="1.5">
+              <circle cx="150" cy="180" r="90"/>
+              <circle cx="150" cy="180" r="55"/>
+            </g>
+            <circle cx="150" cy="180" r="6" fill="#B8901F"/>
+          </svg>
+          <span class="photo-cap">Ilustrasi</span>
+        </div>
+        <span class="page-idx">13</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 14 Profil Singkat | 15 Nilai-Nilai --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <span class="kicker">Profil Singkat</span>
+        <h2 style="font-size:16px; margin:8px 0 12px;">Inspektorat Kota Mojokerto</h2>
+        <p>Aparat pengawasan intern yang independen dan profesional, berkedudukan langsung di bawah pimpinan daerah. Bertugas membantu pengawasan penyelenggaraan pemerintahan, memastikan tata kelola berjalan bersih, efektif, dan akuntabel bagi masyarakat.</p>
+        <span class="page-idx">14</span>
+      </div>
+      <div class="leaf right-page">
+        <span class="kicker" style="color:var(--verified);">Nilai-Nilai Kami</span>
+        <div class="bars" style="margin-top:14px;">
+          <div style="margin-bottom:14px;"><b style="font-family:'Fraunces',serif; font-size:13px; color:#0B2A4A;">Integritas</b><p style="font-size:10.5px; color:rgba(20,33,61,.65); margin-top:2px;">Konsisten antara pikiran, ucapan, dan tindakan.</p></div>
+          <div style="margin-bottom:14px;"><b style="font-family:'Fraunces',serif; font-size:13px; color:#0B2A4A;">Independensi</b><p style="font-size:10.5px; color:rgba(20,33,61,.65); margin-top:2px;">Bebas dari intervensi dalam setiap pemeriksaan.</p></div>
+          <div style="margin-bottom:14px;"><b style="font-family:'Fraunces',serif; font-size:13px; color:#0B2A4A;">Profesionalisme</b><p style="font-size:10.5px; color:rgba(20,33,61,.65); margin-top:2px;">Bekerja sesuai standar audit yang berlaku.</p></div>
+          <div><b style="font-family:'Fraunces',serif; font-size:13px; color:#0B2A4A;">Akuntabel</b><p style="font-size:10.5px; color:rgba(20,33,61,.65); margin-top:2px;">Bertanggung jawab atas setiap simpulan hasil audit.</p></div>
+        </div>
+        <span class="page-idx">15</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 16 Alur Pemeriksaan | 17 Foto --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <span class="kicker">Metodologi</span>
+        <h2 style="font-size:16px; margin:8px 0 14px;">Alur Satu Pemeriksaan</h2>
+        <div class="masthead" style="gap:0;">
+          <div class="row"><span class="role">01 · Perencanaan</span><span class="name" style="text-align:left; font-weight:500; color:rgba(20,33,61,.65);"></span></div>
+          <p style="font-size:10px; color:rgba(20,33,61,.6); padding:2px 0 8px;">Menetapkan objek, ruang lingkup, dan risiko yang jadi fokus.</p>
+          <div class="row"><span class="role">02 · Pelaksanaan</span></div>
+          <p style="font-size:10px; color:rgba(20,33,61,.6); padding:2px 0 8px;">Mengumpulkan bukti: wawancara, uji petik, verifikasi dokumen.</p>
+          <div class="row"><span class="role">03 · Pelaporan</span></div>
+          <p style="font-size:10px; color:rgba(20,33,61,.6); padding:2px 0 8px;">Menyusun simpulan dan rekomendasi dalam LHP resmi.</p>
+          <div class="row"><span class="role">04 · Tindak Lanjut</span></div>
+          <p style="font-size:10px; color:rgba(20,33,61,.6); padding:2px 0 8px;">Memantau rekomendasi hingga dijalankan unit kerja.</p>
+          <div class="row"><span class="role">05 · Verifikasi Tuntas</span></div>
+          <p style="font-size:10px; color:rgba(20,33,61,.6); padding:2px 0;">Status selesai setelah bukti perbaikan diperiksa ulang.</p>
+        </div>
+        <span class="page-idx">16</span>
+      </div>
+      <div class="leaf right-page">
+        <div class="photo-panel" style="height:100%;">
+          <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b3a1a"/><stop offset="1" stop-color="#06182E"/></linearGradient></defs>
+            <rect width="300" height="400" fill="url(#g6)"/>
+            <path d="M0 220 L70 260 L140 210 L210 250 L300 190 L300 400 L0 400 Z" fill="#1c2f52" opacity="0.75"/>
+          </svg>
+          <span class="photo-cap">Ilustrasi</span>
+        </div>
+        <span class="page-idx">17</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 18 Capaian Kinerja | 19 Layanan Kami --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <span class="kicker" style="color:var(--verified);">Capaian</span>
+        <h2 style="font-size:16px; margin:8px 0 14px;">Kinerja Pengawasan</h2>
+        <div class="bars">
+          <div class="bar-row"><span class="bar-label">LHP / Tahun</span><span class="bar-val mono" style="width:auto;">128</span></div>
+          <div class="bar-row"><span class="bar-label">Tindak Lanjut</span><span class="bar-val mono" style="width:auto;">96%</span></div>
+          <div class="bar-row"><span class="bar-label">Auditor Bersertifikat</span><span class="bar-val mono" style="width:auto;">42</span></div>
+          <div class="bar-row"><span class="bar-label">Respons Pengaduan</span><span class="bar-val mono" style="width:auto;">24 jam</span></div>
+        </div>
+        <span class="page-idx">18</span>
+      </div>
+      <div class="leaf right-page">
+        <span class="kicker">Layanan Kami</span>
+        <div class="toc-list" style="margin-left:0; justify-content:flex-start; gap:2px;">
+          <div class="toc-row"><span class="no mono">01</span><span class="t">Audit Kinerja &amp; Keuangan</span></div>
+          <div class="toc-row"><span class="no mono">02</span><span class="t">Reviu Laporan &amp; Rencana</span></div>
+          <div class="toc-row"><span class="no mono">03</span><span class="t">Evaluasi Program</span></div>
+          <div class="toc-row"><span class="no mono">04</span><span class="t">Pemantauan Tindak Lanjut</span></div>
+          <div class="toc-row"><span class="no mono">05</span><span class="t">Konsultansi &amp; Asistensi</span></div>
+          <div class="toc-row"><span class="no mono">06</span><span class="t">Pengaduan Masyarakat</span></div>
+        </div>
+        <span class="page-idx">19</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 20 Kanal Pengaduan | 21 Foto --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <span class="kicker">Ruang Publik</span>
+        <h2 style="font-size:16px; margin:8px 0 12px;">Kanal Pengaduan</h2>
+        <p>Laporan dugaan penyimpangan ditindaklanjuti secara rahasia — identitas pelapor kami lindungi penuh. Sampaikan lewat salah satu kanal berikut:</p>
+        <div class="toc-list" style="margin-left:0; justify-content:flex-start; margin-top:12px;">
+          <div class="toc-row"><span class="no mono">•</span><span class="t">Whistleblowing System (WBS)</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">SP4N-LAPOR!</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">Formulir Pengaduan di Website</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">Datang Langsung ke Kantor</span></div>
+        </div>
+        <span class="page-idx">20</span>
+      </div>
+      <div class="leaf right-page">
+        <div class="photo-panel" style="height:100%;">
+          <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g7" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b4470"/><stop offset="1" stop-color="#06182E"/></linearGradient></defs>
+            <rect width="300" height="400" fill="url(#g7)"/>
+            <path d="M60 260h100v-60l40 40v20l-40 40v-40H60z" fill="none" stroke="#F3EFE4" stroke-opacity="0.3" stroke-width="3"/>
+          </svg>
+          <span class="photo-cap">Ilustrasi</span>
+        </div>
+        <span class="page-idx">21</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 22 Referensi & Ketentuan | 23 Agenda Mendatang --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <h3 class="mono">Referensi &amp; Ketentuan</h3>
+        <div class="hint">*Contoh format — sesuaikan dengan regulasi yang berlaku di instansi Anda</div>
+        <div class="toc-list" style="margin-left:0; justify-content:flex-start; margin-top:6px;">
+          <div class="toc-row"><span class="no mono">•</span><span class="t">[Peraturan tentang Sistem Pengendalian Intern]</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">[Peraturan tentang Pedoman APIP]</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">[Peraturan Daerah terkait Pengawasan]</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">[Kode Etik Auditor Internal]</span></div>
+        </div>
+        <span class="page-idx">22</span>
+      </div>
+      <div class="leaf right-page">
+        <h3 class="mono">Agenda Mendatang</h3>
+        <div class="hint">*Agenda indikatif, sesuaikan dengan jadwal riil</div>
+        <div class="toc-list" style="margin-left:0; justify-content:flex-start; margin-top:6px;">
+          <div class="toc-row"><span class="no mono">•</span><span class="t">Reviu RKA triwulan berikutnya</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">Sosialisasi WBS ke unit kerja</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">Pelatihan penguatan kapasitas auditor</span></div>
+          <div class="toc-row"><span class="no mono">•</span><span class="t">Evaluasi tindak lanjut semester berjalan</span></div>
+        </div>
+        <span class="page-idx">23</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 24 Foto | 25 Kutipan Wawancara --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <div class="photo-panel" style="height:100%;">
+          <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g8" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#06182E"/><stop offset="1" stop-color="#3a5a8f"/></linearGradient></defs>
+            <rect width="300" height="400" fill="url(#g8)"/>
+            <g fill="#B8901F" opacity="0.85">
+              <circle cx="70" cy="300" r="8"/><circle cx="140" cy="260" r="8"/><circle cx="210" cy="310" r="8"/><circle cx="250" cy="230" r="8"/>
+            </g>
+            <polyline points="70,300 140,260 210,310 250,230" fill="none" stroke="#F3EFE4" stroke-opacity="0.35" stroke-width="2"/>
+          </svg>
+          <span class="photo-cap">Ilustrasi</span>
+        </div>
+        <span class="page-idx">24</span>
+      </div>
+      <div class="leaf right-page">
+        <div class="big-quote">
+          <div class="qmark">&ldquo;</div>
+          <blockquote style="font-size:16px;">{{ $current['iv_a'] }}</blockquote>
+          <div class="src mono">{{ $current['iv_who'] }}</div>
+        </div>
+        <span class="page-idx">25</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 26 FAQ Singkat | 27 Foto --}}
+    <div class="view" data-pages="2" style="display:none;">
+      <div class="leaf left-page">
+        <span class="kicker">Tanya Jawab</span>
+        <h2 style="font-size:16px; margin:8px 0 12px;">Seputar Pengaduan</h2>
+        <div style="margin-bottom:12px;"><b style="font-size:11px; color:#0B2A4A;">Apakah identitas pelapor dirahasiakan?</b><p style="font-size:10.5px; color:rgba(20,33,61,.65); margin-top:3px;">Ya, identitas pelapor dilindungi penuh sepanjang proses.</p></div>
+        <div style="margin-bottom:12px;"><b style="font-size:11px; color:#0B2A4A;">Berapa lama laporan ditindaklanjuti?</b><p style="font-size:10.5px; color:rgba(20,33,61,.65); margin-top:3px;">Rata-rata respons awal dalam 24 jam kerja.</p></div>
+        <div><b style="font-size:11px; color:#0B2A4A;">Apakah bisa lapor tanpa identitas?</b><p style="font-size:10.5px; color:rgba(20,33,61,.65); margin-top:3px;">Bisa, lewat kanal WBS yang mendukung laporan anonim.</p></div>
+        <span class="page-idx">26</span>
+      </div>
+      <div class="leaf right-page">
+        <div class="photo-panel" style="height:100%;">
+          <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g9" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a5a8f"/><stop offset="1" stop-color="#5b3a1a"/></linearGradient></defs>
+            <rect width="300" height="400" fill="url(#g9)"/>
+            <circle cx="150" cy="160" r="60" fill="none" stroke="#F3EFE4" stroke-opacity="0.3" stroke-width="2"/>
+            <path d="M150 100v-20M150 240v-20M90 160h-20M270 160h-20" stroke="#B8901F" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+          <span class="photo-cap">Ilustrasi</span>
+        </div>
+        <span class="page-idx">27</span>
+      </div>
+    </div>
+
+    {{-- SPREAD — 28 Susunan Redaksi | 29 Penutup --}}
     <div class="view" data-pages="2" style="display:none;">
       <div class="leaf left-page">
         <div class="masthead">
@@ -502,7 +750,7 @@
           <div class="row"><span class="role">Dokumentasi</span><span class="name">[Nama]</span></div>
           <div class="foot mono">Inspektorat Kota Mojokerto · {{ $current['label'] }}</div>
         </div>
-        <span class="page-idx">12</span>
+        <span class="page-idx">28</span>
       </div>
       <div class="leaf right-page dark">
         <div class="closing-page">
@@ -517,7 +765,20 @@
             <rect x="26" y="26" width="8" height="8" fill="#F3EFE4"/>
           </svg>
         </div>
-        <span class="page-idx">13</span>
+        <span class="page-idx">29</span>
+      </div>
+    </div>
+
+    {{-- HALAMAN 30 — Sampul Belakang (tunggal) --}}
+    <div class="view single" data-pages="1" style="display:none;">
+      <div class="leaf dark">
+        <div class="cov">
+          <img class="logo-img" src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto" style="width:110px;">
+          <div class="eyebrow" style="margin-top:18px;">Inspektorat Kota Mojokerto</div>
+          <div class="rule"></div>
+          <div class="edisi">Portal Resmi Pengawasan Intern</div>
+        </div>
+        <span class="page-idx" style="left:50%; transform:translateX(-50%);">30</span>
       </div>
     </div>
 
@@ -595,6 +856,17 @@
     <button class="a11y-reset" id="a11yReset">Reset Semua</button>
   </div>
 </div>
+
+{{-- ===== TOMBOL MODE SIANG / MALAM ===== --}}
+<button class="theme-btn" id="themeBtn" aria-label="Ganti Mode Siang/Malam">
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+  </svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="4.5"/>
+    <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/>
+  </svg>
+</button>
 
 <script>
   const views = Array.from(document.querySelectorAll('.view'));
@@ -746,6 +1018,39 @@
         item.classList.remove('active');
       });
       window.__a11yReduceMotion = false;
+    });
+  })();
+</script>
+
+{{-- ===== SCRIPT MODE SIANG / MALAM ===== --}}
+<script>
+  (function(){
+    const root = document.documentElement;
+    const btn = document.getElementById('themeBtn');
+    const STORAGE_KEY = 'buletin-theme';
+
+    function applyTheme(mode){
+      if (mode === 'light') {
+        root.classList.add('light-mode');
+      } else {
+        root.classList.remove('light-mode');
+      }
+    }
+
+    let saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+
+    if (saved === 'light' || saved === 'dark') {
+      applyTheme(saved);
+    } else {
+      // belum pernah pilih -> ikuti jam perangkat: 06.00-17.59 = siang
+      const hour = new Date().getHours();
+      applyTheme(hour >= 6 && hour < 18 ? 'light' : 'dark');
+    }
+
+    btn.addEventListener('click', function(){
+      const isLight = root.classList.toggle('light-mode');
+      try { localStorage.setItem(STORAGE_KEY, isLight ? 'light' : 'dark'); } catch (e) {}
     });
   })();
 </script>

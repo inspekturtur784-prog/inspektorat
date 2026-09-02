@@ -78,17 +78,11 @@
                         <li>inspektorat@mojokertokota.go.id</li>
                         <li>(0321) 399630</li>
                     </ul>
-                    <div class="footer-social" aria-label="Media sosial">
-                        <a href="#" aria-label="Instagram" title="Instagram">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
-                        </a>
-                        <a href="#" aria-label="Facebook" title="Facebook">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h-2a5 5 0 0 0-5 5v2H6v4h2v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3z"/></svg>
-                        </a>
-                        <a href="#" aria-label="YouTube" title="YouTube">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>
-                        </a>
-                    </div>
+                   <div class="footer-social" aria-label="Media sosial">
+    <a href="https://www.instagram.com/inspektoratkotamr" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+    </a>
+</div>
                 </div>
 
                 <div class="footer-hours">

@@ -85,7 +85,7 @@
         <div class="section-head">
             <span class="eyebrow">Layanan Kami</span>
             <h2>Apa yang bisa Anda lakukan di sini?</h2>
-            <p>Empat layanan utama yang bisa langsung Anda akses melalui website ini.</p>
+            <p>Tujuh layanan utama yang bisa langsung Anda akses melalui website ini.</p>
         </div>
 
         <div class="service-grid">
@@ -136,6 +136,45 @@
                 <h3>SKM Inspektorat</h3>
                 <p>Isi Survei Kepuasan Masyarakat untuk membantu kami terus meningkatkan kualitas layanan.</p>
                 <a href="{{ url('/layanan/skm') }}" class="service-link">
+                    Lihat Layanan
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+            </div>
+
+            {{-- Layanan Pengaduan --}}
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3>Layanan Pengaduan</h3>
+                <p>Sampaikan aduan dan keluhan Anda melalui kanal resmi Curhat Ning Ita.</p>
+                <a href="https://curhatningita.lapor.go.id/" target="_blank" rel="noopener noreferrer" class="service-link">
+                    Lihat Layanan
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+            </div>
+
+            {{-- Gratifikasi Online (KPK) --}}
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5.5-3.5 9-8 10-4.5-1-8-4.5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+                </div>
+                <h3>Gratifikasi Online</h3>
+                <p>Laporkan penerimaan gratifikasi secara resmi melalui sistem GOL milik KPK.</p>
+                <a href="https://gol.kpk.go.id/" target="_blank" rel="noopener noreferrer" class="service-link">
+                    Lihat Layanan
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+            </div>
+
+            {{-- Whistle Blowing System --}}
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+                </div>
+                <h3>Whistle Blowing System</h3>
+                <p>Laporkan dugaan pelanggaran secara rahasia melalui kanal WBS Kota Mojokerto.</p>
+                <a href="https://wbs.mojokertokota.go.id/" target="_blank" rel="noopener noreferrer" class="service-link">
                     Lihat Layanan
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
