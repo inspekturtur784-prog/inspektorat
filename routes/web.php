@@ -12,3 +12,7 @@ Route::get('/profile', function () {
 Route::get('/konsultasi', function () {
     return view('konsultasi.index');
 })->name('konsultasi');
+
+use App\Http\Controllers\KonsultasiController;
+Route::get('konsultasi', [KonsultasiController::class, 'index'])->name('konsultasi.index');
+Route::post('konsultasi', [KonsultasiController::class, 'store'])->name('konsultasi.store');
