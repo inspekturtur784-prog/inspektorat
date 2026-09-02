@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\SkmController;
+use App\Http\Controllers\KonsultasiController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes — Inspektorat Kota Mojokerto
@@ -47,11 +48,11 @@ Route::get('/profil/galeri/{slug}', [GaleriController::class, 'show'])->name('ga
 
 // ---------- Layanan ----------
 Route::redirect('/layanan', '/#layanan');
-Route::view('/layanan/konsultansi', 'coming-soon', ['title' => 'Konsultansi Online']);
-Route::view('/layanan/kms', 'coming-soon', ['title' => 'KMS / Pedoman']);
-Route::redirect('/layanan/buletin', '/buletin', 301);
-Route::view('/layanan/skm', 'coming-soon', ['title' => 'SKM Inspektorat']);
 
+Route::get('/layanan/konsultansi', [KonsultasiController::class, 'index'])
+    ->name('konsultasi.index');
+
+Route::view('/layanan/kms', 'coming-soon', ['title' => 'KMS / Pedoman']);
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/kontak', [KontakController::class, 'show'])->name('kontak.show');
 Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
@@ -261,14 +262,13 @@ Route::get('/profile', function () {
     return view('profile');
 });
 
+// ---------- Konsultasi Online ----------
 Route::get('/konsultasi', function () {
-    return view('konsultasi.index');
-})->name('konsultasi');
+    return redirect()->route('konsultasi.index');
+});
 
-use App\Http\Controllers\KonsultasiController;
-Route::get('konsultasi', [KonsultasiController::class, 'index'])->name('konsultasi.index');
-Route::post('konsultasi', [KonsultasiController::class, 'store'])->name('konsultasi.store');
-
+Route::post('/konsultasi', [KonsultasiController::class, 'store'])
+    ->name('konsultasi.store');
 // ---------- Admin: WAJIB LOGIN ----------
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
