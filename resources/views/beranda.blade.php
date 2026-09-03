@@ -610,7 +610,7 @@
             <path d="M100 130l15 15 30-32" fill="none" stroke="#B8901F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <span class="ed mono">EDISI 24 · 2025</span>
-          <span class="ti">Tata Garis Tegak Batas Pengawasan</span>
+          <span class="ti">Hasil Cepat Dampak Hebat</span>
         </div>
         <div class="mag-info"><span>48 hlm</span><span style="font-size:12.5px; font-weight:600; color:var(--verified);">Baca ↗</span></div>
       </a>

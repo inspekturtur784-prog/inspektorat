@@ -142,12 +142,15 @@
   .card:hover .read-link svg{ transform:translateX(3px); }
   .card.hidden{ display:none; }
 
+  /* Rasio potret (3:4) seperti sampul majalah asli — sebelumnya 16:11 (gepeng)
+     bikin foto kepotong pendek & nggak jelas. Sekarang lebih tinggi & proporsional. */
   .card-cover{
-    position:relative; aspect-ratio:16/11; overflow:hidden;
+    position:relative; aspect-ratio:3/4; overflow:hidden;
     background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
   }
   .card-cover .cover-img{
-    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center top;
     transition:transform .35s ease;
   }
   .card-cover .cover-fallback{
