@@ -55,7 +55,7 @@ Route::redirect('/layanan', '/#layanan');
 Route::get('/layanan/konsultansi', [KonsultasiController::class, 'index'])
     ->name('konsultasi.index');
 
-Route::view('/layanan/kms', 'coming-soon', ['title' => 'KMS / Pedoman']);
+Route::redirect('/layanan/kms', '/knowledge-base');
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/kontak', [KontakController::class, 'show'])->name('kontak.show');
 Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
