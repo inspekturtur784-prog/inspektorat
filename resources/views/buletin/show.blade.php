@@ -13,7 +13,7 @@
 <title>{{ $current['title'] }} — Buletin Pengawasan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#0B2A4A; --navy-deep:#06182E; --navy-soft:#12335A;
@@ -24,7 +24,7 @@
     --stage: var(--navy-deep);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  body{background:var(--stage); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; line-height:1.5; overflow-x:hidden; transition:background .3s ease;}
+  body{background:var(--stage); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; line-height:1.5; overflow-x:hidden;}
   a{color:inherit; text-decoration:none;}
   .mono{font-family:'IBM Plex Mono',monospace;}
   h1,h2,h3{font-family:'Fraunces',serif; letter-spacing:-.01em;}
@@ -38,7 +38,6 @@
     background:var(--navy-deep); padding:8px 26px;
     font-family:'IBM Plex Mono',monospace; font-size:11px;
     color:rgba(243,239,228,.5); display:flex; align-items:center; gap:6px;
-    transition:background .3s ease, color .3s ease;
   }
   .breadcrumb a:hover{ color:var(--parchment); }
   .breadcrumb .sep{ color:rgba(243,239,228,.25); }
@@ -50,7 +49,6 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:14px 26px; flex-wrap:wrap; gap:10px;
     border-bottom:1px solid rgba(243,239,228,.12);
-    transition:background .3s ease, color .3s ease, border-color .3s ease;
   }
   .back-link{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500; color:rgba(243,239,228,.8);}
   .back-link:hover{color:#fff;}
@@ -68,7 +66,6 @@
     padding:50px 90px 100px;
     background:radial-gradient(ellipse at 50% 35%, var(--navy-soft) 0%, var(--navy-deep) 72%);
     perspective:2200px;
-    transition:background .3s ease;
   }
 
   #zoomWrap{ width:100%; max-width:920px; }
@@ -92,7 +89,7 @@
     width:44px; height:44px; border-radius:50%;
     background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
     color:rgba(243,239,228,.85); display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:background .2s ease, color .2s ease, border-color .2s ease;
+    cursor:pointer; transition:background .2s ease;
   }
   .stage-nav:hover{background:rgba(255,255,255,.14);}
   .stage-nav:disabled{opacity:.25; cursor:default;}
@@ -131,7 +128,7 @@
   .leaf.dark{ background:var(--navy); color:var(--ink); }
   .leaf.dark .page-idx{ color:rgba(243,239,228,.4); }
 
-  .cov{ text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; position:relative; z-index:1; }
+  .cov{ text-align:center; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; height:100%; position:relative; z-index:1; padding-top:26%; }
   .cov .logo-img{ width:150px; height:auto; margin:0 0 22px; display:block; }
   .cov .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.16em; color:var(--brass); text-transform:uppercase; margin-bottom:12px;}
   .cov h1{ font-size:24px; font-weight:700; color:var(--ink); line-height:1.16;}
@@ -155,6 +152,35 @@
   .photo-panel{ position:relative; width:100%; height:100%; overflow:hidden; }
   .photo-panel svg{ position:absolute; inset:0; width:100%; height:100%; }
   .photo-cap{ position:absolute; left:18px; bottom:18px; right:18px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:rgba(255,255,255,.75); text-transform:uppercase; }
+
+  /* ---- EDITOR'S NOTE ---- */
+  .note-page{ justify-content:flex-start; }
+  .note-eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--brass); margin-bottom:6px;
+  }
+  .note-head{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:600;
+    font-size:25px; color:var(--rust); line-height:1.1;
+    position:relative; padding-bottom:14px; margin-bottom:16px;
+  }
+  .note-head::after{
+    content:""; position:absolute; left:0; bottom:0; width:52px; height:2px;
+    background:var(--brass);
+  }
+  .note-page p{ font-size:11.5px; color:rgba(20,33,61,.75); text-align:justify; line-height:1.7; margin-bottom:11px; }
+  .note-page p.lead::first-letter{
+    font-family:'Fraunces',serif; font-weight:700; font-size:40px; float:left;
+    line-height:.78; padding:5px 7px 0 0; color:var(--rust);
+  }
+  .note-sign{
+    margin-top:auto; padding-top:14px; border-top:1px solid rgba(20,33,61,.14);
+    font-family:'Fraunces',serif; font-style:italic; font-weight:600; font-size:12.5px; color:#0B2A4A;
+  }
+  .note-sign span{
+    display:block; font-family:'IBM Plex Mono',monospace; font-style:normal;
+    font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:rgba(20,33,61,.5); margin-top:3px;
+  }
 
   .toc .vert{
     writing-mode:vertical-rl; transform:rotate(180deg); font-family:'Fraunces',serif;
@@ -208,14 +234,13 @@
     background:rgba(20,20,22,.9); backdrop-filter:blur(6px);
     border:1px solid rgba(255,255,255,.1); border-radius:30px;
     padding:8px 10px; display:flex; align-items:center; gap:4px; z-index:20;
-    transition:background .3s ease, border-color .3s ease;
   }
-  .ctrl-btn{ width:34px; height:34px; border-radius:50%; background:transparent; border:none; color:rgba(243,239,228,.8); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s ease, color .3s ease; }
+  .ctrl-btn{ width:34px; height:34px; border-radius:50%; background:transparent; border:none; color:rgba(243,239,228,.8); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s ease; }
   .ctrl-btn:hover{ background:rgba(255,255,255,.1); }
   .ctrl-btn:disabled{ opacity:.3; cursor:default; }
   .ctrl-btn svg{ width:16px; height:16px; }
-  .ctrl-page{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:rgba(243,239,228,.9); padding:0 12px; white-space:nowrap; transition:color .3s ease; }
-  .ctrl-sep{ width:1px; height:20px; background:rgba(255,255,255,.14); margin:0 6px; transition:background .3s ease; }
+  .ctrl-page{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:rgba(243,239,228,.9); padding:0 12px; white-space:nowrap; }
+  .ctrl-sep{ width:1px; height:20px; background:rgba(255,255,255,.14); margin:0 6px; }
 
   /* ===== WIDGET AKSESIBILITAS ===== */
   :root{ --a11y-blue:#2A5CE6; }
@@ -270,38 +295,6 @@
   html.a11y-noimages .photo-panel svg,
   html.a11y-noimages .cov-bg{ visibility:hidden !important; }
 
-  /* ===== MODE SIANG / MALAM ===== */
-  html.light-mode body{ background:#DCD3BA; }
-  html.light-mode .breadcrumb{ background:#F3EFE4; color:rgba(11,42,74,.55); }
-  html.light-mode .breadcrumb a:hover{ color:#0B2A4A; }
-  html.light-mode .breadcrumb .sep{ color:rgba(11,42,74,.25); }
-  html.light-mode .reader-topbar{ background:#FBF9F3; color:#0B2A4A; border-bottom:1px solid rgba(11,42,74,.12); }
-  html.light-mode .back-link{ color:rgba(11,42,74,.72); }
-  html.light-mode .back-link:hover{ color:#0B2A4A; }
-  html.light-mode .topbar-title span{ color:var(--rust); }
-  html.light-mode .stage{ background:radial-gradient(ellipse at 50% 35%, #EFE9D8 0%, #DCD3BA 72%); }
-  html.light-mode .stage-nav{ background:rgba(11,42,74,.06); border-color:rgba(11,42,74,.16); color:rgba(11,42,74,.8); }
-  html.light-mode .stage-nav:hover{ background:rgba(11,42,74,.14); }
-  html.light-mode .ctrl-bar{ background:rgba(255,255,255,.92); border:1px solid rgba(11,42,74,.12); }
-  html.light-mode .ctrl-btn{ color:rgba(11,42,74,.78); }
-  html.light-mode .ctrl-btn:hover{ background:rgba(11,42,74,.08); }
-  html.light-mode .ctrl-page{ color:rgba(11,42,74,.9); }
-  html.light-mode .ctrl-sep{ background:rgba(11,42,74,.16); }
-
-  .theme-btn{
-    position:fixed; right:20px; bottom:26px; z-index:60;
-    width:48px; height:48px; border-radius:50%;
-    background:var(--navy); color:#fff; border:1px solid rgba(255,255,255,.14); cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 10px 24px rgba(0,0,0,.4);
-    transition:background .3s ease, color .3s ease, border-color .3s ease;
-  }
-  .theme-btn svg{ width:22px; height:22px; }
-  .theme-btn .icon-sun{ display:none; }
-  html.light-mode .theme-btn{ background:#fff; color:#0B2A4A; border-color:rgba(11,42,74,.16); }
-  html.light-mode .theme-btn .icon-moon{ display:none; }
-  html.light-mode .theme-btn .icon-sun{ display:flex; }
-
   @media (max-width:860px){
     .stage{ padding:30px 16px 110px; }
     .stage-nav{ width:36px; height:36px; }
@@ -318,8 +311,6 @@
     .view:not(.single) .leaf{ width:100%; aspect-ratio:auto; min-height:64vh; }
     .leaf.left-page::after, .leaf.right-page::after{ display:none; }
     .view.single{ max-width:92vw; }
-    .theme-btn{ width:42px; height:42px; right:14px; bottom:14px; }
-    .a11y-btn{ width:42px; height:42px; left:14px; bottom:14px; }
   }
 </style>
 </head>
@@ -394,11 +385,15 @@
       </div>
     </div>
 
-    {{-- SPREAD — 02 Dari Redaksi | 03 Daftar Isi --}}
+    {{-- SPREAD — 02 Editor's Note | 03 Daftar Isi --}}
     <div class="view" data-pages="2" style="display:none;">
-      <div class="leaf left-page">
-        <div class="kicker">Dari Redaksi</div>
-        <p style="font-size:12.5px; color:rgba(20,33,61,.75); margin-top:10px; text-align:justify;">{{ $current['intro'] }}</p>
+      <div class="leaf left-page note-page">
+        <div class="note-eyebrow">Sapaan Pembuka</div>
+        <div class="note-head">Editor&rsquo;s Note</div>
+        <p class="lead">{{ $current['intro'] }}</p>
+        <p>Setiap edisi Buletin Pengawasan kami susun untuk menjembatani jarak antara proses pemeriksaan yang teknis dengan hak masyarakat untuk tahu. Kami percaya transparansi bukan sekadar kewajiban administratif, melainkan bentuk tanggung jawab moral kepada publik yang kami layani sehari-hari.</p>
+        <p>Selamat membaca, dan semoga edisi ini memberi gambaran yang jernih atas apa yang sedang kami kerjakan di balik meja audit.</p>
+        <div class="note-sign">Redaksi Buletin Pengawasan<span>Inspektorat Kota Mojokerto</span></div>
         <span class="page-idx">02</span>
       </div>
       <div class="leaf right-page toc">
@@ -857,17 +852,6 @@
   </div>
 </div>
 
-{{-- ===== TOMBOL MODE SIANG / MALAM ===== --}}
-<button class="theme-btn" id="themeBtn" aria-label="Ganti Mode Siang/Malam">
-  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-  </svg>
-  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="12" cy="12" r="4.5"/>
-    <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/>
-  </svg>
-</button>
-
 <script>
   const views = Array.from(document.querySelectorAll('.view'));
   const totalViews = views.length;
@@ -1018,39 +1002,6 @@
         item.classList.remove('active');
       });
       window.__a11yReduceMotion = false;
-    });
-  })();
-</script>
-
-{{-- ===== SCRIPT MODE SIANG / MALAM ===== --}}
-<script>
-  (function(){
-    const root = document.documentElement;
-    const btn = document.getElementById('themeBtn');
-    const STORAGE_KEY = 'buletin-theme';
-
-    function applyTheme(mode){
-      if (mode === 'light') {
-        root.classList.add('light-mode');
-      } else {
-        root.classList.remove('light-mode');
-      }
-    }
-
-    let saved = null;
-    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
-
-    if (saved === 'light' || saved === 'dark') {
-      applyTheme(saved);
-    } else {
-      // belum pernah pilih -> ikuti jam perangkat: 06.00-17.59 = siang
-      const hour = new Date().getHours();
-      applyTheme(hour >= 6 && hour < 18 ? 'light' : 'dark');
-    }
-
-    btn.addEventListener('click', function(){
-      const isLight = root.classList.toggle('light-mode');
-      try { localStorage.setItem(STORAGE_KEY, isLight ? 'light' : 'dark'); } catch (e) {}
     });
   })();
 </script>

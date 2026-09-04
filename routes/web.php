@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KmsController;
+use App\Http\Controllers\PedomanController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\StrukturController;
@@ -77,6 +80,11 @@ Route::view('/layanan/kms', 'coming-soon', [
     'title' => 'KMS / Pedoman'
 ]);
 
+Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
+
+Route::get('/kontak', [KontakController::class, 'show'])->name('kontak.show');
+
+Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
 Route::redirect('/layanan/buletin', '/buletin', 301);
 
 Route::view('/layanan/skm', 'coming-soon', [
@@ -370,6 +378,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 // ---------- Profile ----------
+Route::get('/knowledge-base', [KmsController::class, 'index'])->name('kms.index');
+Route::get('/knowledge-base/{slug}', [KmsController::class, 'kategori'])->name('kms.kategori');
+
+Route::get('/pedoman', [PedomanController::class, 'index'])->name('pedoman.index');
+Route::get('/pedoman/{slug}', [PedomanController::class, 'kategori'])->name('pedoman.kategori');
+Route::get('/pedoman/{slug}/{id}', [PedomanController::class, 'detail'])->name('pedoman.detail');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
 Route::get('/profile', function () {
     return view('profile');
 });
