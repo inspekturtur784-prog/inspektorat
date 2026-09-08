@@ -1,0 +1,195 @@
+{
+    "pengaturan_profils": [
+        {
+            "id": 1,
+            "key": "tentang_intro",
+            "value": "Inspektorat adalah unsur pengawas penyelenggaraan pemerintahan daerah, yang bekerja langsung di bawah dan bertanggung jawab kepada Wali Kota. Kami hadir untuk memastikan setiap kebijakan, program, dan penggunaan anggaran daerah berjalan sesuai aturan — demi Kota Mojokerto yang bersih, akuntabel, dan terpercaya.",
+            "created_at": "2026-08-24T01:46:11.000000Z",
+            "updated_at": "2026-08-24T01:46:11.000000Z"
+        },
+        {
+            "id": 2,
+            "key": "kedudukan",
+            "value": "Merupakan unsur pengawas penyelenggaraan Pemerintahan Daerah, dipimpin oleh Inspektur yang berkedudukan di bawah dan bertanggung jawab kepada Wali Kota melalui Sekretaris Daerah Kota.",
+            "created_at": "2026-08-24T01:46:11.000000Z",
+            "updated_at": "2026-08-24T01:46:11.000000Z"
+        },
+        {
+            "id": 3,
+            "key": "peran",
+            "value": "Menjadi mitra strategis seluruh perangkat daerah dalam mewujudkan tata kelola pemerintahan yang taat aturan dan berintegritas.",
+            "created_at": "2026-08-24T01:46:11.000000Z",
+            "updated_at": "2026-08-24T01:46:11.000000Z"
+        },
+        {
+            "id": 4,
+            "key": "tujuan",
+            "value": "Mewujudkan penyelenggaraan pemerintahan Kota Mojokerto yang bersih, akuntabel, dan bebas dari korupsi.",
+            "created_at": "2026-08-24T01:46:11.000000Z",
+            "updated_at": "2026-08-24T01:46:11.000000Z"
+        },
+        {
+            "id": 5,
+            "key": "fungsi_singkat",
+            "value": "Melaksanakan audit, reviu, evaluasi, pemantauan, dan bentuk pengawasan lain sesuai kebijakan Wali Kota.",
+            "created_at": "2026-08-24T01:46:11.000000Z",
+            "updated_at": "2026-08-24T01:46:11.000000Z"
+        },
+        {
+            "id": 6,
+            "key": "visi",
+            "value": "Terwujudnya pengawasan yang profesional untuk mendukung tata kelola pemerintahan Kota Mojokerto yang bersih, akuntabel, dan berintegritas.",
+            "created_at": "2026-08-24T01:46:11.000000Z",
+            "updated_at": "2026-08-24T01:46:11.000000Z"
+        },
+        {
+            "id": 7,
+            "key": "misi",
+            "value": "Meningkatkan kualitas dan profesionalisme aparatur pengawasan internal pemerintah.\r\nMendorong penyelenggaraan pemerintahan daerah yang taat aturan dan bebas dari korupsi, kolusi, dan nepotisme.\r\nMemperkuat sistem pengendalian intern pada seluruh perangkat daerah.\r\nMembangun budaya integritas dan zona bebas gratifikasi di lingkungan pemerintah kota.",
+            "created_at": "2026-08-24T01:46:11.000000Z",
+            "updated_at": "2026-08-29T04:08:03.000000Z"
+        },
+        {
+            "id": 8,
+            "key": "tugas_pokok",
+            "value": "Membantu Wali Kota membina dan mengawasi pelaksanaan Urusan Pemerintahan yang menjadi kewenangan Daerah dan tugas pembantuan oleh Perangkat Daerah.",
+            "created_at": "2026-08-24T01:46:11.000000Z",
+            "updated_at": "2026-08-24T01:46:11.000000Z"
+        }
+    ],
+    "tugas_fungsis": [
+        {
+            "id": 1,
+            "judul": "Perumusan Kebijakan",
+            "deskripsi": "Merumuskan kebijakan teknis bidang pengawasan dan fasilitasi pengawasan.",
+            "icon": "kebijakan",
+            "urutan": 1,
+            "created_at": "2026-08-24T01:47:10.000000Z",
+            "updated_at": "2026-08-24T01:47:10.000000Z"
+        },
+        {
+            "id": 2,
+            "judul": "Pengawasan Internal",
+            "deskripsi": "Audit, reviu, evaluasi, dan pemantauan kinerja serta keuangan perangkat daerah.",
+            "icon": "pengawasan",
+            "urutan": 2,
+            "created_at": "2026-08-24T01:47:10.000000Z",
+            "updated_at": "2026-08-24T01:47:10.000000Z"
+        },
+        {
+            "id": 3,
+            "judul": "Audit Khusus",
+            "deskripsi": "Audit dengan tujuan tertentu, audit investigasi, dan audit kinerja atas penugasan Wali Kota.",
+            "icon": "audit",
+            "urutan": 3,
+            "created_at": "2026-08-24T01:47:10.000000Z",
+            "updated_at": "2026-08-24T01:47:10.000000Z"
+        },
+        {
+            "id": 4,
+            "judul": "Pelaporan Hasil",
+            "deskripsi": "Menyusun laporan hasil pengawasan secara berkala dan menyeluruh.",
+            "icon": "laporan",
+            "urutan": 4,
+            "created_at": "2026-08-24T01:47:10.000000Z",
+            "updated_at": "2026-08-24T01:47:10.000000Z"
+        },
+        {
+            "id": 5,
+            "judul": "Administrasi Inspektorat",
+            "deskripsi": "Mengelola tata usaha, kepegawaian, dan administrasi internal Inspektorat.",
+            "icon": "administrasi",
+            "urutan": 5,
+            "created_at": "2026-08-24T01:47:10.000000Z",
+            "updated_at": "2026-08-24T01:47:10.000000Z"
+        },
+        {
+            "id": 6,
+            "judul": "Fungsi Lainnya",
+            "deskripsi": "Melaksanakan fungsi lain yang diberikan Wali Kota terkait tugas pokok dan fungsinya.",
+            "icon": "lainnya",
+            "urutan": 6,
+            "created_at": "2026-08-24T01:47:10.000000Z",
+            "updated_at": "2026-08-24T01:47:10.000000Z"
+        }
+    ],
+    "struktur_bagians": [
+        {
+            "id": 1,
+            "nama": "Inspektur",
+            "jabatan_desc": "Pimpinan tertinggi Inspektorat, berkedudukan di bawah dan bertanggung jawab kepada Wali Kota melalui Sekretaris Daerah Kota.",
+            "tugas": "Membantu Wali Kota membina dan mengawasi pelaksanaan Urusan Pemerintahan yang menjadi kewenangan Daerah dan tugas pembantuan oleh Perangkat Daerah.",
+            "bidang_key": "Inspektur",
+            "is_top": true,
+            "urutan": 1,
+            "created_at": "2026-08-24T01:48:22.000000Z",
+            "updated_at": "2026-08-24T01:48:22.000000Z"
+        },
+        {
+            "id": 2,
+            "nama": "Sekretariat",
+            "jabatan_desc": "Membawahi Subbagian Perencanaan dan Keuangan; Subbagian Umum dan Kepegawaian. Masing-masing dipimpin Kepala Sub Bagian yang bertanggung jawab kepada Sekretaris.",
+            "tugas": "Menyelenggarakan penyusunan, perencanaan, dan pengelolaan urusan keuangan, kepegawaian, dan umum, serta mengoordinasikan secara teknis dan administratif pelaksanaan kegiatan dinas.",
+            "bidang_key": "Sekretariat",
+            "is_top": false,
+            "urutan": 2,
+            "created_at": "2026-08-24T01:48:22.000000Z",
+            "updated_at": "2026-08-24T01:48:22.000000Z"
+        },
+        {
+            "id": 3,
+            "nama": "Kelompok Jabatan Fungsional",
+            "jabatan_desc": "Auditor Ahli Utama, Auditor Ahli Madya, Pengawas Penyelenggaraan Urusan Pemerintahan Daerah (P2UPD) Ahli Madya, Perencana Ahli Madya.",
+            "tugas": "Melaksanakan audit, reviu, evaluasi, dan pemantauan tingkat lanjut yang langsung berada di bawah koordinasi Inspektur.",
+            "bidang_key": "Kelompok Jabatan Fungsional",
+            "is_top": false,
+            "urutan": 3,
+            "created_at": "2026-08-24T01:48:22.000000Z",
+            "updated_at": "2026-08-24T01:48:22.000000Z"
+        },
+        {
+            "id": 4,
+            "nama": "Irban I",
+            "jabatan_desc": "Kelompok Jabatan Fungsional: Auditor Terampil, Auditor Mahir, Auditor Penyelia, Auditor Ahli Pertama, Auditor Ahli Muda, P2UPD Ahli Pertama, P2UPD Ahli Muda.",
+            "tugas": "Melaksanakan pengawasan atas perangkat daerah binaan pada wilayah kerja Irban I.",
+            "bidang_key": "Irban I",
+            "is_top": false,
+            "urutan": 4,
+            "created_at": "2026-08-24T01:48:22.000000Z",
+            "updated_at": "2026-08-24T01:48:22.000000Z"
+        },
+        {
+            "id": 5,
+            "nama": "Irban II",
+            "jabatan_desc": "Kelompok Jabatan Fungsional: Auditor Terampil, Auditor Mahir, Auditor Penyelia, Auditor Ahli Pertama, Auditor Ahli Muda, P2UPD Ahli Pertama, P2UPD Ahli Muda.",
+            "tugas": "Melaksanakan pengawasan atas perangkat daerah binaan pada wilayah kerja Irban II.",
+            "bidang_key": "Irban II",
+            "is_top": false,
+            "urutan": 5,
+            "created_at": "2026-08-24T01:48:22.000000Z",
+            "updated_at": "2026-08-24T01:48:22.000000Z"
+        },
+        {
+            "id": 6,
+            "nama": "Irban III",
+            "jabatan_desc": "Kelompok Jabatan Fungsional: Auditor Terampil, Auditor Mahir, Auditor Penyelia, Auditor Ahli Pertama, Auditor Ahli Muda, P2UPD Ahli Pertama, P2UPD Ahli Muda.",
+            "tugas": "Melaksanakan pengawasan atas perangkat daerah binaan pada wilayah kerja Irban III.",
+            "bidang_key": "Irban III",
+            "is_top": false,
+            "urutan": 6,
+            "created_at": "2026-08-24T01:48:22.000000Z",
+            "updated_at": "2026-08-24T01:48:22.000000Z"
+        },
+        {
+            "id": 7,
+            "nama": "Irban Khusus",
+            "jabatan_desc": "Kelompok Jabatan Fungsional: Auditor Terampil, Auditor Mahir, Auditor Penyelia, Auditor Ahli Pertama, Auditor Ahli Muda, P2UPD Ahli Pertama, P2UPD Ahli Muda.",
+            "tugas": "Menangani penugasan pengawasan khusus, termasuk audit investigasi dan audit dengan tujuan tertentu.",
+            "bidang_key": "Irban Khusus",
+            "is_top": false,
+            "urutan": 7,
+            "created_at": "2026-08-24T01:48:22.000000Z",
+            "updated_at": "2026-08-24T01:48:22.000000Z"
+        }
+    ]
+}

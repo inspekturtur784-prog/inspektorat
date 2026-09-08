@@ -9,6 +9,7 @@ use App\Models\Galeri;
 use App\Models\StrukturBagian;
 use App\Models\TugasFungsi;
 use App\Models\Pesan;
+use App\Models\Buletin;
 
 class DashboardController extends Controller
 {
@@ -21,6 +22,7 @@ class DashboardController extends Controller
             'struktur'  => StrukturBagian::count(),
             'fungsi'    => TugasFungsi::count(),
             'pesan'     => Pesan::where('is_read', false)->count(),
+            'buletin'   => Buletin::count(),
         ];
 
         return view('admin.dashboard', compact('stats'));

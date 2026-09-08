@@ -50,6 +50,12 @@
                         <span class="admin-nav-badge">{{ $belumDibaca }}</span>
                     @endif
                 </a>
+                <a href="{{ route('admin.articles.index') }}" class="{{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
+    Artikel / Informasi
+</a>
+<a href="{{ route('admin.buletin.index') }}" class="{{ request()->routeIs('admin.buletin.*') ? 'active' : '' }}">
+    Buletin
+</a>
                 {{-- Tambahkan menu admin lain di sini: Pedoman, Layanan, Publikasi, dst. --}}
             </nav>
 

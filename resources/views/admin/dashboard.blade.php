@@ -35,6 +35,10 @@
         <span class="dash-stat-number">{{ $stats['pesan'] }}</span>
         <span class="dash-stat-label">Pesan Belum Dibaca</span>
     </a>
+    <a href="{{ route('admin.buletin.index') }}" class="dash-stat-card">
+        <span class="dash-stat-number">{{ $stats['buletin'] }}</span>
+        <span class="dash-stat-label">Buletin</span>
+    </a>
 </div>
 
 <div class="admin-header" style="margin-top:40px;">
@@ -48,5 +52,6 @@
     <a href="{{ route('admin.galeri.index') }}" class="dash-quicklink">Galeri</a>
     <a href="{{ route('admin.articles.index') }}" class="dash-quicklink">Artikel / Informasi</a>
     <a href="{{ route('admin.pesan.index') }}" class="dash-quicklink">Pesan Masuk</a>
+    <a href="{{ route('admin.buletin.index') }}" class="dash-quicklink">Buletin</a>
 </div>
 @endsection

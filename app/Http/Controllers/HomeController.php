@@ -9,24 +9,32 @@ class HomeController extends Controller
 {
     /**
      * Menampilkan halaman Beranda Inspektorat Kota Mojokerto.
-     *
-     * Section yang dirender di view home.blade.php:
-     * - Hero / Banner
-     * - Apa Itu Inspektorat (Pengertian, Peran, Fungsi, Tujuan)
-     * - Layanan Utama
-     * - Artikel / Informasi Terbaru (CRUD dari Admin, lihat App\Http\Controllers\Admin\ArticleController)
-     * - Statistik singkat (opsional)
      */
     public function index()
     {
-        $articles = Article::published()->limit(3)->get();
-        $p = PengaturanProfil::semua();
+        // 1. Ambil artikel dipublikasi (dengan fallback jika Model Article belum siap)
+        $articles = class_exists('\App\Models\Article') 
+            ? Article::published()->limit(3)->get() 
+            : collect();
 
-        // Statistik: Jumlah Artikel sudah dari data asli (tabel articles).
-        // Pedoman / Layanan / Publikasi masih placeholder — tinggal ganti
-        // dengan Model::count() masing-masing begitu modulnya dibuat.
+        // 2. Ambil data Pengaturan Profil
+        $p = class_exists('\App\Models\PengaturanProfil') 
+            ? PengaturanProfil::semua() 
+            : null;
+
+        // Fallback data RINGKAS khusus untuk Beranda (Teaser)
+        if (!$p) {
+            $p = [
+                'kedudukan' => 'Unsur pengawas penyelenggaraan pemerintahan daerah yang dipimpin oleh Inspektur dan bertanggung jawab langsung kepada Wali Kota.',
+                'peran'     => 'Mitra strategis perangkat daerah sebagai APIP dalam mendorong tata kelola yang taat aturan.',
+                'tujuan'    => 'Mewujudkan penyelenggaraan pemerintahan Kota Mojokerto yang bersih, akuntabel, dan transparan.',
+                'fungsi'    => 'Melaksanakan perumusan kebijakan teknis, audit, reviu, evaluasi, serta pemantauan pengawasan internal.'
+            ];
+        }
+
+        // 3. Statistik singkat
         $stats = [
-            'artikel'   => Article::published()->count(),
+            'artikel'   => class_exists('\App\Models\Article') ? Article::published()->count() : 0,
             'pedoman'   => 12,
             'layanan'   => 4,
             'publikasi' => 8,

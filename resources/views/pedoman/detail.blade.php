@@ -17,12 +17,12 @@
 </head>
 <body>
 
-    <header class="border-b-2 border-[#06182E] px-6 md:px-12 py-5 flex justify-between items-center">
+    <header class="bg-[#06182E] border-b border-white/10 px-6 md:px-12 py-5 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <img src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto" class="h-12 w-auto">
             <div>
                 <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
-                <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg hover:text-[#0B2A4A] transition block">
+                <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg text-white hover:text-[#D4AF6A] transition block">
                     Knowledge Management System &amp; Pedoman
                 </a>
             </div>

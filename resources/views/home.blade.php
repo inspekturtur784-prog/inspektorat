@@ -109,7 +109,7 @@
                 </div>
                 <h3>KMS / Pedoman</h3>
                 <p>Kumpulan pedoman dan pengetahuan pengawasan yang bisa diakses dan dipelajari kapan saja.</p>
-                <a href="{{ url('/layanan/kms') }}" class="service-link">
+                <a href="{{ url('/knowledge-base') }}" class="service-link">
                     Lihat Layanan
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
@@ -122,7 +122,7 @@
                 </div>
                 <h3>Buletin Pengawasan</h3>
                 <p>Publikasi berkala berisi wawasan, kebijakan, dan perkembangan seputar dunia pengawasan.</p>
-                <a href="{{ url('/layanan/buletin') }}" class="service-link">
+              <a href="buletin" class="service-link">
                     Lihat Layanan
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>

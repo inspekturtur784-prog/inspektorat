@@ -5,131 +5,93 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Buletin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class BuletinController extends Controller
 {
-    /**
-     * Menampilkan semua buletin
-     */
     public function index()
     {
-        $buletins = Buletin::latest()->get();
-
+        $buletins = Buletin::orderByDesc('created_at')->paginate(10);
         return view('admin.buletin.index', compact('buletins'));
     }
 
-    /**
-     * Menampilkan form tambah buletin
-     */
     public function create()
     {
         return view('admin.buletin.create');
     }
 
-    /**
-     * Menyimpan buletin baru
-     */
     public function store(Request $request)
     {
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'kategori' => 'nullable|string|max:100',
-            'tanggal' => 'nullable|date',
-            'deskripsi' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
+        $data = $this->validated($request, true);
 
-        $data = [
-            'judul' => $request->judul,
-            'kategori' => $request->kategori,
-            'tanggal' => $request->tanggal,
-            'deskripsi' => $request->deskripsi,
-        ];
+        if ($request->hasFile('cover_image')) {
+            $data['cover_image'] = $this->handleCoverUpload($request);
+        }
 
-        // Upload foto
-        if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')
-                ->store('buletin', 'public');
+        if ($request->hasFile('pdf_file')) {
+            $data['pdf_file'] = $this->handlePdfUpload($request);
         }
 
         Buletin::create($data);
 
-        return redirect()
-            ->route('admin.buletin.index')
-            ->with('success', 'Buletin berhasil ditambahkan.');
+        return redirect()->route('admin.buletin.index')->with('status', 'Buletin berhasil ditambahkan.');
     }
 
-    /**
-     * Menampilkan detail buletin
-     */
-    public function show(Buletin $buletin)
-    {
-        return view('admin.buletin.show', compact('buletin'));
-    }
-
-    /**
-     * Menampilkan form edit
-     */
     public function edit(Buletin $buletin)
     {
         return view('admin.buletin.edit', compact('buletin'));
     }
 
-    /**
-     * Memperbarui buletin
-     */
     public function update(Request $request, Buletin $buletin)
     {
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'kategori' => 'nullable|string|max:100',
-            'tanggal' => 'nullable|date',
-            'deskripsi' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
+        $data = $this->validated($request, false);
 
-        $data = [
-            'judul' => $request->judul,
-            'kategori' => $request->kategori,
-            'tanggal' => $request->tanggal,
-            'deskripsi' => $request->deskripsi,
-        ];
+        if ($request->hasFile('cover_image')) {
+            $data['cover_image'] = $this->handleCoverUpload($request);
+        }
 
-        // Jika upload foto baru
-        if ($request->hasFile('foto')) {
-
-            // Hapus foto lama
-            if ($buletin->foto) {
-                Storage::disk('public')->delete($buletin->foto);
-            }
-
-            // Simpan foto baru
-            $data['foto'] = $request->file('foto')
-                ->store('buletin', 'public');
+        if ($request->hasFile('pdf_file')) {
+            $data['pdf_file'] = $this->handlePdfUpload($request);
         }
 
         $buletin->update($data);
 
-        return redirect()
-            ->route('admin.buletin.index')
-            ->with('success', 'Buletin berhasil diperbarui.');
+        return redirect()->route('admin.buletin.index')->with('status', 'Buletin berhasil diperbarui.');
     }
 
-    /**
-     * Menghapus buletin
-     */
     public function destroy(Buletin $buletin)
     {
-        // Hapus file foto
-        if ($buletin->foto) {
-            Storage::disk('public')->delete($buletin->foto);
-        }
-
         $buletin->delete();
+        return redirect()->route('admin.buletin.index')->with('status', 'Buletin berhasil dihapus.');
+    }
 
-        return redirect()
-            ->route('admin.buletin.index')
-            ->with('success', 'Buletin berhasil dihapus.');
+    private function validated(Request $request, bool $isCreate): array
+    {
+        return $request->validate([
+            'title'          => 'required|string|max:255',
+            'label'          => 'nullable|string|max:255',
+            'image_position' => 'nullable|in:top,center,bottom',
+            'theme'          => 'nullable|in:navy,brass,rust,forest',
+            'is_published'   => 'nullable|boolean',
+            'published_at'   => 'nullable|date',
+            'cover_image'    => 'nullable|image|max:4096',
+            // Saat tambah baru, PDF wajib. Saat edit, boleh dikosongkan (pakai PDF lama).
+            'pdf_file'       => ($isCreate ? 'required' : 'nullable') . '|file|mimes:pdf|max:20480',
+        ]);
+    }
+
+    private function handleCoverUpload(Request $request): ?string
+    {
+        $file = $request->file('cover_image');
+        $name = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('images/buletin'), $name);
+        return $name;
+    }
+
+    private function handlePdfUpload(Request $request): ?string
+    {
+        $file = $request->file('pdf_file');
+        $name = time() . '_' . preg_replace('/\s+/', '-', $file->getClientOriginalName());
+        $file->move(public_path('buletin-pdf'), $name);
+        return $name;
     }
 }

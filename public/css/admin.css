@@ -4,11 +4,13 @@
 
 .admin-sidebar{
   width:240px;flex-shrink:0;background:var(--navy-deep);color:#fff;
-  padding:24px 18px;display:flex;flex-direction:column;gap:28px;
+  padding:24px 18px;display:flex;flex-direction:column;gap:28px;justify-content:space-between;
   position:sticky;
   top:0;
   height:100vh;
   overflow-y:auto;
+  z-index:40;
+  transition:transform .25s ease;
 }
 .admin-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;text-decoration:none;color:#fff;}
 .admin-brand img{height:32px;width:32px;}
@@ -18,19 +20,38 @@
 }
 .admin-sidebar nav a:hover,.admin-sidebar nav a.active{background:rgba(255,255,255,.08);color:#fff;}
 
-.admin-main{flex:1;padding:36px 40px;max-width:1000px;}
+/* Konten utama — dibuat FULL, tanpa max-width supaya memenuhi layar di semua ukuran */
+.admin-main{
+  flex:1;
+  min-width:0; /* penting: cegah tabel lebar mendorong seluruh halaman */
+  padding:36px 40px;
+  width:100%;
+}
 .admin-alert{
   background:#E7F4E8;border:1px solid #9FCFA4;color:#1F6B2A;
   padding:12px 16px;border-radius:10px;margin-bottom:22px;font-size:14px;
 }
 
-.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;flex-wrap:wrap;gap:12px;}
 .admin-header h1{font-family:'Fraunces',serif;font-size:24px;color:var(--navy);margin:0;}
 
-.admin-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);}
-.admin-table th,.admin-table td{text-align:left;padding:12px 16px;font-size:14px;border-bottom:1px solid #ECEAE2;}
-.admin-table th{background:#FAF9F5;color:var(--slate);font-weight:600;text-transform:uppercase;font-size:11.5px;letter-spacing:.05em;}
+/* Wrapper supaya tabel bisa discroll horizontal di layar sempit, tanpa merusak layout */
+.admin-table-wrapper{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+}
+.admin-table-wrapper .admin-table{box-shadow:none;border-radius:0;}
+
+.admin-table{width:100%;min-width:640px;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.admin-table th,.admin-table td{text-align:left;padding:14px 16px;font-size:14px;border-bottom:1px solid #ECEAE2;vertical-align:middle;}
+.admin-table th{background:#FAF9F5;color:var(--slate);font-weight:600;text-transform:uppercase;font-size:11.5px;letter-spacing:.05em;white-space:nowrap;}
 .admin-table tr:last-child td{border-bottom:none;}
+.admin-table td:last-child,.admin-table th:last-child{padding-right:20px;}
+.admin-table img{vertical-align:middle;}
 .badge{padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;}
 .badge-on{background:#E7F4E8;color:#1F6B2A;}
 .badge-off{background:#F4E7E7;color:#A3312B;}
@@ -52,17 +73,22 @@
 .checkbox-row input{width:auto;}
 
 .btn-admin{
-  display:inline-flex;align-items:center;gap:8px;padding:10px 20px;
-  border-radius:999px;font-weight:600;font-size:14px;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 18px;
+  border-radius:999px;font-weight:600;font-size:13.5px;border:none;cursor:pointer;
+  white-space:nowrap;line-height:1.2;
 }
 .btn-admin-primary{background:var(--navy);color:#fff;}
 .btn-admin-primary:hover{background:var(--navy-soft);}
 .btn-admin-danger{background:#A3312B;color:#fff;}
 .btn-admin-ghost{background:#EDEBE2;color:var(--ink);}
-.row-actions{display:flex;gap:8px;}
+.row-actions{white-space:nowrap;}
+.row-actions .btn-admin,
+.row-actions form{display:inline-block;vertical-align:middle;margin-right:8px;}
+.row-actions form{margin-bottom:0;}
+.row-actions .btn-admin:last-child,
+.row-actions form:last-child{margin-right:0;}
 
 /* ---------- Sidebar footer: user info + ganti password + logout ---------- */
-.admin-sidebar{justify-content:space-between;}
 .admin-sidebar-footer{
   display:flex;flex-direction:column;gap:4px;
   padding-top:16px;border-top:1px solid rgba(255,255,255,.1);
@@ -107,13 +133,6 @@
 }
 .dash-quicklink:hover{border-color:var(--gold);background:var(--cream);}
 
-@media (max-width:1100px){
-  .dash-stats{grid-template-columns:repeat(3,1fr);}
-}
-@media (max-width:640px){
-  .dash-stats{grid-template-columns:1fr 1fr;}
-}
-
 /* ---------- Badge jumlah pesan belum dibaca ---------- */
 .admin-nav-badge{
   background:var(--red);color:#fff;font-size:11px;font-weight:700;
@@ -122,3 +141,47 @@
 
 /* ---------- Form lebar khusus (halaman Tentang & Visi Misi) ---------- */
 .admin-form-wide{max-width:820px;}
+
+/* ---------- Topbar mobile (hamburger) ---------- */
+.admin-topbar{
+  display:none;align-items:center;gap:.75rem;
+  background:var(--navy-deep);color:#fff;
+  padding:.9rem 1rem;position:sticky;top:0;z-index:50;
+}
+.admin-topbar-toggle{
+  background:none;border:none;color:#fff;cursor:pointer;padding:.35rem;
+  display:flex;flex-direction:column;gap:4px;
+}
+.admin-topbar-toggle span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;}
+.admin-topbar-title{font-weight:700;font-size:.95rem;}
+.admin-overlay{
+  display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:39;
+}
+
+/* ---------- Responsive: laptop kecil / tablet ---------- */
+@media (max-width:1200px){
+  .dash-stats{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:1024px){
+  .admin-main{padding:24px;}
+}
+
+/* ---------- Responsive: HP / tablet kecil ---------- */
+@media (max-width:768px){
+  .admin-topbar{display:flex;}
+  .admin-shell{flex-direction:column;}
+
+  .admin-sidebar{
+    position:fixed;top:0;left:0;height:100vh;
+    transform:translateX(-100%);
+  }
+  .admin-sidebar.is-open{transform:translateX(0);}
+  .admin-overlay.is-open{display:block;}
+
+  .admin-main{width:100%;padding:18px;}
+  .admin-header{align-items:flex-start;}
+  .dash-stats{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:480px){
+  .dash-stats{grid-template-columns:1fr;}
+}
