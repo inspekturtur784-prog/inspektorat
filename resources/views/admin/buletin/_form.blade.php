@@ -4,7 +4,7 @@
 </div>
 
 <div class="form-group">
-    <label>Label Edisi (mis. EDISI 01 · TRIWULAN I 2026)</label>
+    <label>Label Edisi (mis. EDISI 01 · INSPEKTORAT 2026)</label>
     <input type="text" name="label" value="{{ old('label', $buletin->label ?? '') }}">
 </div>
 
@@ -49,29 +49,12 @@
     </select>
 </div>
 
-<div class="form-group">
-    <label>Tema Warna Kartu</label>
-    <select name="theme" id="themeSelect">
-        <option value="navy"   {{ old('theme', $buletin->theme ?? 'navy') == 'navy' ? 'selected' : '' }}>Navy (Biru Tua)</option>
-        <option value="brass"  {{ old('theme', $buletin->theme ?? 'navy') == 'brass' ? 'selected' : '' }}>Brass (Emas Tua)</option>
-        <option value="rust"   {{ old('theme', $buletin->theme ?? 'navy') == 'rust' ? 'selected' : '' }}>Rust (Merah Bata)</option>
-        <option value="forest" {{ old('theme', $buletin->theme ?? 'navy') == 'forest' ? 'selected' : '' }}>Forest (Hijau Tua)</option>
-    </select>
-    <div id="themeSwatch" style="width:28px;height:28px;border-radius:6px;margin-top:8px;border:1px solid #ccc;"></div>
-</div>
-
 <script>
 (function () {
     var input = document.getElementById('coverInput');
     var preview = document.getElementById('coverPreview');
     var posSelect = document.getElementById('imagePositionSelect');
-    var themeSelect = document.getElementById('themeSelect');
-    var swatch = document.getElementById('themeSwatch');
-    var themeColors = { navy: '#0f2139', brass: '#b08d57', rust: '#a5462f', forest: '#2f4a3c' };
 
-    function updateSwatch() {
-        swatch.style.background = themeColors[themeSelect.value] || themeColors.navy;
-    }
     input.addEventListener('change', function (e) {
         var file = e.target.files[0];
         if (file) preview.src = URL.createObjectURL(file);
@@ -79,11 +62,12 @@
     posSelect.addEventListener('change', function () {
         preview.style.objectPosition = posSelect.value;
     });
-    themeSelect.addEventListener('change', updateSwatch);
-    updateSwatch();
 })();
 </script>
 
 <div class="form-group" style="margin-top:20px;">
-    <label><input type="checkbox" name="is_published" value="1" {{ old('is_published', $buletin->is_published ?? true) ? 'checked' : '' }}> Tayangkan</label>
+    <label>
+        <input type="checkbox" name="is_published" value="1" {{ old('is_published', $buletin->is_published ?? true) ? 'checked' : '' }}>
+        Tayangkan
+    </label>
 </div>

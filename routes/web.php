@@ -15,6 +15,7 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\SkmController;
 use App\Http\Controllers\KonsultasiController;
 use App\Http\Controllers\KontakController;
+use App\Models\Buletin;
 
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Http\Controllers\Admin\PegawaiController as AdminPegawaiController;
@@ -110,50 +111,16 @@ Route::get('/pedoman/{slug}', [PedomanController::class, 'kategori'])->name('ped
 Route::get('/pedoman/{slug}/{id}', [PedomanController::class, 'detail'])->name('pedoman.detail');
 
 // ==========================================================
-// BULETIN PUBLIK
+// BULETIN PUBLIK (dari database)
 // ==========================================================
-$editions = [
-    'edisi-01-2026' => [
-        'label' => 'EDISI 01 · TRIWULAN I 2026',
-        'title' => 'Evaluasi SAKIP',
-        'intro' => 'Edisi ini mengajak pembaca melihat lebih dekat bagaimana proses reviu berjalan sebelum anggaran direalisasikan.',
-        'toc' => [
-            ['no' => '03', 't' => 'Dari Redaksi'],
-            ['no' => '04', 't' => 'Laporan Utama — Reviu Sebelum Realisasi'],
-            ['no' => '06', 't' => 'Sorotan — Capaian Tindak Lanjut Triwulan I'],
-            ['no' => '08', 't' => 'Wawancara — Menjaga Independensi Auditor'],
-            ['no' => '10', 't' => 'Ruang Publik — Cara Mengajukan Pengaduan'],
-        ],
-        'art_kicker' => 'Laporan Utama',
-        'art_title' => 'Reviu Sebelum Realisasi',
-        'art_p1' => 'Sebagian besar temuan pemeriksaan sebenarnya bisa dicegah sejak dokumen perencanaan disusun.',
-        'art_pull' => '"Koreksi di atas kertas jauh lebih murah dibanding koreksi setelah anggaran cair."',
-        'art_p2' => 'Sepanjang triwulan pertama, puluhan dokumen rencana kerja telah melalui proses reviu.',
-        'stats_title' => 'Capaian Triwulan I',
-        'stats' => [
-            ['label' => 'Selesai Tuntas', 'value' => 78, 'color' => 'brass'],
-            ['label' => 'Verifikasi', 'value' => 14, 'color' => 'brass'],
-            ['label' => 'Belum Ditindak', 'value' => 8, 'color' => 'rust'],
-        ],
-        'stats_note' => 'Dari 96 rekomendasi triwulan sebelumnya, mayoritas telah tuntas usai verifikasi lapangan.',
-        'iv_title' => 'Menjaga Independensi',
-        'iv_q' => 'Apa tantangan terbesar dalam reviu di awal tahun anggaran?',
-        'iv_a' => 'Waktunya sempit — unit kerja sering mengajukan dokumen mepet deadline.',
-        'iv_who' => 'Tim Reviu Perencanaan, Inspektorat',
-    ],
-];
-
-Route::get('/buletin', function () use ($editions) {
-    return view('buletin.index', ['editions' => $editions]);
+Route::get('/buletin', function () {
+    $buletins = Buletin::published()->get();
+    return view('buletin.index', ['buletins' => $buletins]);
 })->name('buletin.index');
 
-Route::get('/buletin/{slug}', function ($slug) use ($editions) {
-    $current = $editions[$slug] ?? $editions['edisi-01-2026'];
-    return view('buletin.show', [
-        'current' => $current,
-        'totalPages' => 8,
-        'slug' => $slug,
-    ]);
+Route::get('/buletin/{slug}', function ($slug) {
+    $buletin = Buletin::where('slug', $slug)->published()->firstOrFail();
+    return view('buletin.show', ['buletin' => $buletin]);
 })->name('buletin.show');
 
 // ---------- Redirect Login User ke Admin Login ----------

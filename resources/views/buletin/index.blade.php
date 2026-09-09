@@ -54,7 +54,6 @@
   .breadcrumb .sep{ color:rgba(243,239,228,.3); }
   .breadcrumb .current{ color:var(--brass); }
 
-  /* ===== HERO / JUDUL HALAMAN ===== */
   .page-hero{
     background:radial-gradient(ellipse at 50% 0%, var(--navy-soft) 0%, var(--navy-deep) 68%);
     padding:46px 24px 30px; text-align:center;
@@ -75,7 +74,6 @@
     transition:color .3s ease;
   }
 
-  /* ===== FILTER BAR (search + tahun) ===== */
   .filter-bar{
     max-width:1080px; margin:0 auto; padding:30px 24px 4px;
     position:relative; z-index:1;
@@ -129,7 +127,6 @@
     gap:24px;
   }
 
-  /* ===== CARD ===== */
   .card{
     background:var(--paper); color:var(--ink); border-radius:14px; overflow:hidden;
     display:flex; flex-direction:column;
@@ -142,15 +139,13 @@
   .card:hover .read-link svg{ transform:translateX(3px); }
   .card.hidden{ display:none; }
 
-  /* Rasio potret (3:4) seperti sampul majalah asli — sebelumnya 16:11 (gepeng)
-     bikin foto kepotong pendek & nggak jelas. Sekarang lebih tinggi & proporsional. */
   .card-cover{
     position:relative; aspect-ratio:3/4; overflow:hidden;
     background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
   }
   .card-cover .cover-img{
     position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover; object-position:center top;
+    object-fit:cover;
     transition:transform .35s ease;
   }
   .card-cover .cover-fallback{
@@ -186,7 +181,11 @@
   }
   .card-body .read-link svg{ width:13px; height:13px; transition:transform .18s ease; }
 
-  /* ===== MODE SIANG / MALAM ===== */
+  .empty-state{
+    text-align:center; padding:60px 20px; color:rgba(243,239,228,.55);
+    font-family:'IBM Plex Mono',monospace; font-size:13px; grid-column:1/-1;
+  }
+
   html.light-mode body{ background:#DCD3BA; }
   html.light-mode .topbar{ background:#FBF9F3; color:#0B2A4A; border-bottom:1px solid rgba(11,42,74,.12); }
   html.light-mode .breadcrumb{ color:rgba(11,42,74,.55); }
@@ -240,7 +239,6 @@
   <p>Telusuri seluruh koleksi Buletin Pengawasan Inspektorat Kota Mojokerto</p>
 </div>
 
-{{-- ===== SEARCH + FILTER TAHUN ===== --}}
 <div class="filter-bar">
   <div class="search-box">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -248,46 +246,34 @@
   </div>
   <div class="year-filters" id="yearFilters">
     <button class="year-chip active" data-year="all">Semua Tahun</button>
-    {{-- tombol tahun lain diisi otomatis oleh JS dari data edisi yang ada --}}
   </div>
 </div>
 
 <div class="wrap">
   <div class="grid" id="editionGrid">
-    @foreach ($editions as $slug => $edition)
+    @forelse ($buletins as $buletin)
       @php
-        $year = preg_match('/\d{4}/', $edition['label'], $m) ? $m[0] : (preg_match('/\d{4}/', $edition['title'], $m2) ? $m2[0] : '');
-        $wordCount = str_word_count(strip_tags($edition['intro'] ?? ''));
-        $readMinutes = max(1, (int) ceil($wordCount / 200));
-
-        // Cari gambar cover otomatis dari folder public/images/buletin/{slug}.(jpg|jpeg|png|webp)
-        // Guru cukup upload file dengan nama = slug edisi ini, TANPA perlu edit kode.
-        $coverPath = null;
-        foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
-          if (file_exists(public_path("images/buletin/{$slug}.{$ext}"))) {
-            $coverPath = asset("images/buletin/{$slug}.{$ext}");
-            break;
-          }
-        }
-        // Tetap dukung field 'image' manual di data lama, kalau ada
-        $coverPath = $coverPath ?: ($edition['image'] ?? null);
+        $year = preg_match('/\d{4}/', $buletin->label ?? '', $m)
+          ? $m[0]
+          : (preg_match('/\d{4}/', $buletin->title, $m2) ? $m2[0] : '');
       @endphp
-      <a href="{{ route('buletin.show', $slug) }}"
+      <a href="{{ route('buletin.show', $buletin->slug) }}"
          class="card"
-         data-title="{{ strtolower($edition['title']) }} {{ strtolower($edition['label']) }}"
+         data-title="{{ strtolower($buletin->title) }} {{ strtolower($buletin->label ?? '') }}"
          data-year="{{ $year }}">
-        <div class="card-cover">
-          @if($coverPath)
-            <img class="cover-img" src="{{ $coverPath }}" alt="{{ $edition['title'] }}">
+        <div class="card-cover" style="border-top:3px solid {{ $buletin->theme_color }};">
+          @if($buletin->cover_image)
+            <img class="cover-img" src="{{ $buletin->cover_url }}" alt="{{ $buletin->title }}"
+                 style="object-position:{{ $buletin->image_position_css }};">
           @else
             <svg viewBox="0 0 300 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <radialGradient id="cg-{{ $slug }}" cx="50%" cy="20%" r="70%">
-                  <stop offset="0%" stop-color="#B8901F" stop-opacity="0.35"/>
-                  <stop offset="100%" stop-color="#B8901F" stop-opacity="0"/>
+                <radialGradient id="cg-{{ $buletin->slug }}" cx="50%" cy="20%" r="70%">
+                  <stop offset="0%" stop-color="{{ $buletin->theme_color }}" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="{{ $buletin->theme_color }}" stop-opacity="0"/>
                 </radialGradient>
               </defs>
-              <rect width="300" height="200" fill="url(#cg-{{ $slug }})"/>
+              <rect width="300" height="200" fill="url(#cg-{{ $buletin->slug }})"/>
               <g stroke="#F3EFE4" stroke-opacity="0.08" stroke-width="1">
                 <line x1="0" y1="60" x2="300" y2="60"/>
                 <line x1="0" y1="120" x2="300" y2="120"/>
@@ -297,21 +283,21 @@
               </g>
             </svg>
             <div class="cover-fallback">
-              <div class="badge mono">{{ $edition['label'] }}</div>
-              <div class="cover-title">{{ $edition['title'] }}</div>
+              <div class="badge mono">{{ $buletin->label }}</div>
+              <div class="cover-title">{{ $buletin->title }}</div>
             </div>
           @endif
         </div>
         <div class="card-body">
-          <h2>{{ $edition['title'] }}</h2>
+          <h2>{{ $buletin->title }}</h2>
           <div class="card-meta">
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
-              {{ $edition['label'] }}
+              {{ $buletin->label ?? '—' }}
             </span>
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-              {{ $readMinutes }} Min Baca
+              {{ $buletin->read_minutes }} Min Baca
             </span>
           </div>
           <span class="read-link">
@@ -320,12 +306,13 @@
           </span>
         </div>
       </a>
-    @endforeach
+    @empty
+      <div class="empty-state">Belum ada buletin yang ditayangkan.</div>
+    @endforelse
   </div>
   <div class="no-results" id="noResults">Tidak ada edisi yang cocok dengan pencarian.</div>
 </div>
 
-{{-- ===== TOMBOL MODE SIANG / MALAM ===== --}}
 <button class="theme-btn" id="themeBtn" aria-label="Ganti Mode Siang/Malam">
   <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
@@ -344,7 +331,6 @@
   const noResults = document.getElementById('noResults');
   let activeYear = 'all';
 
-  // Bangun daftar tahun otomatis dari tahun yang beneran ada di data edisi (urut terbaru dulu)
   const years = Array.from(new Set(cards.map(c => c.dataset.year).filter(Boolean)))
     .sort((a, b) => b.localeCompare(a));
 
@@ -368,7 +354,7 @@
       if (visible) visibleCount++;
     });
 
-    noResults.classList.toggle('show', visibleCount === 0);
+    noResults.classList.toggle('show', visibleCount === 0 && cards.length > 0);
   }
 
   yearFilters.addEventListener('click', function(e){
@@ -384,7 +370,6 @@
 })();
 </script>
 
-{{-- ===== SCRIPT MODE SIANG / MALAM ===== --}}
 <script>
   (function(){
     const root = document.documentElement;
@@ -405,7 +390,6 @@
     if (saved === 'light' || saved === 'dark') {
       applyTheme(saved);
     } else {
-      // belum pernah pilih -> ikuti jam perangkat: 06.00-17.59 = siang
       const hour = new Date().getHours();
       applyTheme(hour >= 6 && hour < 18 ? 'light' : 'dark');
     }

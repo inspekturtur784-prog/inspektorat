@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Galeri;
 use App\Models\PengaturanProfil;
 
 class HomeController extends Controller
@@ -40,6 +41,11 @@ class HomeController extends Controller
             'publikasi' => 8,
         ];
 
-        return view('home', compact('articles', 'stats', 'p'));
+        // 4. Ambil 6 foto galeri terbaru (dengan fallback jika Model Galeri belum siap)
+        $galeries = class_exists('\App\Models\Galeri')
+            ? Galeri::terbaru()->limit(6)->get()
+            : collect();
+
+        return view('home', compact('articles', 'stats', 'p', 'galeries'));
     }
 }

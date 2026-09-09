@@ -38,11 +38,15 @@ class Article extends Model
         });
     }
 
-    /** Hanya artikel yang sudah dipublish, terbaru dulu. */
+    /**
+     * Hanya artikel yang sudah dipublish, terbaru dulu.
+     * Pakai COALESCE supaya artikel yang published_at-nya kosong
+     * tetap terurut benar berdasarkan waktu dibuat (created_at).
+     */
     public function scopePublished($query)
     {
         return $query->where('is_published', true)
-            ->orderByDesc('published_at');
+            ->orderByRaw('COALESCE(published_at, created_at) DESC');
     }
 
     /** URL gambar cover, fallback ke placeholder kalau kosong. */

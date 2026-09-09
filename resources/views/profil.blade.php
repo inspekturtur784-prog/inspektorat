@@ -195,7 +195,7 @@
             <h2 style="font-size:24px;">Jelajahi profil lebih lanjut</h2>
         </div>
 
-        <div class="profil-grid" style="grid-template-columns:1fr 1fr;max-width:780px;">
+        <div class="profil-grid" style="grid-template-columns:1fr;max-width:380px;">
             <a href="{{ url('/profil/data-pegawai') }}" class="profil-card">
                 <div class="profil-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -205,21 +205,6 @@
                 </div>
                 <h3>Data Pegawai</h3>
                 <p>Daftar pegawai yang bertugas di lingkungan Inspektorat Kota Mojokerto.</p>
-                <span class="profil-link">Lihat Bagian Ini
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </span>
-            </a>
-
-            <a href="{{ url('/profil/galeri') }}" class="profil-card">
-                <div class="profil-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                        <path d="M21 15l-5-5L5 21"/>
-                    </svg>
-                </div>
-                <h3>Galeri</h3>
-                <p>Dokumentasi foto kegiatan, pengawasan, dan sosialisasi Inspektorat.</p>
                 <span class="profil-link">Lihat Bagian Ini
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </span>
