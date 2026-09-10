@@ -7,15 +7,17 @@ use App\Models\PengaturanProfil;
 use Illuminate\Http\Request;
 
 /**
- * Kelola konten "Tentang Inspektorat", "Visi & Misi", dan "Tugas Pokok"
- * dari Admin — tidak perlu ubah kode Laravel tiap kali informasinya berubah.
+ * Kelola konten "Tentang Inspektorat" dan "Visi & Misi" dari Admin
+ * — tidak perlu ubah kode Laravel tiap kali informasinya berubah.
+ *
+ * Catatan: "Tugas Pokok" dan kartu "Fungsi" sekarang dikelola di
+ * TugasFungsiController / TugasPokokController, bukan di sini lagi.
  */
 class PengaturanProfilController extends Controller
 {
     public function edit()
     {
         $p = PengaturanProfil::semua();
-
         return view('admin.pengaturan.edit', ['p' => $p]);
     }
 
@@ -29,7 +31,6 @@ class PengaturanProfilController extends Controller
             'fungsi_singkat' => 'required|string',
             'visi'           => 'required|string',
             'misi'           => 'required|string', // satu poin per baris
-            'tugas_pokok'    => 'required|string',
         ]);
 
         foreach ($data as $key => $value) {

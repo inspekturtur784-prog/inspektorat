@@ -473,8 +473,43 @@ a:focus-visible,button:focus-visible{
   .main-nav a{ font-size:17px; }
 }
 
-/* Ultra-wide (2560px+, jarang tapi jaga-jaga) */
-@media (min-width:2560px){
-  :root{ --container: 1680px; }
-  html{ font-size: 18px; }
+.nav-dropdown .dropdown-divider {
+  display: block !important;
+  height: 1px !important;
+  background-color: #d1d5db !important;
+  margin: 16px 0 8px 0 !important;
+}
+
+.nav-dropdown .dropdown-header {
+  display: block !important;
+  padding: 8px 14px 6px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  color: #0b2a4a !important;
+  letter-spacing: 0.08em !important;
+}
+.topbar-bar {
+    background: #071a33; /* Warna Navy gelap */
+    color: #cfd9e6;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.topbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.topbar-login {
+    color: #d4a94a !important; /* Warna Gold */
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.topbar-login:hover {
+    color: #fff !important;
 }

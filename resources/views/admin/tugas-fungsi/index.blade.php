@@ -7,6 +7,18 @@
     <a href="{{ route('admin.tugasfungsi.create') }}" class="btn-admin btn-admin-primary">+ Tambah Kartu</a>
 </div>
 
+<form class="admin-form" action="{{ route('admin.tugasfungsi.tugaspokok.update') }}" method="POST" style="margin-bottom:28px;">
+    @csrf
+    @method('PUT')
+    <div class="form-group">
+        <label for="tugas_pokok">Tugas Pokok</label>
+        <textarea id="tugas_pokok" name="tugas_pokok" style="min-height:100px;">{{ old('tugas_pokok', $tugasPokok ?? '') }}</textarea>
+    </div>
+    <button type="submit" class="btn-admin btn-admin-primary">Simpan Tugas Pokok</button>
+</form>
+
+<hr style="border:none;border-top:1px solid #ECEAE2;margin:0 0 28px;">
+
 <div class="admin-table-wrapper">
     <table class="admin-table">
         <thead>
@@ -40,4 +52,4 @@
         </tbody>
     </table>
 </div>
-@endsection
+@endsection.

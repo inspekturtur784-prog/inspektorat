@@ -29,12 +29,6 @@ use App\Http\Controllers\Admin\StrukturBagianController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes — Inspektorat Kota Mojokerto
-|--------------------------------------------------------------------------
-*/
-
 // ---------- Beranda ----------
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -170,6 +164,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // ---------- Tugas & Fungsi ----------
     Route::get('/tugas-fungsi', [TugasFungsiController::class, 'index'])->name('tugasfungsi.index');
+    Route::put('/tugas-fungsi/tugas-pokok', [TugasFungsiController::class, 'updateTugasPokok'])->name('tugasfungsi.tugaspokok.update');
     Route::get('/tugas-fungsi/tambah', [TugasFungsiController::class, 'create'])->name('tugasfungsi.create');
     Route::post('/tugas-fungsi', [TugasFungsiController::class, 'store'])->name('tugasfungsi.store');
     Route::get('/tugas-fungsi/{tugasFungsi}/edit', [TugasFungsiController::class, 'edit'])->name('tugasfungsi.edit');

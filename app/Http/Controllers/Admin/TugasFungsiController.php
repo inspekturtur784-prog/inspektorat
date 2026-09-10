@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TugasFungsi;
+use App\Models\TugasPokok;
 use Illuminate\Http\Request;
 
 class TugasFungsiController extends Controller
@@ -11,7 +12,9 @@ class TugasFungsiController extends Controller
     public function index()
     {
         $items = TugasFungsi::urut()->get();
-        return view('admin.tugas-fungsi.index', compact('items'));
+        $tugasPokokItems = TugasPokok::urut()->get();
+
+        return view('admin.tugas-fungsi.index', compact('items', 'tugasPokokItems'));
     }
 
     public function create()
