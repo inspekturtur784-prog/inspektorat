@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Galeri;
+use App\Models\ProfilHighlight;
 use App\Models\PengaturanProfil;
 
 class HomeController extends Controller
@@ -46,6 +47,11 @@ class HomeController extends Controller
             ? Galeri::terbaru()->limit(6)->get()
             : collect();
 
-        return view('home', compact('articles', 'stats', 'p', 'galeries'));
+        // 5. Kartu "Mengenal Kami" (Kedudukan, Peran, dll) — dikelola bebas lewat Admin
+        $highlights = class_exists('\App\Models\ProfilHighlight')
+            ? ProfilHighlight::urut()->get()
+            : collect();
+
+        return view('home', compact('articles', 'stats', 'p', 'galeries', 'highlights'));
     }
 }

@@ -28,6 +28,14 @@ use App\Http\Controllers\Admin\TugasFungsiController;
 use App\Http\Controllers\Admin\StrukturBagianController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
+use App\Http\Controllers\Admin\ProfilHighlightController;
+use App\Http\Controllers\Admin\KmsPedomanDashboardController;
+use App\Http\Controllers\Admin\KmsKategoriController;
+use App\Http\Controllers\Admin\KmsSubkategoriController;
+use App\Http\Controllers\Admin\KmsGrupDokumenController;
+use App\Http\Controllers\Admin\KmsDokumenController;
+use App\Http\Controllers\Admin\PedomanKategoriController;
+use App\Http\Controllers\Admin\PedomanDokumenController;
 
 // ---------- Beranda ----------
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -113,12 +121,58 @@ Route::get('/buletin', function () {
 })->name('buletin.index');
 
 Route::get('/buletin/{slug}', function ($slug) {
-    $buletin = Buletin::where('slug', $slug)->published()->firstOrFail();
+    $buletin = Buletin::where('slug', $slug)->published()->firstOrFail();}
     return view('buletin.show', ['buletin' => $buletin]);
-})->name('buletin.show');
+)->name('buletin.show');
 
 // ---------- Redirect Login User ke Admin Login ----------
 Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
+
+// ---------- KMS / Pedoman (halaman utama tab) ----------
+Route::get('/kms-pedoman', [KmsPedomanDashboardController::class, 'index'])->name('kmspedoman.index');
+
+// ---------- KMS: Kategori ----------
+Route::get('/kms-kategori/tambah', [KmsKategoriController::class, 'create'])->name('kms-kategori.create');
+Route::post('/kms-kategori', [KmsKategoriController::class, 'store'])->name('kms-kategori.store');
+Route::get('/kms-kategori/{kategori}/edit', [KmsKategoriController::class, 'edit'])->name('kms-kategori.edit');
+Route::put('/kms-kategori/{kategori}', [KmsKategoriController::class, 'update'])->name('kms-kategori.update');
+Route::delete('/kms-kategori/{kategori}', [KmsKategoriController::class, 'destroy'])->name('kms-kategori.destroy');
+
+// ---------- KMS: Subkategori ----------
+Route::get('/kms-subkategori/tambah', [KmsSubkategoriController::class, 'create'])->name('kms-subkategori.create');
+Route::post('/kms-subkategori', [KmsSubkategoriController::class, 'store'])->name('kms-subkategori.store');
+Route::get('/kms-subkategori/{subkategori}/edit', [KmsSubkategoriController::class, 'edit'])->name('kms-subkategori.edit');
+Route::put('/kms-subkategori/{subkategori}', [KmsSubkategoriController::class, 'update'])->name('kms-subkategori.update');
+Route::delete('/kms-subkategori/{subkategori}', [KmsSubkategoriController::class, 'destroy'])->name('kms-subkategori.destroy');
+
+// ---------- KMS: Grup Dokumen ----------
+Route::get('/kms-grup/tambah', [KmsGrupDokumenController::class, 'create'])->name('kms-grup.create');
+Route::post('/kms-grup', [KmsGrupDokumenController::class, 'store'])->name('kms-grup.store');
+Route::get('/kms-grup/{grup}/edit', [KmsGrupDokumenController::class, 'edit'])->name('kms-grup.edit');
+Route::put('/kms-grup/{grup}', [KmsGrupDokumenController::class, 'update'])->name('kms-grup.update');
+Route::delete('/kms-grup/{grup}', [KmsGrupDokumenController::class, 'destroy'])->name('kms-grup.destroy');
+
+// ---------- KMS: Dokumen ----------
+Route::get('/kms-dokumen/tambah', [KmsDokumenController::class, 'create'])->name('kms-dokumen.create');
+Route::post('/kms-dokumen', [KmsDokumenController::class, 'store'])->name('kms-dokumen.store');
+Route::get('/kms-dokumen/{dokumen}/edit', [KmsDokumenController::class, 'edit'])->name('kms-dokumen.edit');
+Route::put('/kms-dokumen/{dokumen}', [KmsDokumenController::class, 'update'])->name('kms-dokumen.update');
+Route::delete('/kms-dokumen/{dokumen}', [KmsDokumenController::class, 'destroy'])->name('kms-dokumen.destroy');
+
+// ---------- Pedoman: Kategori ----------
+Route::get('/pedoman-kategori/tambah', [PedomanKategoriController::class, 'create'])->name('pedoman-kategori.create');
+Route::post('/pedoman-kategori', [PedomanKategoriController::class, 'store'])->name('pedoman-kategori.store');
+Route::get('/pedoman-kategori/{kategori}/edit', [PedomanKategoriController::class, 'edit'])->name('pedoman-kategori.edit');
+Route::put('/pedoman-kategori/{kategori}', [PedomanKategoriController::class, 'update'])->name('pedoman-kategori.update');
+Route::delete('/pedoman-kategori/{kategori}', [PedomanKategoriController::class, 'destroy'])->name('pedoman-kategori.destroy');
+
+// ---------- Pedoman: Dokumen ----------
+Route::get('/pedoman-dokumen/tambah', [PedomanDokumenController::class, 'create'])->name('pedoman-dokumen.create');
+Route::post('/pedoman-dokumen', [PedomanDokumenController::class, 'store'])->name('pedoman-dokumen.store');
+Route::get('/pedoman-dokumen/{dokumen}/edit', [PedomanDokumenController::class, 'edit'])->name('pedoman-dokumen.edit');
+Route::put('/pedoman-dokumen/{dokumen}', [PedomanDokumenController::class, 'update'])->name('pedoman-dokumen.update');
+Route::delete('/pedoman-dokumen/{dokumen}', [PedomanDokumenController::class, 'destroy'])->name('pedoman-dokumen.destroy');
+
 
 // ==========================================================
 // ADMIN AUTHENTICATION (LOGIN / LOGOUT)
@@ -210,4 +264,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/buletin/{buletin}/edit', [AdminBuletinController::class, 'edit'])->name('buletin.edit');
     Route::put('/buletin/{buletin}', [AdminBuletinController::class, 'update'])->name('buletin.update');
     Route::delete('/buletin/{buletin}', [AdminBuletinController::class, 'destroy'])->name('buletin.destroy');
+
+    // ---------- Kartu Profil (Kedudukan, dll) ----------
+    Route::get('/profil-highlight', [ProfilHighlightController::class, 'index'])->name('profilhighlight.index');
+    Route::get('/profil-highlight/tambah', [ProfilHighlightController::class, 'create'])->name('profilhighlight.create');
+    Route::post('/profil-highlight', [ProfilHighlightController::class, 'store'])->name('profilhighlight.store');
+    Route::get('/profil-highlight/{profilhighlight}/edit', [ProfilHighlightController::class, 'edit'])->name('profilhighlight.edit');
+    Route::put('/profil-highlight/{profilhighlight}', [ProfilHighlightController::class, 'update'])->name('profilhighlight.update');
+    Route::delete('/profil-highlight/{profilhighlight}', [ProfilHighlightController::class, 'destroy'])->name('profilhighlight.destroy');
 });
+

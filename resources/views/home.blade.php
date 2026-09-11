@@ -41,7 +41,13 @@
     .ins-topbar-actions a:hover{
         color: #fff;
     }
-
+    .ins-topbar-login{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--ins-gold) !important;
+        font-weight: 600;
+    }
 
     /* ================= TOMBOL & LABEL UMUM ================= */
     .ins-btn{
@@ -91,12 +97,14 @@
         background: var(--ins-gold);
         display: inline-block;
     }
+    .ins-breadcrumb-light{ color: var(--ins-gold); }
 
     /* ================= HERO (split: teks kiri, foto kanan) ================= */
     .ins-hero{
-        background: #f7f8fa;
+        background: linear-gradient(135deg, #eef2f7 0%, #d9e2ef 100%);
         padding: 56px 24px 64px;
         border-bottom: 1px solid var(--ins-line);
+        position: relative;
     }
     .ins-hero-inner{
         max-width: 1180px;
@@ -141,7 +149,7 @@
         flex-wrap: wrap;
     }
 
-    /* Kartu foto di kanan (carousel) */
+    /* Kartu foto di kanan (carousel, TANPA teks di atasnya) */
     .ins-hero-card{
         position: relative;
         background: #fff;
@@ -228,8 +236,81 @@
         .ins-topbar-inner{ font-size: 12px; }
     }
 
+    /* ================= LAYANAN KAMI (grid) ================= */
+    .ins-layanan{
+        padding: 72px 24px;
+        background: #fff;
+    }
+    .ins-layanan-inner{ max-width: 1180px; margin: 0 auto; }
+    .ins-layanan-intro{ max-width: 640px; margin-bottom: 36px; }
+    .ins-layanan-intro h2{
+        font-size: clamp(24px, 3vw, 32px);
+        color: var(--ins-navy);
+        margin: 12px 0 10px;
+        font-weight: 700;
+    }
+    .ins-layanan-intro p{
+        color: var(--ins-slate);
+        font-size: 15px;
+        line-height: 1.7;
+        margin: 0;
+    }
+    .ins-layanan-grid{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+    .ins-layanan-card{
+        background: #f7f8fa;
+        border: 1px solid var(--ins-line);
+        border-radius: 12px;
+        padding: 26px 22px;
+        display: flex;
+        flex-direction: column;
+        transition: all .2s ease;
+    }
+    .ins-layanan-card:hover{
+        background: #fff;
+        border-color: var(--ins-navy);
+        box-shadow: 0 16px 32px -18px rgba(11,37,69,.25);
+        transform: translateY(-3px);
+    }
+    .ins-layanan-icon{
+        width: 46px; height: 46px;
+        border-radius: 10px;
+        background: var(--ins-navy);
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 16px;
+        flex-shrink: 0;
+    }
+    .ins-layanan-icon svg{ width: 22px; height: 22px; stroke: #fff; }
+    .ins-layanan-card h3{
+        font-size: 15.5px; font-weight: 700; color: var(--ins-navy); margin: 0 0 8px;
+    }
+    .ins-layanan-card p{
+        font-size: 13px; line-height: 1.6; color: var(--ins-slate); margin: 0 0 16px; flex: 1;
+    }
+    .ins-layanan-link{
+        font-size: 12.5px; font-weight: 700; color: var(--ins-navy);
+        text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+        text-transform: uppercase; letter-spacing: .04em;
+    }
+    .ins-layanan-link svg{ width: 14px; height: 14px; stroke: currentColor; }
+    .ins-layanan-sublinks{ display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+    .ins-layanan-sublink{
+        display: flex; align-items: center; justify-content: space-between; gap: 8px;
+        padding: 9px 12px; background: #fff; border: 1px solid var(--ins-line); border-radius: 8px;
+        font-size: 12px; font-weight: 600; color: var(--ins-navy); text-decoration: none;
+        transition: all .15s ease;
+    }
+    .ins-layanan-sublink:hover{ border-color: var(--ins-navy); background: var(--ins-navy); color: #fff; }
+    .ins-layanan-sublink svg{ width: 13px; height: 13px; stroke: currentColor; flex-shrink: 0; }
+
+    @media (max-width: 1024px){ .ins-layanan-grid{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px){ .ins-layanan-grid{ grid-template-columns: 1fr; } }
+
     /* ================= MENGENAL KAMI ================= */
-    .ins-about{ padding: 72px 24px; background: #f7f8fa; }
+    .ins-about{ padding: 72px 24px; background: linear-gradient(135deg, #eef2f7 0%, #d9e2ef 100%); }
     .ins-about-inner{ max-width: 1180px; margin: 0 auto; }
     .ins-about-intro{ max-width: 640px; margin-bottom: 44px; }
     .ins-about-intro h2{
@@ -255,63 +336,78 @@
     @media (max-width: 1024px){ .ins-about-grid{ grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 560px){ .ins-about-grid{ grid-template-columns: 1fr; } }
 
-    /* ================= BERITA TERKINI (NAVY BACKGROUND) ================= */
-    .ins-berita{ 
-        padding: 72px 24px; 
-        background: linear-gradient(160deg, var(--ins-navy) 0%, var(--ins-navy-dark) 100%); 
-        color: #fff;
+    /* ================= STATISTIK RINGKAS ================= */
+    .ins-stats-band{
+        background: linear-gradient(160deg, var(--ins-navy) 0%, var(--ins-navy-dark) 100%);
+        padding: 60px 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    .ins-stats-band::before{
+        content: ""; position: absolute; top: -80px; right: -80px; width: 320px; height: 320px;
+        border-radius: 50%; background: radial-gradient(circle, rgba(212,169,74,.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .ins-stats-inner{
+        max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 48px;
+        flex-wrap: wrap; position: relative; z-index: 1;
+    }
+    .ins-stats-intro{ flex: 0 0 auto; min-width: 220px; }
+    .ins-stats-intro h2{
+        font-size: clamp(20px, 2.4vw, 26px); color: #fff; font-weight: 700; margin: 10px 0 0; line-height: 1.3;
+    }
+    .ins-stats-grid{ flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; min-width: 0; }
+    .ins-stat-item{ border-left: 2px solid rgba(212,169,74,.4); padding-left: 18px; }
+    .ins-stat-number{ font-size: clamp(28px, 3vw, 38px); font-weight: 700; color: #fff; line-height: 1.1; }
+    .ins-stat-label{ font-size: 13px; color: rgba(255,255,255,.65); margin-top: 6px; }
+
+    @media (max-width: 900px){
+        .ins-stats-inner{ flex-direction: column; align-items: flex-start; }
+        .ins-stats-grid{ grid-template-columns: repeat(2, 1fr); width: 100%; }
+    }
+    @media (max-width: 480px){ .ins-stats-grid{ grid-template-columns: 1fr; } }
+
+    /* ================= BERITA TERKINI ================= */
+    .ins-berita{
+        padding: 72px 24px;
+        background: linear-gradient(160deg, var(--ins-navy) 0%, var(--ins-navy-dark) 100%);
     }
     .ins-berita-inner{ max-width: 1180px; margin: 0 auto; }
     .ins-berita-head{ display: flex; align-items: center; gap: 24px; margin-bottom: 32px; }
     .ins-berita-head h2{
         font-size: clamp(22px, 3vw, 28px); color: #fff; font-weight: 700; white-space: nowrap; margin: 0;
     }
-    .ins-berita-head .ins-berita-rule{ flex: 1; height: 2px; background: rgba(255,255,255,.2); border-radius: 2px; }
+    .ins-berita-head .ins-berita-rule{ flex: 1; height: 3px; background: var(--ins-gold); border-radius: 2px; }
     .ins-berita-grid{ display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: start; }
-    
-    /* Berita Utama */
     .ins-berita-featured{
-        display: block; text-decoration: none; border: 1px solid rgba(255,255,255,.12); border-radius: 14px;
-        overflow: hidden; background: rgba(255,255,255,.05); backdrop-filter: blur(8px);
-        transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+        display: block; text-decoration: none; border: 1.5px solid var(--ins-gold); border-radius: 14px;
+        overflow: hidden; background: #fff; transition: box-shadow .2s ease, transform .2s ease;
     }
-    .ins-berita-featured:hover{ 
-        box-shadow: 0 20px 40px -20px rgba(0,0,0,.5); 
-        transform: translateY(-2px); 
-        border-color: var(--ins-gold);
-    }
+    .ins-berita-featured:hover{ box-shadow: 0 20px 40px -20px rgba(11,37,69,.25); transform: translateY(-2px); }
     .ins-berita-featured-img{ aspect-ratio: 16/9; overflow: hidden; }
     .ins-berita-featured-img img{ width: 100%; height: 100%; object-fit: cover; display: block; }
     .ins-berita-featured-body{ padding: 22px 24px 26px; }
-    .ins-berita-date{ font-size: 13px; color: rgba(255,255,255,.65); display: block; margin-bottom: 8px; }
-    .ins-berita-featured-body h3{ font-size: 19px; color: #fff; line-height: 1.4; margin: 0 0 12px; font-weight: 700; }
-    .ins-berita-read{ font-size: 13.5px; font-weight: 600; color: var(--ins-gold); }
-    
-    /* List Berita Samping */
+    .ins-berita-date{ font-size: 13px; color: var(--ins-slate); display: block; margin-bottom: 8px; }
+    .ins-berita-featured-body h3{ font-size: 19px; color: var(--ins-navy); line-height: 1.4; margin: 0 0 12px; font-weight: 700; }
+    .ins-berita-read{ font-size: 13.5px; font-weight: 600; color: var(--ins-navy); }
     .ins-berita-list{ display: flex; flex-direction: column; gap: 14px; }
-    .ins-berita-item{ 
-        display: flex; gap: 14px; text-decoration: none; padding: 12px; border-radius: 10px; 
-        background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
-        transition: all .2s ease; 
-    }
-    .ins-berita-item:hover{ 
-        background: rgba(255,255,255,.1); 
-        border-color: var(--ins-gold);
-    }
+    .ins-berita-item{ display: flex; gap: 14px; text-decoration: none; padding: 12px; border-radius: 10px; border: 1.5px solid var(--ins-gold); transition: background .2s ease; }
+    .ins-berita-list .ins-berita-item + .ins-berita-item{ margin-top: 0; }
+    .ins-berita-item:hover{ background: rgba(255,255,255,.08); }
     .ins-berita-item-thumb{ width: 96px; height: 72px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
     .ins-berita-item-thumb img{ width: 100%; height: 100%; object-fit: cover; display: block; }
-    .ins-berita-item-body h4{ font-size: 14.5px; color: #fff; line-height: 1.4; margin: 0 0 4px; font-weight: 600; }
-    .ins-berita-more{ text-align: right; margin-top: 14px; }
-    .ins-berita-more a{ font-size: 13.5px; font-weight: 600; color: var(--ins-gold); text-decoration: none; }
+    .ins-berita-item .ins-berita-date{ color: rgba(255,255,255,.65); }
+    .ins-berita-item-body h4{ font-size: 14.5px; color: #fff; line-height: 1.4; margin: 0 0 4px; font-weight: 700; }
+    .ins-berita-item .ins-berita-read{ color: var(--ins-gold); }
+    .ins-berita-more{ text-align: right; margin-top: 4px; }
+    .ins-berita-more a{ font-size: 13.5px; font-weight: 600; color: #fff; text-decoration: none; }
     .ins-berita-more a:hover{ text-decoration: underline; }
 
     @media (max-width: 900px){ .ins-berita-grid{ grid-template-columns: 1fr; } }
 
     /* ================= GALERI FOTO ================= */
-    .ins-galeri{ padding: 72px 24px; background: #f7f8fa; }
+    .ins-galeri{ padding: 20px 24px 72px; background: #f7f8fa; }
     .ins-galeri-inner{ max-width: 1180px; margin: 0 auto; }
-    .ins-galeri-head h2{ color: var(--ins-navy); }
-    .ins-galeri-head .ins-berita-rule{ background: var(--ins-navy); }
     .ins-galeri-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .ins-galeri-item{
         display: block; position: relative; aspect-ratio: 4/3; border-radius: 12px; overflow: hidden;
@@ -347,7 +443,7 @@
             </p>
             <div class="ins-hero-actions">
                 <a href="{{ url('/profil') }}" class="ins-btn ins-btn-primary">Lihat Profil Kami</a>
-                <a href="{{ url('/berita') }}" class="ins-btn ins-btn-outline">Berita Terkini</a>
+                <a href="{{ url('/#layanan') }}" class="ins-btn ins-btn-outline">Jelajahi Layanan</a>
             </div>
         </div>
 
@@ -360,6 +456,7 @@
                     <div class="ins-slide">
                         <img src="{{ asset('images/team-banner.png') }}" alt="Seluruh pegawai Inspektorat Kota Mojokerto berfoto bersama">
                     </div>
+                    {{-- Tambah slide lain: copy blok <div class="ins-slide">...</div> di atas --}}
                 </div>
                 <button type="button" class="ins-slide-nav ins-slide-prev" aria-label="Sebelumnya">
                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -422,40 +519,23 @@
         </div>
 
         <div class="ins-about-grid">
-            <div class="ins-about-card">
-                <div class="ins-about-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V8l8-5 8 5v13M9 21v-6h6v6"/></svg>
+            @forelse ($highlights as $item)
+                <div class="ins-about-card">
+                    <div class="ins-about-icon">
+                        <span style="color:#fff;font-weight:700;font-size:18px;">{{ \Illuminate\Support\Str::substr($item->judul, 0, 1) }}</span>
+                    </div>
+                    <h3>{{ $item->judul }}</h3>
+                    <p>{{ $item->deskripsi }}</p>
                 </div>
-                <h3>Kedudukan</h3>
-                <p>{{ $p['kedudukan'] ?? '' }}</p>
-            </div>
-
-            <div class="ins-about-card">
-                <div class="ins-about-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </div>
-                <h3>Peran</h3>
-                <p>{{ $p['peran'] ?? '' }}</p>
-            </div>
-
-            <div class="ins-about-card">
-                <div class="ins-about-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>
-                </div>
-                <h3>Tujuan</h3>
-                <p>{{ $p['tujuan'] ?? '' }}</p>
-            </div>
-
-            <div class="ins-about-card">
-                <div class="ins-about-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                </div>
-                <h3>Fungsi</h3>
-                <p>{{ $p['fungsi'] ?? $p['fungsi_singkat'] ?? '' }}</p>
-            </div>
+            @empty
+                <p style="color:var(--ins-slate);grid-column:1/-1;">
+                    Belum ada kartu profil. Tambahkan lewat halaman Admin &rarr; Tentang Inspektorat & Visi Misi.
+                </p>
+            @endforelse
         </div>
     </div>
 </section>
+
 
 {{-- ============ BERITA TERKINI ============ --}}
 <section class="ins-berita" id="artikel">
@@ -500,7 +580,7 @@
                 </div>
             </div>
         @else
-            <p style="color:rgba(255,255,255,.7);">Belum ada berita yang dipublikasikan. Tambahkan lewat panel Admin.</p>
+            <p style="color:var(--ins-slate);">Belum ada berita yang dipublikasikan. Tambahkan lewat panel Admin.</p>
         @endif
     </div>
 </section>
@@ -508,7 +588,7 @@
 {{-- ============ GALERI FOTO ============ --}}
 <section class="ins-galeri" id="galeri">
     <div class="ins-galeri-inner">
-        <div class="ins-berita-head ins-galeri-head">
+        <div class="ins-berita-head">
             <h2>Galeri Foto</h2>
             <div class="ins-berita-rule"></div>
         </div>
@@ -525,8 +605,18 @@
                 <a href="{{ route('galeri.index') }}" class="ins-btn ins-btn-primary">Selengkapnya</a>
             </div>
         @else
-            <p style="color:var(--ins-slate);">Belum ada galeri foto yang dipublikasikan.</p>
+            <p style="color:var(--ins-slate); text-align:center;">Belum ada foto galeri yang ditambahkan.</p>
         @endif
+    </div>
+</section>
+
+{{-- ============ TEAM STRIP ============ --}}
+<section class="team-strip">
+    <img src="{{ asset('images/team-banner.png') }}" alt="Seluruh pegawai Inspektorat Kota Mojokerto berfoto bersama di halaman kantor">
+    <div class="team-caption">
+        <div class="wrap">
+            <p>Bersama, menuju wilayah bebas dari korupsi</p>
+        </div>
     </div>
 </section>
 

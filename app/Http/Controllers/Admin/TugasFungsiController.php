@@ -13,8 +13,32 @@ class TugasFungsiController extends Controller
     {
         $items = TugasFungsi::urut()->get();
         $tugasPokokItems = TugasPokok::urut()->get();
+        $tugasPokok = optional(TugasPokok::urut()->first())->teks ?? '';
 
-        return view('admin.tugas-fungsi.index', compact('items', 'tugasPokokItems'));
+        return view('admin.tugas-fungsi.index', compact('items', 'tugasPokokItems', 'tugasPokok'));
+    }
+
+    /**
+     * Simpan/perbarui teks Tugas Pokok.
+     * Tugas Pokok ditampilkan sebagai satu textarea di form (bukan daftar
+     * kartu seperti Fungsi), jadi cukup disimpan sebagai satu baris saja
+     * di tabel tugas_pokok.
+     */
+    public function updateTugasPokok(Request $request)
+    {
+        $data = $request->validate([
+            'tugas_pokok' => 'required|string',
+        ]);
+
+        $item = TugasPokok::urut()->first();
+
+        if ($item) {
+            $item->update(['teks' => $data['tugas_pokok']]);
+        } else {
+            TugasPokok::create(['teks' => $data['tugas_pokok'], 'urutan' => 0]);
+        }
+
+        return redirect()->route('admin.tugasfungsi.index')->with('status', 'Tugas Pokok berhasil disimpan.');
     }
 
     public function create()
