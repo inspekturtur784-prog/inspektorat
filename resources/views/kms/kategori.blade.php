@@ -98,7 +98,7 @@
                 <div class="p-5 space-y-1">
 
                     @foreach($sub->dokumensLangsung as $dokumen)
-                        <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank" class="text-sm text-[#06182E] hover:underline flex items-start gap-2 group py-1.5">
+                        <a href="{{ asset('kms-file/' . $dokumen->file_path) }}" target="_blank" class="text-sm text-[#06182E] hover:underline flex items-start gap-2 group py-1.5">
                             <span class="font-mono text-xs mt-0.5" style="color: {{ $accent }}">&#9642;</span>
                             <span class="group-hover:translate-x-0.5 transition">{{ $dokumen->judul }}</span>
                         </a>
@@ -113,7 +113,7 @@
                             </summary>
                             <div class="pl-6 mt-1 space-y-1 border-l ml-1.5" style="border-color: {{ $accent }}30;">
                                 @foreach($grup->dokumens as $dokumen)
-                                    <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank" class="text-sm text-[#06182E]/80 hover:underline flex items-start gap-2 group py-1">
+                                    <a href="{{ asset('kms-file/' . $dokumen->file_path) }}" target="_blank" class="text-sm text-[#06182E]/80 hover:underline flex items-start gap-2 group py-1">
                                         <span class="font-mono text-xs mt-0.5" style="color: {{ $accent }}">&#9642;</span>
                                         <span class="group-hover:translate-x-0.5 transition">{{ $dokumen->judul }}</span>
                                     </a>

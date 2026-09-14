@@ -77,7 +77,7 @@
             <p class="font-mono text-xs gold uppercase tracking-widest mb-2">Hasil pencarian</p>
             <h3 class="font-display text-2xl mb-6">"{{ $keyword }}"</h3>
             @forelse($dokumens as $dokumen)
-                <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank" class="border-b border-[#06182E]/10 py-4 flex justify-between items-center hover:bg-white transition px-2 -mx-2">
+                <a href="{{ url('kms-file/' . $dokumen->file_path) }}" target="_blank" class="border-b border-[#06182E]/10 py-4 flex justify-between items-center hover:bg-white transition px-2 -mx-2">
                     <div>
                         <p class="font-medium">{{ $dokumen->judul }}</p>
                         <p class="text-sm text-[#06182E]/50">{{ $dokumen->kategori->nama }}</p>
