@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -51,7 +51,7 @@
         <p class="font-mono text-xs text-[#06182E]/50">
             {{ strtoupper($dokumen->file_type) }} &middot; {{ $dokumen->ukuran }} &middot; {{ $dokumen->downloads }} kali dilihat
         </p>
-        <a href="{{ asset('storage/' . $dokumen->file_path) }}" download
+        <a href="{{ url('/files/' . $dokumen->file_path) }}" download
            class="inline-block mt-4 bg-[#B08D57] hover:bg-[#9c7a49] text-white px-6 py-3 rounded-sm text-sm font-semibold transition">
             &#8681; Download File
         </a>
@@ -60,7 +60,7 @@
     <div class="px-6 md:px-12 pb-24">
         <div class="bg-white border border-[#06182E]/10" style="height: 85vh;">
             <embed
-                src="{{ asset('storage/' . $dokumen->file_path) }}"
+                src="{{ url('/files/' . $dokumen->file_path) }}"
                 type="application/pdf"
                 width="100%"
                 height="100%"
@@ -70,3 +70,4 @@
 
 </body>
 </html>
+

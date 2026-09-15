@@ -9,11 +9,13 @@ use Illuminate\Support\Str;
 
 class KategoriKmsController extends Controller
 {
-public function index()
-{
-    $kategoris = Kategori::orderBy('nama')->get();
-    return view('kms.kategori.index', compact('kategoris'));
-}
+    public function index()
+    {
+        $kategoris = Kategori::withCount(['subkategoris', 'dokumens'])->orderBy('nama')->get();
+
+        return view('kms.kategori.index', compact('kategoris'));
+    }
+
     public function create()
     {
         return view('kms.kategori.create');
@@ -25,11 +27,11 @@ public function index()
             'nama' => 'required|string|max:255',
         ]);
 
-        $data['slug'] = $this->uniqueSlug($data['nama']);
+        $data['slug'] = Str::slug($data['nama']) . '-' . uniqid();
 
         Kategori::create($data);
 
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Kategori berhasil ditambahkan.');
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori berhasil ditambahkan.');
     }
 
     public function show(Kategori $kategori)
@@ -52,31 +54,15 @@ public function index()
             'nama' => 'required|string|max:255',
         ]);
 
-        if ($data['nama'] !== $kategori->nama) {
-            $data['slug'] = $this->uniqueSlug($data['nama'], $kategori->id);
-        }
-
         $kategori->update($data);
 
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Kategori berhasil diperbarui.');
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori berhasil diperbarui.');
     }
 
     public function destroy(Kategori $kategori)
     {
         $kategori->delete();
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Kategori berhasil dihapus.');
-    }
 
-    private function uniqueSlug(string $nama, ?int $ignoreId = null): string
-    {
-        $base = Str::slug($nama);
-        $slug = $base;
-        $i = 1;
-
-        while (Kategori::where('slug', $slug)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
-            $slug = $base . '-' . $i++;
-        }
-
-        return $slug;
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori berhasil dihapus.');
     }
 }

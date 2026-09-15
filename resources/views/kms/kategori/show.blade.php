@@ -7,7 +7,7 @@
     <a href="{{ route('admin.kms.subkategori.create', $kategori) }}" class="btn-admin btn-admin-primary">+ Tambah Subkategori</a>
 </div>
 
-<p><a href="{{ route('admin.kmspedoman.index') }}">&larr; Kembali ke daftar kategori</a></p>
+<p><a href="{{ route('admin.kms.index') }}">&larr; Kembali ke daftar kategori</a></p>
 
 <table class="admin-table">
     <thead>

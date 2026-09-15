@@ -55,7 +55,7 @@
                     <a href="{{ route('admin.articles.index') }}" class="{{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
                         Artikel / Informasi
                     </a>
-                    <a href="{{ route('admin.kmspedoman.index') }}" class="{{ request()->routeIs('admin.kmspedoman.*') || request()->routeIs('admin.kms-*') || request()->routeIs('admin.pedoman-*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.kms.index') }}" class="{{ request()->routeIs('admin.kmspedoman.*') || request()->routeIs('admin.kms-*') || request()->routeIs('admin.pedoman-*') ? 'active' : '' }}">
     KMS / Pedoman
 </a>
 

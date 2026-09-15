@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $kategori->nama }} - Knowledge Base</title>
+    <title>{{ $kategori->nama }} - Knowledge Base Inspektorat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,9 +14,6 @@
         .maroon { color: #0B2A4A; }
         .bg-maroon { background-color: #0B2A4A; }
         .gold { color: #B08D57; }
-        details > summary { list-style: none; cursor: pointer; }
-        details > summary::-webkit-details-marker { display: none; }
-        details[open] .chevron { transform: rotate(90deg); }
     </style>
 </head>
 <body>
@@ -48,20 +45,20 @@
     </nav>
 
     <div class="px-6 md:px-12 pt-6">
-        <a href="{{ route('kms.index') }}" class="font-mono text-xs gold hover:underline">&larr; Kembali ke Beranda</a>
+        <a href="{{ route('kms.index') }}" class="font-mono text-xs gold hover:underline">&larr; Kembali ke Kategori Arsip</a>
     </div>
 
-    <div class="px-6 md:px-12 pt-6 pb-4 flex overflow-x-auto gap-x-8 border-b border-[#06182E]/10" style="scrollbar-width: none;">
+    <div class="px-6 md:px-12 pt-6 pb-4 flex overflow-x-auto gap-x-6 border-b border-[#06182E]/10" style="scrollbar-width: none;">
         @foreach(\App\Models\Kategori::all() as $k)
             <a href="{{ route('kms.kategori', $k->slug) }}"
-               class="font-medium pb-3 -mb-px whitespace-nowrap flex-shrink-0 {{ $k->id === $kategori->id ? 'maroon border-b-2 border-[#0B2A4A]' : 'text-[#06182E]/40 hover:text-[#06182E]' }}">
+               class="font-medium pb-3 -mb-px text-sm md:text-base whitespace-nowrap flex-shrink-0 {{ $k->id === $kategori->id ? 'maroon border-b-2 border-[#0B2A4A]' : 'text-[#06182E]/40 hover:text-[#06182E]' }}">
                 {{ $k->nama }}
             </a>
         @endforeach
     </div>
 
-    <div class="px-6 md:px-12 pt-10 pb-8">
-        <p class="font-mono text-xs gold uppercase tracking-widest mb-2">Kategori Arsip</p>
+    <div class="px-6 md:px-12 pt-10 pb-6">
+        <p class="font-mono text-xs gold uppercase tracking-widest mb-2">Arsip Pengetahuan</p>
         <h1 class="font-display text-4xl md:text-5xl maroon">{{ $kategori->nama }}</h1>
     </div>
 
@@ -69,10 +66,11 @@
         <div class="bg-maroon rounded-sm p-8 md:p-10 relative overflow-hidden bg-gradient-to-br from-[#0B2A4A] to-[#06182E]">
             <div class="absolute top-0 right-0 font-mono text-[10px] text-white/20 p-3">NO. REG-KMS/2026</div>
             <h2 class="font-display text-white text-2xl md:text-3xl mb-6">Cari dokumen di {{ $kategori->nama }}</h2>
-            <form action="{{ route('kms.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3">
+            <form action="{{ route('kms.kategori', $kategori->slug) }}" method="GET" class="flex flex-col sm:flex-row gap-3">
                 <input
                     type="text"
                     name="cari"
+                    value="{{ request('cari') }}"
                     placeholder="Ketik judul atau kata kunci..."
                     class="font-mono flex-1 px-4 py-3 rounded-sm border-2 border-transparent focus:border-[#D4AF6A] outline-none"
                 >
@@ -83,55 +81,51 @@
         </div>
     </div>
 
-    <div class="px-6 md:px-12 pb-24 grid gap-6 {{ $kategori->subkategoris->count() === 1 ? 'max-w-md mx-auto' : 'md:grid-cols-2 lg:grid-cols-3' }}">
-        @php
-            $accents = ['#0B2A4A', '#12335A', '#06182E', '#1E4E7A'];
-        @endphp
-        @forelse($kategori->subkategoris as $index => $sub)
-            @php $accent = $accents[$index % count($accents)]; @endphp
-            <div class="bg-white border border-[#06182E]/10 shadow-sm hover:shadow-md transition overflow-hidden">
-                <div class="px-5 py-4 border-b" style="border-color: {{ $accent }}22; background: linear-gradient(135deg, {{ $accent }}12, transparent);">
-                    <span class="font-mono text-xs font-semibold" style="color: {{ $accent }}">{{ sprintf('%02d', $index + 1) }} /</span>
-                    <h3 class="font-display text-lg font-semibold" style="color: {{ $accent }}">{{ $sub->nama }}</h3>
+    <section class="px-6 md:px-12 pb-24">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse($kategori->subkategoris as $index => $subkategori)
+                <div class="bg-white rounded-sm p-6 shadow-sm">
+                    <p class="font-mono text-xs gold mb-1">{{ sprintf('%02d', $index + 1) }} /</p>
+                    <h2 class="font-display text-xl font-semibold maroon mb-4">{{ $subkategori->nama }}</h2>
+
+                    <ul class="space-y-2 text-sm">
+                        @foreach($subkategori->dokumensLangsung as $dokumen)
+                            <li class="flex items-start gap-2">
+                                <span class="gold mt-1">&bull;</span>
+                                <a href="{{ url('/files/' . $dokumen->file_path) }}" target="_blank" class="hover:underline hover:maroon">
+                                    {{ $dokumen->judul }}
+                                </a>
+                            </li>
+                        @endforeach
+
+                        @foreach($subkategori->grupDokumens as $grup)
+                            <li>
+                                <details class="group">
+                                    <summary class="flex items-center gap-2 cursor-pointer list-none text-[#06182E]/70 hover:text-[#06182E]">
+                                        <span class="text-xs">&#9656;</span>
+                                        <span>{{ $grup->nama }}</span>
+                                        <span class="font-mono text-xs text-[#06182E]/40">({{ $grup->dokumens->count() }})</span>
+                                    </summary>
+                                    <ul class="mt-2 ml-5 space-y-2">
+                                        @foreach($grup->dokumens as $dokumen)
+                                            <li class="flex items-start gap-2">
+                                                <span class="gold mt-1">&bull;</span>
+                                                <a href="{{ url('/files/' . $dokumen->file_path) }}" target="_blank" class="hover:underline">
+                                                    {{ $dokumen->judul }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </details>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
-
-                <div class="p-5 space-y-1">
-
-                    @foreach($sub->dokumensLangsung as $dokumen)
-                        <a href="{{ asset('kms-file/' . $dokumen->file_path) }}" target="_blank" class="text-sm text-[#06182E] hover:underline flex items-start gap-2 group py-1.5">
-                            <span class="font-mono text-xs mt-0.5" style="color: {{ $accent }}">&#9642;</span>
-                            <span class="group-hover:translate-x-0.5 transition">{{ $dokumen->judul }}</span>
-                        </a>
-                    @endforeach
-
-                    @foreach($sub->grupDokumens as $grup)
-                        <details class="py-1.5">
-                            <summary class="text-sm font-medium flex items-center gap-2 text-[#06182E]/70 hover:text-[#06182E]">
-                                <span class="chevron font-mono text-xs transition-transform" style="color: {{ $accent }}">&#9656;</span>
-                                <span>{{ $grup->nama }}</span>
-                                <span class="font-mono text-[10px] text-[#06182E]/30">({{ $grup->dokumens->count() }})</span>
-                            </summary>
-                            <div class="pl-6 mt-1 space-y-1 border-l ml-1.5" style="border-color: {{ $accent }}30;">
-                                @foreach($grup->dokumens as $dokumen)
-                                    <a href="{{ asset('kms-file/' . $dokumen->file_path) }}" target="_blank" class="text-sm text-[#06182E]/80 hover:underline flex items-start gap-2 group py-1">
-                                        <span class="font-mono text-xs mt-0.5" style="color: {{ $accent }}">&#9642;</span>
-                                        <span class="group-hover:translate-x-0.5 transition">{{ $dokumen->judul }}</span>
-                                    </a>
-                                @endforeach
-                            </div>
-                        </details>
-                    @endforeach
-
-                    @if($sub->dokumensLangsung->isEmpty() && $sub->grupDokumens->isEmpty())
-                        <p class="text-sm text-[#06182E]/40 italic py-1.5">Belum ada dokumen</p>
-                    @endif
-
-                </div>
-            </div>
-        @empty
-            <p class="text-[#06182E]/50 italic col-span-full">Belum ada sub-kategori untuk kategori ini.</p>
-        @endforelse
-    </div>
+            @empty
+                <p class="text-[#06182E]/50 italic">Belum ada dokumen di kategori ini.</p>
+            @endforelse
+        </div>
+    </section>
 
 </body>
 </html>

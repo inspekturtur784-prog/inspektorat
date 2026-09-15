@@ -6,24 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('kategoris', function (Blueprint $table) {
-        $table->id();
-        $table->string('nama');           // contoh: "Diklat Fungsional Auditor"
-        $table->string('slug')->unique(); // contoh: "diklat-fungsional-auditor" (buat URL)
-        $table->timestamps();
+        Schema::create('kms_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('kategoris');
+        Schema::dropIfExists('kms_categories');
     }
 };

@@ -19,22 +19,20 @@
 </head>
 <body>
 
-    <header class="bg-[#06182E] border-b border-white/10 px-6 md:px-12 py-5 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <img src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto" class="h-12 w-auto">
-            <div>
-                <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
-                <a href="https://kms-inspektorat.mojokertokota.go.id/" class="font-display font-semibold text-lg text-white hover:text-[#D4AF6A] transition block">
-                    Knowledge Management System &amp; Pedoman
-                </a>
-            </div>
+<header class="bg-[#06182E] border-b border-white/10 px-6 md:px-12 py-5 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+        <img src="{{ asset('images/logo-inspektorat.png') }}" alt="Logo Inspektorat Kota Mojokerto" class="h-12 w-auto">
+        <div>
+            <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
+            <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg text-white hover:text-[#D4AF6A] transition block">
+                Knowledge Management System &amp; Pedoman
+            </a>
         </div>
-        <p class="font-mono text-xs text-right hidden lg:block text-white/60">
-            Arsip Digital<br>Terverifikasi
-        </p>
-    </header>
-
-    <nav class="bg-[#06182E] px-6 md:px-12">
+    </div>
+    <p class="font-mono text-xs text-right hidden lg:block text-white/60">
+        Arsip Digital<br>Terverifikasi
+    </p>
+</header>    <nav class="bg-[#06182E] px-6 md:px-12">
         <div class="flex gap-8">
             <a href="{{ route('kms.index') }}" class="font-mono text-xs uppercase tracking-widest text-white py-3 border-b-2 border-[#B08D57] transition">
                 Knowledge Base
@@ -77,7 +75,7 @@
             <p class="font-mono text-xs gold uppercase tracking-widest mb-2">Hasil pencarian</p>
             <h3 class="font-display text-2xl mb-6">"{{ $keyword }}"</h3>
             @forelse($dokumens as $dokumen)
-                <a href="{{ url('kms-file/' . $dokumen->file_path) }}" target="_blank" class="border-b border-[#06182E]/10 py-4 flex justify-between items-center hover:bg-white transition px-2 -mx-2">
+               <a href="{{ url('/files/' . $dokumen->file_path) }}" target="_blank" class="border-b border-[#06182E]/10 py-4 flex justify-between items-center hover:bg-white transition px-2 -mx-2">
                     <div>
                         <p class="font-medium">{{ $dokumen->judul }}</p>
                         <p class="text-sm text-[#06182E]/50">{{ $dokumen->kategori->nama }}</p>

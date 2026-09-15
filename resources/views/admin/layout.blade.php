@@ -55,7 +55,7 @@
                    <a href="{{ route('admin.buletin.index') }}" class="{{ request()->routeIs('admin.buletin.*') ? 'active' : '' }}">
     Buletin
 </a>
-<a href="{{ route('admin.kmspedoman.index') }}" class="{{ request()->routeIs('admin.kms.*') || request()->routeIs('admin.kmspedoman.*') ? 'active' : '' }}">
+<a href="{{ route('admin.kms.index') }}" class="{{ request()->routeIs('admin.kms.*') || request()->routeIs('admin.kmspedoman.*') ? 'active' : '' }}">
     KMS
 </a>
                     <a href="{{ route('admin.pesan.index') }}" class="{{ request()->routeIs('admin.pesan.*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">

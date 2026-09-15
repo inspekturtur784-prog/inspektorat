@@ -27,7 +27,7 @@ class KmsController extends Controller
     public function kategori($slug)
     {
         $kategori = Kategori::where('slug', $slug)
-            ->with(['subkategoris.grupDokumens.dokumens', 'subkategoris.dokumensLangsung'])
+            ->with(['subkategoris.dokumensLangsung', 'subkategoris.grupDokumens.dokumens'])
             ->firstOrFail();
 
         return view('kms.kategori', compact('kategori'));

@@ -6,28 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('dokumens', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('kategori_id')->constrained()->onDelete('cascade');
-        $table->string('judul');
-        $table->text('deskripsi')->nullable();
-        $table->string('file_path');      // lokasi file di storage
-        $table->string('file_type')->nullable();  // pdf, docx, dll
-        $table->integer('dilihat')->default(0);   // jumlah dilihat/download
-        $table->timestamps();
+        Schema::create('kms_documents', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('kms_category_id')
+                ->constrained('kms_categories')
+                ->cascadeOnDelete();
+            $table->string('title');
+            // Tag bebas, pengganti "Subkategori" + "Grup Dokumen" lama.
+            // Boleh dikosongkan kalau dokumen tidak perlu dikelompokkan lagi.
+            $table->string('tag')->nullable();
+            $table->string('file_path');
+            $table->string('original_name');
+            $table->string('file_type', 20)->nullable(); // PDF, DOCX, dst
+            $table->unsignedInteger('views')->default(0);
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('dokumens');
+        Schema::dropIfExists('kms_documents');
     }
 };

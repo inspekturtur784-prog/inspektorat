@@ -1,13 +1,12 @@
 <?php
 
-Route::get('/kms-file/{path}', function ($path) {
-    $fullPath = public_path('kms-files/' . $path);
+use Illuminate\Support\Facades\Storage;
 
-    if (!file_exists($fullPath)) {
+Route::get('/files/{path}', function ($path) {
+    if (!Storage::disk('public')->exists($path)) {
         abort(404);
     }
-
-    return response()->file($fullPath);
+    return response()->file(Storage::disk('public')->path($path));
 })->where('path', '.*');
 
 use App\Http\Controllers\ProfileController;
@@ -37,10 +36,8 @@ use App\Http\Controllers\Admin\StrukturBagianController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 use App\Http\Controllers\Admin\ProfilHighlightController;
-use App\Http\Controllers\Admin\KategoriKmsController;
-use App\Http\Controllers\Admin\SubkategoriKmsController;
-use App\Http\Controllers\Admin\GrupDokumenController;
-use App\Http\Controllers\Admin\DokumenController;
+use App\Http\Controllers\Admin\KmsCategoryController;
+use App\Http\Controllers\Admin\KmsDocumentController;
 
 // ---------- Beranda ----------
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -224,37 +221,18 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/buletin/{buletin}', [AdminBuletinController::class, 'update'])->name('buletin.update');
     Route::delete('/buletin/{buletin}', [AdminBuletinController::class, 'destroy'])->name('buletin.destroy');
 
+    // ---------- KMS / Pedoman (versi simpel: Kategori -> Dokumen) ----------
+    Route::prefix('kms')->name('kms.')->group(function () {
+        Route::get('/', [KmsCategoryController::class, 'index'])->name('index');
+        Route::post('/kategori', [KmsCategoryController::class, 'store'])->name('kategori.store');
+        Route::put('/kategori/{category}', [KmsCategoryController::class, 'update'])->name('kategori.update');
+        Route::delete('/kategori/{category}', [KmsCategoryController::class, 'destroy'])->name('kategori.destroy');
 
-        // ---------- KMS: Kategori ----------
-    Route::get('/kms', [KategoriKmsController::class, 'index'])->name('kmspedoman.index');
-    Route::get('/kms/kategori/tambah', [KategoriKmsController::class, 'create'])->name('kms.kategori.create');
-    Route::post('/kms/kategori', [KategoriKmsController::class, 'store'])->name('kms.kategori.store');
-    Route::get('/kms/kategori/{kategori}', [KategoriKmsController::class, 'show'])->name('kms.kategori.show');
-    Route::get('/kms/kategori/{kategori}/edit', [KategoriKmsController::class, 'edit'])->name('kms.kategori.edit');
-    Route::put('/kms/kategori/{kategori}', [KategoriKmsController::class, 'update'])->name('kms.kategori.update');
-    Route::delete('/kms/kategori/{kategori}', [KategoriKmsController::class, 'destroy'])->name('kms.kategori.destroy');
+        Route::get('/kategori/{category}', [KmsDocumentController::class, 'index'])->name('kategori.show');
+        Route::post('/kategori/{category}/dokumen', [KmsDocumentController::class, 'store'])->name('dokumen.store');
+        Route::put('/dokumen/{document}', [KmsDocumentController::class, 'update'])->name('dokumen.update');
+        Route::delete('/dokumen/{document}', [KmsDocumentController::class, 'destroy'])->name('dokumen.destroy');
+        Route::get('/dokumen/{document}/download', [KmsDocumentController::class, 'download'])->name('dokumen.download');
+    });
 
-    // ---------- KMS: Subkategori ----------
-    Route::get('/kms/kategori/{kategori}/subkategori/tambah', [SubkategoriKmsController::class, 'create'])->name('kms.subkategori.create');
-    Route::post('/kms/kategori/{kategori}/subkategori', [SubkategoriKmsController::class, 'store'])->name('kms.subkategori.store');
-    Route::get('/kms/subkategori/{subkategori}', [SubkategoriKmsController::class, 'show'])->name('kms.subkategori.show');
-    Route::get('/kms/subkategori/{subkategori}/edit', [SubkategoriKmsController::class, 'edit'])->name('kms.subkategori.edit');
-    Route::put('/kms/subkategori/{subkategori}', [SubkategoriKmsController::class, 'update'])->name('kms.subkategori.update');
-    Route::delete('/kms/subkategori/{subkategori}', [SubkategoriKmsController::class, 'destroy'])->name('kms.subkategori.destroy');
-
-    // ---------- KMS: Grup Dokumen ----------
-    Route::get('/kms/subkategori/{subkategori}/grup/tambah', [GrupDokumenController::class, 'create'])->name('kms.grup.create');
-    Route::post('/kms/subkategori/{subkategori}/grup', [GrupDokumenController::class, 'store'])->name('kms.grup.store');
-    Route::get('/kms/grup/{grup}', [GrupDokumenController::class, 'show'])->name('kms.grup.show');
-    Route::get('/kms/grup/{grup}/edit', [GrupDokumenController::class, 'edit'])->name('kms.grup.edit');
-    Route::put('/kms/grup/{grup}', [GrupDokumenController::class, 'update'])->name('kms.grup.update');
-    Route::delete('/kms/grup/{grup}', [GrupDokumenController::class, 'destroy'])->name('kms.grup.destroy');
-
-    // ---------- KMS: Dokumen ----------
-    Route::get('/kms/subkategori/{subkategori}/dokumen/tambah', [DokumenController::class, 'create'])->name('kms.dokumen.create');
-    Route::post('/kms/dokumen', [DokumenController::class, 'store'])->name('kms.dokumen.store');
-    Route::get('/kms/dokumen/{dokumen}/edit', [DokumenController::class, 'edit'])->name('kms.dokumen.edit');
-    Route::put('/kms/dokumen/{dokumen}', [DokumenController::class, 'update'])->name('kms.dokumen.update');
-    Route::delete('/kms/dokumen/{dokumen}', [DokumenController::class, 'destroy'])->name('kms.dokumen.destroy');
-    
 });

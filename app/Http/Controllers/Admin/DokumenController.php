@@ -10,13 +10,11 @@ use Illuminate\Http\Request;
 
 class DokumenController extends Controller
 {
-    public function create(Subkategori $subkategori, Request $request)
+    public function create(Request $request, Subkategori $subkategori)
     {
         $grup = null;
         if ($request->filled('grup')) {
-            $grup = GrupDokumen::where('id', $request->query('grup'))
-                ->where('subkategori_id', $subkategori->id)
-                ->first();
+            $grup = GrupDokumen::find($request->query('grup'));
         }
 
         return view('kms.dokumen.create', compact('subkategori', 'grup'));
@@ -24,67 +22,72 @@ class DokumenController extends Controller
 
     public function store(Request $request)
     {
-        $data = $this->validated($request, true);
+        $data = $request->validate([
+            'subkategori_id'   => 'required|exists:subkategoris,id',
+            'grup_dokumen_id'  => 'nullable|exists:grup_dokumens,id',
+            'judul'            => 'required|string|max:255',
+            'deskripsi'        => 'nullable|string',
+            'file'             => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:20480',
+        ]);
 
-        $data['file_type'] = $request->file('file')->getClientOriginalExtension();
-        $data['file_path'] = $this->handleUpload($request);
-        $data['dilihat'] = 0;
-
-        // kategori_id diambil otomatis dari subkategori yang dipilih
         $subkategori = Subkategori::findOrFail($data['subkategori_id']);
-        $data['kategori_id'] = $subkategori->kategori_id;
 
-        Dokumen::create($data);
+        $upload = $this->handleUpload($request);
+
+        Dokumen::create([
+            'kategori_id'      => $subkategori->kategori_id,
+            'subkategori_id'   => $subkategori->id,
+            'grup_dokumen_id'  => $data['grup_dokumen_id'] ?: null,
+            'judul'            => $data['judul'],
+            'deskripsi'        => $data['deskripsi'] ?? null,
+            'file_path'        => $upload['file_path'],
+            'file_type'        => $upload['file_type'],
+        ]);
 
         return redirect()->route('admin.kms.subkategori.show', $subkategori)->with('status', 'Dokumen berhasil ditambahkan.');
     }
 
     public function edit(Dokumen $dokumen)
     {
-        $dokumen->load('subkategori');
         return view('kms.dokumen.edit', compact('dokumen'));
     }
 
     public function update(Request $request, Dokumen $dokumen)
     {
-        $data = $this->validated($request, false);
+        $data = $request->validate([
+            'judul'      => 'required|string|max:255',
+            'deskripsi'  => 'nullable|string',
+            'file'       => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:20480',
+        ]);
 
         if ($request->hasFile('file')) {
-            $data['file_type'] = $request->file('file')->getClientOriginalExtension();
-            $data['file_path'] = $this->handleUpload($request);
+            $upload = $this->handleUpload($request);
+            $data['file_path'] = $upload['file_path'];
+            $data['file_type'] = $upload['file_type'];
         }
-
-        $subkategori = Subkategori::findOrFail($data['subkategori_id']);
-        $data['kategori_id'] = $subkategori->kategori_id;
 
         $dokumen->update($data);
 
-        return redirect()->route('admin.kms.subkategori.show', $subkategori)->with('status', 'Dokumen berhasil diperbarui.');
+        return redirect()->route('admin.kms.subkategori.show', $dokumen->subkategori_id)->with('status', 'Dokumen berhasil diperbarui.');
     }
 
     public function destroy(Dokumen $dokumen)
     {
         $subkategoriId = $dokumen->subkategori_id;
         $dokumen->delete();
+
         return redirect()->route('admin.kms.subkategori.show', $subkategoriId)->with('status', 'Dokumen berhasil dihapus.');
     }
 
-    private function validated(Request $request, bool $isCreate): array
-    {
-        return $request->validate([
-            'judul'           => 'required|string|max:255',
-            'deskripsi'       => 'nullable|string',
-            'subkategori_id'  => 'required|exists:subkategoris,id',
-            'grup_dokumen_id' => 'nullable|exists:grup_dokumens,id',
-            'file'            => ($isCreate ? 'required' : 'nullable') . '|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:20480',
-        ]);
-    }
-
-    private function handleUpload(Request $request): string
+    private function handleUpload(Request $request): array
     {
         $file = $request->file('file');
         $name = time() . '_' . preg_replace('/\s+/', '-', $file->getClientOriginalName());
         $file->move(public_path('kms-files'), $name);
-        return $name;
+
+        return [
+            'file_path' => $name,
+            'file_type' => $file->getClientOriginalExtension(),
+        ];
     }
 }
