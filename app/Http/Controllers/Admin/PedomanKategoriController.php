@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Admin;
 
@@ -21,7 +21,7 @@ class PedomanKategoriController extends Controller
 
         PedomanKategori::create($data);
 
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Kategori Pedoman berhasil ditambahkan.');
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori Pedoman berhasil ditambahkan.');
     }
 
     public function edit(PedomanKategori $kategori)
@@ -36,14 +36,14 @@ class PedomanKategoriController extends Controller
 
         $kategori->update($data);
 
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Kategori Pedoman berhasil diperbarui.');
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori Pedoman berhasil diperbarui.');
     }
 
     public function destroy(PedomanKategori $kategori)
     {
         $kategori->delete();
 
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Kategori Pedoman berhasil dihapus.');
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori Pedoman berhasil dihapus.');
     }
 
     private function validated(Request $request): array

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Admin;
 
@@ -24,7 +24,7 @@ class PedomanDokumenController extends Controller
 
         PedomanDokumen::create($data);
 
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Dokumen Pedoman berhasil ditambahkan.');
+        return redirect()->route('admin.kms.index')->with('status', 'Dokumen Pedoman berhasil ditambahkan.');
     }
 
     public function edit(PedomanDokumen $dokumen)
@@ -42,14 +42,14 @@ class PedomanDokumenController extends Controller
 
         $dokumen->update($data);
 
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Dokumen Pedoman berhasil diperbarui.');
+        return redirect()->route('admin.kms.index')->with('status', 'Dokumen Pedoman berhasil diperbarui.');
     }
 
     public function destroy(PedomanDokumen $dokumen)
     {
         $dokumen->delete();
 
-        return redirect()->route('admin.kmspedoman.index')->with('status', 'Dokumen Pedoman berhasil dihapus.');
+        return redirect()->route('admin.kms.index')->with('status', 'Dokumen Pedoman berhasil dihapus.');
     }
 
     private function validated(Request $request, bool $isCreate): array
