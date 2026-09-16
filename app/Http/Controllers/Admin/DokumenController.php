@@ -37,7 +37,7 @@ class DokumenController extends Controller
         Dokumen::create([
             'kategori_id'      => $subkategori->kategori_id,
             'subkategori_id'   => $subkategori->id,
-            'grup_dokumen_id'  => $data['grup_dokumen_id'] ?: null,
+            'grup_dokumen_id'  => $data['grup_dokumen_id'] ?? null,
             'judul'            => $data['judul'],
             'deskripsi'        => $data['deskripsi'] ?? null,
             'file_path'        => $upload['file_path'],
@@ -83,7 +83,7 @@ class DokumenController extends Controller
     {
         $file = $request->file('file');
         $name = time() . '_' . preg_replace('/\s+/', '-', $file->getClientOriginalName());
-        $file->move(public_path('kms-files'), $name);
+        $file->move(public_path('files'), $name);
 
         return [
             'file_path' => $name,

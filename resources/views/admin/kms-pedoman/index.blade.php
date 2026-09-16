@@ -25,7 +25,20 @@
     .kp-table tbody tr:hover { background:#fafafa; }
     .kp-empty { text-align:center; color:#999; padding:28px; }
     .kp-divider { border:none; border-top:1px solid #e5e2da; margin:36px 0; }
-    .kp-subtitle { font-size:15px; font-weight:700; color:#1e2a4a; margin:0 0 14px; }
+    .kp-subtitle-row { display:flex; justify-content:space-between; align-items:center; margin:0 0 14px; flex-wrap:wrap; gap:10px; }
+    .kp-subtitle { font-size:15px; font-weight:700; color:#1e2a4a; margin:0; }
+
+    .kp-upload-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    @media (max-width: 900px) { .kp-upload-grid { grid-template-columns:1fr; } }
+    .kp-upload-card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,.06); border-top:4px solid #1e2a4a; }
+    .kp-upload-card h3 { margin:0 0 4px; font-size:16px; color:#1e2a4a; }
+    .kp-upload-card p.kp-desc { margin:0 0 16px; font-size:13px; color:#888; }
+    .kp-field { margin-bottom:14px; }
+    .kp-field label { display:block; font-size:13px; font-weight:600; color:#555; margin-bottom:6px; }
+    .kp-field input, .kp-field select, .kp-field textarea { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:inherit; }
+    .kp-upload-card .kp-btn-primary { width:100%; padding:11px; font-size:14px; margin-top:4px; }
+    .kp-manage { display:none; }
+    .kp-manage.open { display:block; }
 </style>
 
 <div class="kp-wrap">
@@ -37,126 +50,200 @@
         <div class="kp-status">{{ session('status') }}</div>
     @endif
 
-    <div class="kp-section">
-        <div class="kp-header">
-            <div>
-                <h2>Knowledge Base (KMS)</h2>
-                <p class="kp-count">{{ $kmsKategoris->count() }} kategori &middot; {{ $kmsDokumens->count() }} dokumen</p>
-            </div>
-            <a href="{{ route('admin.kms.kategori.create') }}" class="kp-btn kp-btn-primary">+ Tambah Kategori KMS</a>
+    <div class="kp-subtitle-row">
+        <p class="kp-subtitle">Upload Dokumen</p>
+        <button type="button" class="kp-btn kp-btn-outline" onclick="document.getElementById('kp-manage-area').classList.toggle('open'); this.textContent = document.getElementById('kp-manage-area').classList.contains('open') ? '\u25b2 Sembunyikan Kelola Kategori' : '+ Kelola Kategori & Subkategori';">
+            + Kelola Kategori &amp; Subkategori
+        </button>
+    </div>
+
+    <div class="kp-upload-grid">
+        <div class="kp-upload-card">
+            <h3>Knowledge Base (KMS)</h3>
+            <p class="kp-desc">Pilih subkategori, isi judul, unggah filenya. Selesai.</p>
+            <form action="{{ route('admin.kms.dokumen.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="grup_dokumen_id" value="">
+                <div class="kp-field">
+                    <label>Kategori / Subkategori</label>
+                    <select name="subkategori_id" required>
+                        <option value="">-- Pilih Subkategori --</option>
+                        @foreach ($kmsSubkategoris->sortBy(fn($s) => ($s->kategori->nama ?? '') . $s->nama)->groupBy(fn($s) => $s->kategori->nama ?? '-') as $namaKategori => $subs)
+                            <optgroup label="{{ $namaKategori }}">
+                                @foreach ($subs as $sub)
+                                    <option value="{{ $sub->id }}">{{ $sub->nama }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="kp-field">
+                    <label>Judul Dokumen</label>
+                    <input type="text" name="judul" required>
+                </div>
+                <div class="kp-field">
+                    <label>File (PDF, Word, Excel, PPT &mdash; maks 20MB)</label>
+                    <input type="file" name="file" required>
+                </div>
+                <button type="submit" class="kp-btn kp-btn-primary">Upload Dokumen KMS</button>
+            </form>
+            @if ($kmsSubkategoris->isEmpty())
+                <p class="kp-desc" style="margin-top:10px;">Belum ada subkategori. Klik "+ Kelola Kategori & Subkategori" di atas untuk buat yang pertama.</p>
+            @endif
         </div>
 
-        <div class="kp-card">
-            <table class="kp-table">
-                <thead><tr><th>Nama Kategori</th><th style="width:220px;">Aksi</th></tr></thead>
-                <tbody>
-                    @forelse ($kmsKategoris as $kategori)
-                    <tr>
-                        <td>{{ $kategori->nama }}</td>
-                        <td>
-                            <a href="{{ route('admin.kms.kategori.show', $kategori) }}" class="kp-btn kp-btn-outline">Kelola</a>
-                            <a href="{{ route('admin.kms.kategori.edit', $kategori) }}" class="kp-btn kp-btn-outline">Edit</a>
-                            <form action="{{ route('admin.kms.kategori.destroy', $kategori) }}" method="POST" onsubmit="return confirm('Hapus kategori ini beserta semua isinya?');" style="display:inline">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="2" class="kp-empty">Belum ada kategori KMS.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <p class="kp-subtitle">Semua Dokumen KMS</p>
-        <div class="kp-card">
-            <table class="kp-table">
-                <thead><tr><th>Judul</th><th>Kategori</th><th>Subkategori</th><th>Grup</th><th style="width:160px;">Aksi</th></tr></thead>
-                <tbody>
-                    @forelse ($kmsDokumens as $doc)
-                    <tr>
-                        <td>{{ $doc->judul }}</td>
-                        <td>{{ $doc->kategori->nama ?? '-' }}</td>
-                        <td>{{ $doc->subkategori->nama ?? '-' }}</td>
-                        <td>{{ $doc->grupDokumen->nama ?? '-' }}</td>
-                        <td>
-                            <a href="{{ asset('kms-files/' . $doc->file_path) }}" target="_blank" class="kp-btn kp-btn-outline">Lihat</a>
-                            <a href="{{ route('admin.kms.dokumen.edit', $doc) }}" class="kp-btn kp-btn-outline">Edit</a>
-                            <form action="{{ route('admin.kms.dokumen.destroy', $doc) }}" method="POST" onsubmit="return confirm('Hapus dokumen ini?');" style="display:inline">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="5" class="kp-empty">Belum ada dokumen KMS.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="kp-upload-card">
+            <h3>Pedoman</h3>
+            <p class="kp-desc">Pilih kategori, isi judul, unggah filenya. Selesai.</p>
+            <form action="{{ route('admin.pedoman.dokumen.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="kp-field">
+                    <label>Kategori</label>
+                    <select name="pedoman_kategori_id" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        @foreach ($pedomanKategoris->sortBy('nama') as $k)
+                            <option value="{{ $k->id }}">{{ $k->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="kp-field">
+                    <label>Judul Dokumen</label>
+                    <input type="text" name="judul" required>
+                </div>
+                <div class="kp-field">
+                    <label>File PDF (maks 20MB)</label>
+                    <input type="file" name="file" required>
+                </div>
+                <button type="submit" class="kp-btn kp-btn-primary">Upload Dokumen Pedoman</button>
+            </form>
+            @if ($pedomanKategoris->isEmpty())
+                <p class="kp-desc" style="margin-top:10px;">Belum ada kategori Pedoman. Klik "+ Kelola Kategori & Subkategori" di atas untuk buat yang pertama.</p>
+            @endif
         </div>
     </div>
 
-    <hr class="kp-divider">
+    <div id="kp-manage-area" class="kp-manage">
+        <hr class="kp-divider">
 
-    <div class="kp-section">
-        <div class="kp-header">
-            <div>
-                <h2>Pedoman</h2>
-                <p class="kp-count">{{ $pedomanKategoris->count() }} kategori &middot; {{ $pedomanDokumens->count() }} dokumen</p>
+        <div class="kp-section">
+            <div class="kp-header">
+                <div>
+                    <h2>Knowledge Base (KMS)</h2>
+                    <p class="kp-count">{{ $kmsKategoris->count() }} kategori &middot; {{ $kmsDokumens->count() }} dokumen</p>
+                </div>
+                <a href="{{ route('admin.kms.kategori.create') }}" class="kp-btn kp-btn-primary">+ Tambah Kategori KMS</a>
             </div>
-            <div>
-                <a href="{{ route('admin.pedoman.kategori.create') }}" class="kp-btn kp-btn-outline">+ Tambah Kategori</a>
-                <a href="{{ route('admin.pedoman.dokumen.create') }}" class="kp-btn kp-btn-primary">+ Tambah Dokumen</a>
+
+            <div class="kp-card">
+                <table class="kp-table">
+                    <thead><tr><th>Nama Kategori</th><th style="width:220px;">Aksi</th></tr></thead>
+                    <tbody>
+                        @forelse ($kmsKategoris as $kategori)
+                        <tr>
+                            <td>{{ $kategori->nama }}</td>
+                            <td>
+                                <a href="{{ route('admin.kms.kategori.show', $kategori) }}" class="kp-btn kp-btn-outline">Kelola</a>
+                                <a href="{{ route('admin.kms.kategori.edit', $kategori) }}" class="kp-btn kp-btn-outline">Edit</a>
+                                <form action="{{ route('admin.kms.kategori.destroy', $kategori) }}" method="POST" onsubmit="return confirm('Hapus kategori ini beserta semua isinya?');" style="display:inline">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="2" class="kp-empty">Belum ada kategori KMS.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <p class="kp-desc" style="font-size:13px;color:#888;margin:-14px 0 24px;">Klik "Kelola" pada kategori untuk menambah subkategori di dalamnya.</p>
+
+            <p class="kp-subtitle" style="margin-bottom:14px;">Semua Dokumen KMS</p>
+            <div class="kp-card">
+                <table class="kp-table">
+                    <thead><tr><th>Judul</th><th>Kategori</th><th>Subkategori</th><th>Grup</th><th style="width:160px;">Aksi</th></tr></thead>
+                    <tbody>
+                        @forelse ($kmsDokumens as $doc)
+                        <tr>
+                            <td>{{ $doc->judul }}</td>
+                            <td>{{ $doc->kategori->nama ?? '-' }}</td>
+                            <td>{{ $doc->subkategori->nama ?? '-' }}</td>
+                            <td>{{ $doc->grupDokumen->nama ?? '-' }}</td>
+                            <td>
+                                <a href="{{ url('/files/' . $doc->file_path) }}" target="_blank" class="kp-btn kp-btn-outline">Lihat</a>
+                                <a href="{{ route('admin.kms.dokumen.edit', $doc) }}" class="kp-btn kp-btn-outline">Edit</a>
+                                <form action="{{ route('admin.kms.dokumen.destroy', $doc) }}" method="POST" onsubmit="return confirm('Hapus dokumen ini?');" style="display:inline">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="5" class="kp-empty">Belum ada dokumen KMS.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="kp-card">
-            <table class="kp-table">
-                <thead><tr><th>Nama Kategori</th><th>Jumlah Dokumen</th><th style="width:160px;">Aksi</th></tr></thead>
-                <tbody>
-                    @forelse ($pedomanKategoris as $kategori)
-                    <tr>
-                        <td>{{ $kategori->nama }}</td>
-                        <td>{{ $pedomanDokumens->where('pedoman_kategori_id', $kategori->id)->count() }}</td>
-                        <td>
-                            <a href="{{ route('admin.pedoman.kategori.edit', $kategori) }}" class="kp-btn kp-btn-outline">Edit</a>
-                            <form action="{{ route('admin.pedoman.kategori.destroy', $kategori) }}" method="POST" onsubmit="return confirm('Hapus kategori pedoman ini?');" style="display:inline">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="3" class="kp-empty">Belum ada kategori Pedoman.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+        <hr class="kp-divider">
 
-        <p class="kp-subtitle">Semua Dokumen Pedoman</p>
-        <div class="kp-card">
-            <table class="kp-table">
-                <thead><tr><th>Judul</th><th>Kategori</th><th style="width:160px;">Aksi</th></tr></thead>
-                <tbody>
-                    @forelse ($pedomanDokumens as $doc)
-                    <tr>
-                        <td>{{ $doc->judul }}</td>
-                        <td>{{ $doc->kategori->nama ?? '-' }}</td>
-                        <td>
-                            <a href="{{ asset($doc->file_path) }}" target="_blank" class="kp-btn kp-btn-outline">Lihat</a>
-                            <a href="{{ route('admin.pedoman.dokumen.edit', $doc) }}" class="kp-btn kp-btn-outline">Edit</a>
-                            <form action="{{ route('admin.pedoman.dokumen.destroy', $doc) }}" method="POST" onsubmit="return confirm('Hapus dokumen pedoman ini?');" style="display:inline">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="3" class="kp-empty">Belum ada dokumen Pedoman.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="kp-section">
+            <div class="kp-header">
+                <div>
+                    <h2>Pedoman</h2>
+                    <p class="kp-count">{{ $pedomanKategoris->count() }} kategori &middot; {{ $pedomanDokumens->count() }} dokumen</p>
+                </div>
+                <a href="{{ route('admin.pedoman.kategori.create') }}" class="kp-btn kp-btn-primary">+ Tambah Kategori Pedoman</a>
+            </div>
+
+            <div class="kp-card">
+                <table class="kp-table">
+                    <thead><tr><th>Nama Kategori</th><th>Jumlah Dokumen</th><th style="width:160px;">Aksi</th></tr></thead>
+                    <tbody>
+                        @forelse ($pedomanKategoris as $kategori)
+                        <tr>
+                            <td>{{ $kategori->nama }}</td>
+                            <td>{{ $pedomanDokumens->where('pedoman_kategori_id', $kategori->id)->count() }}</td>
+                            <td>
+                                <a href="{{ route('admin.pedoman.kategori.edit', $kategori) }}" class="kp-btn kp-btn-outline">Edit</a>
+                                <form action="{{ route('admin.pedoman.kategori.destroy', $kategori) }}" method="POST" onsubmit="return confirm('Hapus kategori pedoman ini?');" style="display:inline">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="3" class="kp-empty">Belum ada kategori Pedoman.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="kp-subtitle" style="margin-bottom:14px;">Semua Dokumen Pedoman</p>
+            <div class="kp-card">
+                <table class="kp-table">
+                    <thead><tr><th>Judul</th><th>Kategori</th><th style="width:160px;">Aksi</th></tr></thead>
+                    <tbody>
+                        @forelse ($pedomanDokumens as $doc)
+                        <tr>
+                            <td>{{ $doc->judul }}</td>
+                            <td>{{ $doc->kategori->nama ?? '-' }}</td>
+                            <td>
+                                <a href="{{ asset($doc->file_path) }}" target="_blank" class="kp-btn kp-btn-outline">Lihat</a>
+                                <a href="{{ route('admin.pedoman.dokumen.edit', $doc) }}" class="kp-btn kp-btn-outline">Edit</a>
+                                <form action="{{ route('admin.pedoman.dokumen.destroy', $doc) }}" method="POST" onsubmit="return confirm('Hapus dokumen pedoman ini?');" style="display:inline">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="3" class="kp-empty">Belum ada dokumen Pedoman.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

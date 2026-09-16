@@ -39,7 +39,7 @@
 
         <div class="kp-field">
             <label>File saat ini</label>
-            <p><a href="{{ asset('kms-files/' . $dokumen->file_path) }}" target="_blank">{{ $dokumen->file_path }}</a></p>
+            <p><a href="{{ url('/files/' . $dokumen->file_path) }}" target="_blank">{{ $dokumen->file_path }}</a></p>
         </div>
 
         <div class="kp-field">
