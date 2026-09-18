@@ -52,6 +52,9 @@
                     <a href="{{ route('admin.articles.index') }}" class="{{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
                         Artikel / Informasi
                     </a>
+                    <a href="{{ route('admin.informasidokumen.index') }}" class="{{ request()->routeIs('admin.informasidokumen.*') ? 'active' : '' }}">
+    Informasi Dokumen
+</a>
                    <a href="{{ route('admin.buletin.index') }}" class="{{ request()->routeIs('admin.buletin.*') ? 'active' : '' }}">
     Buletin
 </a>

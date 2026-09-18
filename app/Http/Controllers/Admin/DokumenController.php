@@ -27,7 +27,7 @@ class DokumenController extends Controller
             'grup_dokumen_id'  => 'nullable|exists:grup_dokumens,id',
             'judul'            => 'required|string|max:255',
             'deskripsi'        => 'nullable|string',
-            'file'             => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:20480',
+            'file'             => 'required|file|mimes:pdf,mp4,mov,avi,wmv,mkv|max:102400',
         ]);
 
         $subkategori = Subkategori::findOrFail($data['subkategori_id']);
@@ -57,7 +57,7 @@ class DokumenController extends Controller
         $data = $request->validate([
             'judul'      => 'required|string|max:255',
             'deskripsi'  => 'nullable|string',
-            'file'       => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:20480',
+            'file'       => 'nullable|file|mimes:pdf,mp4,mov,avi,wmv,mkv|max:102400',
         ]);
 
         if ($request->hasFile('file')) {

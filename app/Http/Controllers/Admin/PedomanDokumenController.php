@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Http\Controllers\Admin;
 
@@ -68,12 +68,15 @@ class PedomanDokumenController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
+            $size = $file->getSize();
             $name = time() . '_' . preg_replace('/\s+/', '-', $file->getClientOriginalName());
-            $file->move(public_path('pedoman-pdf'), $name);
+            $extension = $file->getClientOriginalExtension();
 
-            $data['file_path'] = 'pedoman-pdf/' . $name;
-            $data['file_type'] = $file->getClientOriginalExtension();
-            $data['ukuran_kb'] = intdiv($file->getSize(), 1024);
+            $file->move(public_path('files'), $name);
+
+            $data['file_path'] = $name;
+            $data['file_type'] = $extension;
+            $data['ukuran_kb'] = intdiv($size, 1024);
         }
 
         return $data;

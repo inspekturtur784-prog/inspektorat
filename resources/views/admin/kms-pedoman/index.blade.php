@@ -82,8 +82,8 @@
                     <input type="text" name="judul" required>
                 </div>
                 <div class="kp-field">
-                    <label>File (PDF, Word, Excel, PPT &mdash; maks 20MB)</label>
-                    <input type="file" name="file" required>
+                    <label>File PDF atau Video (mp4, mov, avi, wmv, mkv &mdash; maks 100MB)</label>
+                    <input type="file" name="file" accept="application/pdf,video/*" required>
                 </div>
                 <button type="submit" class="kp-btn kp-btn-primary">Upload Dokumen KMS</button>
             </form>
@@ -112,7 +112,7 @@
                 </div>
                 <div class="kp-field">
                     <label>File PDF (maks 20MB)</label>
-                    <input type="file" name="file" required>
+                    <input type="file" name="file" accept="application/pdf" required>
                 </div>
                 <button type="submit" class="kp-btn kp-btn-primary">Upload Dokumen Pedoman</button>
             </form>
@@ -156,34 +156,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="kp-desc" style="font-size:13px;color:#888;margin:-14px 0 24px;">Klik "Kelola" pada kategori untuk menambah subkategori di dalamnya.</p>
-
-            <p class="kp-subtitle" style="margin-bottom:14px;">Semua Dokumen KMS</p>
-            <div class="kp-card">
-                <table class="kp-table">
-                    <thead><tr><th>Judul</th><th>Kategori</th><th>Subkategori</th><th>Grup</th><th style="width:160px;">Aksi</th></tr></thead>
-                    <tbody>
-                        @forelse ($kmsDokumens as $doc)
-                        <tr>
-                            <td>{{ $doc->judul }}</td>
-                            <td>{{ $doc->kategori->nama ?? '-' }}</td>
-                            <td>{{ $doc->subkategori->nama ?? '-' }}</td>
-                            <td>{{ $doc->grupDokumen->nama ?? '-' }}</td>
-                            <td>
-                                <a href="{{ url('/files/' . $doc->file_path) }}" target="_blank" class="kp-btn kp-btn-outline">Lihat</a>
-                                <a href="{{ route('admin.kms.dokumen.edit', $doc) }}" class="kp-btn kp-btn-outline">Edit</a>
-                                <form action="{{ route('admin.kms.dokumen.destroy', $doc) }}" method="POST" onsubmit="return confirm('Hapus dokumen ini?');" style="display:inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="5" class="kp-empty">Belum ada dokumen KMS.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+            <p class="kp-desc" style="font-size:13px;color:#888;">Klik "Kelola" pada kategori untuk masuk ke subkategori &amp; dokumen di dalamnya.</p>
         </div>
 
         <hr class="kp-divider">
@@ -219,31 +192,7 @@
                     </tbody>
                 </table>
             </div>
-
-            <p class="kp-subtitle" style="margin-bottom:14px;">Semua Dokumen Pedoman</p>
-            <div class="kp-card">
-                <table class="kp-table">
-                    <thead><tr><th>Judul</th><th>Kategori</th><th style="width:160px;">Aksi</th></tr></thead>
-                    <tbody>
-                        @forelse ($pedomanDokumens as $doc)
-                        <tr>
-                            <td>{{ $doc->judul }}</td>
-                            <td>{{ $doc->kategori->nama ?? '-' }}</td>
-                            <td>
-                                <a href="{{ asset($doc->file_path) }}" target="_blank" class="kp-btn kp-btn-outline">Lihat</a>
-                                <a href="{{ route('admin.pedoman.dokumen.edit', $doc) }}" class="kp-btn kp-btn-outline">Edit</a>
-                                <form action="{{ route('admin.pedoman.dokumen.destroy', $doc) }}" method="POST" onsubmit="return confirm('Hapus dokumen pedoman ini?');" style="display:inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="kp-btn kp-btn-danger">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="3" class="kp-empty">Belum ada dokumen Pedoman.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+            <p class="kp-desc" style="font-size:13px;color:#888;">Dokumen Pedoman langsung berada di dalam kategorinya di atas &mdash; klik nama kategori di halaman publik atau kelola lewat form Edit/Hapus dokumen saat upload.</p>
         </div>
     </div>
 </div>

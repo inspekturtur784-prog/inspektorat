@@ -23,6 +23,7 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\SkmController;
 use App\Http\Controllers\KonsultasiController;
 use App\Http\Controllers\KontakController;
+use App\Http\Controllers\InformasiController;
 use App\Models\Buletin;
 
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
@@ -44,6 +45,7 @@ use App\Http\Controllers\Admin\GrupDokumenController;
 use App\Http\Controllers\Admin\DokumenController;
 use App\Http\Controllers\Admin\PedomanKategoriController;
 use App\Http\Controllers\Admin\PedomanDokumenController;
+use App\Http\Controllers\Admin\InformasiDokumenController;
 
 // ---------- Beranda ----------
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -111,6 +113,10 @@ Route::get('/kontak', [KontakController::class, 'show'])
 
 Route::post('/kontak', [KontakController::class, 'store'])
     ->name('kontak.store');
+
+// ---------- Informasi (SOP, Informasi Berkala, Informasi Setiap Saat, IKM, Persepsi Korupsi) ----------
+Route::get('/informasi/{slug}', [InformasiController::class, 'show'])
+    ->name('informasi.show');
 
 // ---------- Knowledge Base & Pedoman (PUBLIK — TIDAK DIUBAH) ----------
 Route::get('/knowledge-base', [KmsController::class, 'index'])->name('kms.index');
@@ -226,6 +232,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/buletin/{buletin}/edit', [AdminBuletinController::class, 'edit'])->name('buletin.edit');
     Route::put('/buletin/{buletin}', [AdminBuletinController::class, 'update'])->name('buletin.update');
     Route::delete('/buletin/{buletin}', [AdminBuletinController::class, 'destroy'])->name('buletin.destroy');
+
+    // ---------- Dokumen Informasi (SOP, IKM, Persepsi Korupsi, dst) ----------
+    Route::get('/informasi-dokumen', [InformasiDokumenController::class, 'index'])->name('informasidokumen.index');
+    Route::get('/informasi-dokumen/tambah', [InformasiDokumenController::class, 'create'])->name('informasidokumen.create');
+    Route::post('/informasi-dokumen', [InformasiDokumenController::class, 'store'])->name('informasidokumen.store');
+    Route::get('/informasi-dokumen/{informasiDokumen}/edit', [InformasiDokumenController::class, 'edit'])->name('informasidokumen.edit');
+    Route::put('/informasi-dokumen/{informasiDokumen}', [InformasiDokumenController::class, 'update'])->name('informasidokumen.update');
+    Route::delete('/informasi-dokumen/{informasiDokumen}', [InformasiDokumenController::class, 'destroy'])->name('informasidokumen.destroy');
 
     // ==========================================================
     // KMS & PEDOMAN (dashboard admin, terpisah dari halaman publik)

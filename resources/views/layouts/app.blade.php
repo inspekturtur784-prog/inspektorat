@@ -98,6 +98,41 @@
     </div>
 
     <a href="{{ url('/berita') }}">Berita</a>
+
+    <!-- Dropdown Informasi (BARU) -->
+    <div class="nav-item">
+        <a href="#">
+            Informasi
+            <svg class="nav-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="nav-dropdown">
+            <a href="{{ url('/informasi/sop') }}">
+                <strong>SOP</strong>
+                <span>Standar Operasional Prosedur</span>
+            </a>
+            <a href="{{ url('/informasi/berkala') }}">
+                <strong>Informasi Berkala</strong>
+                <span>Informasi publik yang wajib disediakan berkala</span>
+            </a>
+            <a href="{{ url('/informasi/setiap-saat') }}">
+                <strong>Informasi Setiap Saat</strong>
+                <span>Informasi publik yang tersedia setiap saat</span>
+            </a>
+            <a href="{{ url('/informasi/ikm') }}">
+                <strong>IKM</strong>
+                <span>Indeks Kepuasan Masyarakat</span>
+            </a>
+            <a href="{{ url('/informasi/persepsi-korupsi') }}">
+                <strong>Persepsi Korupsi</strong>
+                <span>Survei penilaian integritas</span>
+            </a>
+            <a href="https://sippn.menpan.go.id/" target="_blank" rel="noopener">
+                <strong>SIPPN – PANRB</strong>
+                <span>Sistem Informasi Pelayanan Publik Nasional</span>
+            </a>
+        </div>
+    </div>
+
     <a href="{{ url('/layanan/skm') }}">SKM</a> 
     <a href="{{ url('/kontak') }}" class="nav-cta">Kontak Kami</a>
 </nav>
@@ -196,4 +231,4 @@
     })();
     </script>
 </body>
-</html>  
+</html>
