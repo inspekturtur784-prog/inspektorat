@@ -44,6 +44,13 @@
     </nav>
 
     <section class="px-6 md:px-12 pt-16 pb-10 max-w-4xl">
+<style>
+  .back-home{display:flex;width:fit-content;align-items:center;gap:8px;margin-top:-40px;margin-bottom:30px;font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.08em;color:#b08d57;text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+  .back-home__arrow{transition:transform .2s}
+  .back-home:hover{color:#0b2a4a;border-bottom-color:currentColor}
+  .back-home:hover .back-home__arrow{transform:translateX(-4px)}
+</style>
+<a href="{{ url('/') }}" class="back-home"><span class="back-home__arrow">&larr;</span><span>KEMBALI KE BERANDA</span></a>
         <p class="font-mono text-xs gold uppercase tracking-widest mb-3">// Ruang Arsip Pengetahuan</p>
         <h1 class="font-display text-6xl md:text-7xl font-medium leading-none maroon">Pusat<br>Pengetahuan</h1>
         <p class="mt-6 text-[#06182E]/70 max-w-md">

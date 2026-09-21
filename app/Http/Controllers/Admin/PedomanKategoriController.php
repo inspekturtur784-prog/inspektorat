@@ -24,6 +24,13 @@ class PedomanKategoriController extends Controller
         return redirect()->route('admin.kms.index')->with('status', 'Kategori Pedoman berhasil ditambahkan.');
     }
 
+    public function show(PedomanKategori $kategori)
+    {
+        $kategori->load('dokumens');
+
+        return view('admin.kms-pedoman.pedoman.kategori-show', compact('kategori'));
+    }
+
     public function edit(PedomanKategori $kategori)
     {
         return view('admin.kms-pedoman.pedoman.kategori-form', compact('kategori'));

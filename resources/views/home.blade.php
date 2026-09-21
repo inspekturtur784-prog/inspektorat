@@ -186,6 +186,13 @@
         object-position: center 75%;
         display: block;
     }
+    .ins-slide:nth-child(2){
+        background: var(--ins-navy, #14213D);
+    }
+    .ins-slide:nth-child(2) img{
+        object-fit: contain;
+        object-position: center 30%;
+    }
     .ins-slide-nav{
         position: absolute;
         top: 50%;
@@ -522,7 +529,7 @@
             @forelse ($highlights as $item)
                 <div class="ins-about-card">
                     <div class="ins-about-icon">
-                        <span style="color:#fff;font-weight:700;font-size:18px;">{{ \Illuminate\Support\Str::substr($item->judul, 0, 1) }}</span>
+                        <span style="color:#fff;font-weight:700;font-size:18px;">{{ $loop->iteration }}</span>
                     </div>
                     <h3>{{ $item->judul }}</h3>
                     <p>{{ $item->deskripsi }}</p>

@@ -57,4 +57,37 @@ class InformasiDokumen extends Model
     {
         return $this->file ? Storage::url($this->file) : null;
     }
+
+    public function getFileInfoAttribute(): ?string
+    {
+        if (! $this->file) {
+            return null;
+        }
+
+        $jenis = strtoupper(pathinfo($this->file, PATHINFO_EXTENSION));
+        $bytes = null;
+
+        foreach ([null, 'public'] as $disk) {
+            try {
+                $storage = Storage::disk($disk);
+                if ($storage->exists($this->file)) {
+                    $bytes = $storage->size($this->file);
+                    break;
+                }
+            } catch (\Throwable $e) {
+                // abaikan, coba disk berikutnya
+            }
+        }
+
+        $ukuran = null;
+        if ($bytes !== null) {
+            $ukuran = $bytes >= 1048576
+                ? number_format($bytes / 1048576, 1, ',', '.') . ' MB'
+                : max(1, (int) round($bytes / 1024)) . ' KB';
+        }
+
+        $info = implode(" \u{00B7} ", array_filter([$jenis ?: null, $ukuran]));
+
+        return $info !== '' ? $info : null;
+    }
 }

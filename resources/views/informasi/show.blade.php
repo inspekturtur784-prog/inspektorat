@@ -90,14 +90,114 @@
         border: 1px dashed #cbd5e1;
         border-radius: 8px;
     }
+    .info-meta {
+        flex: 0 0 auto;
+        color: #64748b;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+    @media (max-width: 520px) {
+        .info-meta { display: none; }
+    }
+    /* kontras tombol unduh */
+    .info-download,
+    .info-download:hover {
+        color: #0f1e3d;
+    }
+    .info-download:hover {
+        background: #b48a20;
+    }
+    /* intro persepsi korupsi */
+    .info-intro {
+        color: #475569;
+        font-size: 15px;
+        line-height: 1.7;
+        margin: -8px 0 24px;
+    }
+    /* pencarian dokumen */
+    .info-search {
+        margin: 0 0 16px;
+    }
+    .info-search input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 16px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 15px;
+        background: #fff;
+        color: #0f1e3d;
+    }
+    .info-search input:focus {
+        outline: 2px solid #c59b27;
+        outline-offset: 1px;
+        border-color: #c59b27;
+    }
+    .info-sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+    .info-noresult {
+        display: none;
+        padding: 24px 20px;
+        color: #64748b;
+        border: 1px dashed #cbd5e1;
+        border-radius: 8px;
+    }
+    /* breadcrumb */
+    .info-breadcrumb {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 14px;
+        font-size: 13px;
+        color: #475569;
+    }
+    .info-breadcrumb a {
+        color: #475569;
+        text-decoration: none;
+    }
+    .info-breadcrumb a:hover {
+        color: #c59b27;
+        text-decoration: underline;
+    }
+    .info-breadcrumb [aria-current="page"] {
+        color: #0f1e3d;
+        font-weight: 600;
+    }
 </style>
 
 <div class="info-wrap">
+    <div class="info-breadcrumb" role="navigation" aria-label="Breadcrumb">
+        <a href="{{ url('/') }}">Beranda</a>
+        <span aria-hidden="true">&rsaquo;</span>
+        <span>Informasi</span>
+        <span aria-hidden="true">&rsaquo;</span>
+        <span aria-current="page">{{ $judulHalaman }}</span>
+    </div>
     <h1>{{ $judulHalaman }}</h1>
+    @if (request()->is('informasi/persepsi-korupsi'))
+        <p class="info-intro">
+            Survei Persepsi Korupsi digunakan untuk menilai tingkat integritas dan
+            kepercayaan masyarakat terhadap layanan Inspektorat Kota Mojokerto.
+            Hasil survei dapat diunduh pada daftar di bawah ini.
+        </p>
+    @endif
 
     @if ($items->isEmpty())
         <p class="info-empty">Belum ada data untuk kategori ini.</p>
     @else
+        @if ($items->count() > 5 || request()->is('informasi/ikm', 'informasi/setiap-saat', 'informasi/*berkala*'))
+            <div class="info-search">
+                <label for="infoSearch" class="info-sr">Cari dokumen</label>
+                <input type="search" id="infoSearch" placeholder="Cari dokumen..." autocomplete="off">
+            </div>
+        @endif
         <ol class="info-list" style="counter-reset: item;">
             @foreach ($items as $item)
                 <li>
@@ -118,11 +218,35 @@
                         </span>
                     @endif
                     @if ($item->file_url)
-                        <a href="{{ $item->file_url }}" class="info-download" target="_blank">Unduh</a>
+                        @if ($item->file_info)
+                        <span class="info-meta">{{ $item->file_info }}</span>
+                    @endif
+                    <a href="{{ $item->file_url }}" class="info-download" target="_blank" aria-label="Unduh {{ $item->judul }}">Unduh</a>
                     @endif
                 </li>
             @endforeach
         </ol>
+        <p class="info-noresult" id="infoNoResult">Dokumen tidak ditemukan.</p>
     @endif
 </div>
+<script>
+(function () {
+    var input = document.getElementById('infoSearch');
+    if (!input) { return; }
+    var rows = document.querySelectorAll('.info-list li');
+    var empty = document.getElementById('infoNoResult');
+    input.addEventListener('input', function () {
+        var q = input.value.trim().toLowerCase();
+        var shown = 0;
+        rows.forEach(function (li) {
+            var t = li.querySelector('.info-title');
+            var text = (t ? t.textContent : li.textContent).toLowerCase();
+            var ok = q === '' || text.indexOf(q) !== -1;
+            li.style.display = ok ? '' : 'none';
+            if (ok) { shown++; }
+        });
+        if (empty) { empty.style.display = shown === 0 ? 'block' : 'none'; }
+    });
+})();
+</script>
 @endsection

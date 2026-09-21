@@ -118,7 +118,7 @@ Route::post('/kontak', [KontakController::class, 'store'])
 Route::get('/informasi/{slug}', [InformasiController::class, 'show'])
     ->name('informasi.show');
 
-// ---------- Knowledge Base & Pedoman (PUBLIK — TIDAK DIUBAH) ----------
+// ---------- Knowledge Base & Pedoman (PUBLIK â€” TIDAK DIUBAH) ----------
 Route::get('/knowledge-base', [KmsController::class, 'index'])->name('kms.index');
 Route::get('/knowledge-base/{slug}', [KmsController::class, 'kategori'])->name('kms.kategori');
 
@@ -183,6 +183,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // ---------- Pengaturan Profil ----------
     Route::get('/pengaturan', [PengaturanProfilController::class, 'edit'])->name('pengaturan.edit');
     Route::put('/pengaturan', [PengaturanProfilController::class, 'update'])->name('pengaturan.update');
+
+    // ---------- Kartu Profil (Kedudukan, Peran, dll) ----------
+    Route::post('/pengaturan/highlight', [ProfilHighlightController::class, 'store'])->name('profilhighlight.store');
+    Route::put('/pengaturan/highlight/{profilhighlight}', [ProfilHighlightController::class, 'update'])->name('profilhighlight.update');
+    Route::delete('/pengaturan/highlight/{profilhighlight}', [ProfilHighlightController::class, 'destroy'])->name('profilhighlight.destroy');
 
     // ---------- Tugas & Fungsi ----------
     Route::get('/tugas-fungsi', [TugasFungsiController::class, 'index'])->name('tugasfungsi.index');
@@ -282,6 +287,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // ---------- Pedoman: Kategori ----------
     Route::get('/pedoman/kategori/tambah', [PedomanKategoriController::class, 'create'])->name('pedoman.kategori.create');
     Route::post('/pedoman/kategori', [PedomanKategoriController::class, 'store'])->name('pedoman.kategori.store');
+    Route::get('/pedoman/kategori/{kategori}', [PedomanKategoriController::class, 'show'])->name('pedoman.kategori.show');
     Route::get('/pedoman/kategori/{kategori}/edit', [PedomanKategoriController::class, 'edit'])->name('pedoman.kategori.edit');
     Route::put('/pedoman/kategori/{kategori}', [PedomanKategoriController::class, 'update'])->name('pedoman.kategori.update');
     Route::delete('/pedoman/kategori/{kategori}', [PedomanKategoriController::class, 'destroy'])->name('pedoman.kategori.destroy');
@@ -293,4 +299,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/pedoman/dokumen/{dokumen}', [PedomanDokumenController::class, 'update'])->name('pedoman.dokumen.update');
     Route::delete('/pedoman/dokumen/{dokumen}', [PedomanDokumenController::class, 'destroy'])->name('pedoman.dokumen.destroy');
 
+});
+
+// ---------- Tambahan: Pengaturan Situs & Log Aktivitas ----------
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    Route::get('/pengaturan-situs', [\App\Http\Controllers\Admin\PengaturanSitusController::class, 'edit'])->name('pengaturan-situs.edit');
+    Route::put('/pengaturan-situs', [\App\Http\Controllers\Admin\PengaturanSitusController::class, 'update'])->name('pengaturan-situs.update');
 });

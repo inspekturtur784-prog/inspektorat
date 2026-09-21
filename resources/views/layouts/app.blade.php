@@ -147,7 +147,8 @@
         @yield('content')
     </main>
 
-    <footer>
+    @php $situs = \App\Support\SitusInfo::semua(); @endphp
+<footer>
         <div class="wrap">
             <div class="footer-grid footer-grid-4">
                 <div>
@@ -158,12 +159,14 @@
                             <p>Aparat Pengawasan Intern Pemerintah yang mengawal tata kelola pemerintahan Kota Mojokerto agar bersih, akuntabel, dan bebas dari korupsi.</p>
                         </div>
                     </div>
+                    @if ($situs['kontak_maps_embed'] !== '')
                     <div class="footer-map">
                         <iframe
-                            src="https://www.google.com/maps?q=Jl.+Benteng+Pancasila+No.+23,+Magersari,+Kota+Mojokerto,+Jawa+Timur+61314&output=embed"
+                            src="{{ $situs['kontak_maps_embed'] }}"
                             loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                             title="Lokasi Kantor Inspektorat Kota Mojokerto"></iframe>
                     </div>
+                    @endif
                 </div>
 
                 <div>
@@ -179,27 +182,39 @@
                 <div>
                     <h4>Kontak</h4>
                     <ul>
-                        <li>Jl. Benteng Pancasila No. 23, Magersari, Kota Mojokerto, Jawa Timur 61314</li>
-                        <li>inspektorat@mojokertokota.go.id</li>
-                        <li>(0321) 399630</li>
+                        @if ($situs['kontak_alamat'] !== '')<li>{{ $situs['kontak_alamat'] }}</li>@endif
+                        @if ($situs['kontak_email'] !== '')<li>{{ $situs['kontak_email'] }}</li>@endif
+                        @if ($situs['kontak_telepon'] !== '')<li>{{ $situs['kontak_telepon'] }}</li>@endif
                     </ul>
                    <div class="footer-social" aria-label="Media sosial">
-    <a href="https://www.instagram.com/inspektoratkotamr" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
-    </a>
-</div>
+                        @if ($situs['sosmed_facebook'] !== '')
+                        <a href="{{ $situs['sosmed_facebook'] }}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 4h-2a4 4 0 0 0-4 4v2H7v3h2v7h3v-7h2.5l.5-3H12V8a1 1 0 0 1 1-1h2V4z"/></svg>
+                        </a>
+                        @endif
+                        @if ($situs['sosmed_instagram'] !== '')
+                        <a href="{{ $situs['sosmed_instagram'] }}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+                        </a>
+                        @endif
+                        @if ($situs['sosmed_youtube'] !== '')
+                        <a href="{{ $situs['sosmed_youtube'] }}" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="M10.5 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>
+                        </a>
+                        @endif
+                    </div>
                 </div>
 
+                @if ($situs['kontak_jam_layanan'] !== '')
                 <div class="footer-hours">
                     <strong>Jam Layanan</strong>
-                    Senin – Kamis<br>07.30 – 15.30 WIB<br><br>
-                    Jumat<br>07.30 – 14.30 WIB<br><br>
-                    Sabtu, Minggu & Libur Nasional<br>Tutup
+                    {!! nl2br(e($situs['kontak_jam_layanan'])) !!}
                 </div>
+                @endif
             </div>
             <div class="footer-bottom">
                 <span>&copy; {{ date('Y') }} Inspektorat Kota Mojokerto. Zona Integritas — Tolak Gratifikasi.</span>
-                <span>Dibangun dengan Laravel</span>
+                <span>Bagian dari <a href="https://mojokertokota.go.id" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Pemerintah Kota Mojokerto</a></span>
             </div>
         </div>
     </footer>
@@ -230,5 +245,59 @@
         });
     })();
     </script>
+<!-- nav-now-marker: penanda menu aktif -->
+<style>
+    a.nav-now, button.nav-now {
+        color: #d4a72c !important;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 8px;
+    }
+    a.nav-now-child {
+        box-shadow: inset 3px 0 0 #d4a72c;
+        background: rgba(212, 167, 44, 0.12);
+    }
+</style>
+<script>
+(function () {
+    function norm(p) { return p.replace(/\/+$/, '') || '/'; }
+    function dropdownOf(a) {
+        for (var el = a.parentElement; el && el.tagName !== 'HEADER' && el.tagName !== 'NAV' && el !== document.body; el = el.parentElement) {
+            if (getComputedStyle(el).position === 'absolute') { return el; }
+        }
+        var li = a.closest('li');
+        var pli = li && li.parentElement ? li.parentElement.closest('li') : null;
+        return pli ? li.parentElement : null;
+    }
+    var here = norm(location.pathname);
+    document.querySelectorAll('header a[href], nav a[href]').forEach(function (a) {
+        var raw = a.getAttribute('href');
+        if (!raw || raw.charAt(0) === '#' || a.origin !== location.origin) { return; }
+        if (a.querySelector('img')) { return; }
+        var p = norm(a.pathname);
+        var match = (p === here) || (p !== '/' && here.indexOf(p + '/') === 0);
+        if (!match) { return; }
+        var dd = dropdownOf(a);
+        if (dd) {
+            a.classList.add('nav-now-child');
+            var host = dd.parentElement;
+            var toggle = host ? host.querySelector('a, button') : null;
+            if (toggle && !dd.contains(toggle)) { toggle.classList.add('nav-now'); }
+        } else {
+            a.classList.add('nav-now');
+        }
+    });
+})();
+</script>
+<!-- nav-cta-padding: jarak tombol Kontak Kami -->
+<style>
+    nav a.nav-cta {
+        padding-left: 22px !important;
+        padding-right: 22px !important;
+    }
+    nav a.nav-cta.nav-now {
+        text-decoration: none;
+    }
+</style>
 </body>
 </html>

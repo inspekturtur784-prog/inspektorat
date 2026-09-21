@@ -21,7 +21,7 @@
             <tr>
                 <td>
                     @if ($pesan->is_read)
-                        <span class="badge badge-off">Sudah dibaca</span>
+                        <span class="badge badge-off" style="background:#dcfce7;color:#166534;">Sudah dibaca</span>
                     @else
                         <span class="badge badge-on">Baru</span>
                     @endif

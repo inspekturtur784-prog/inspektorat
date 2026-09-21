@@ -217,3 +217,17 @@
 @media (max-width:480px){
   .dash-stats{grid-template-columns:1fr;}
 }
+/* sidebar: menu grup seragam */
+.admin-sidebar nav .admin-nav-label ~ a {
+  font-size: 13.5px !important;
+  padding-left: 22px !important;
+}
+.admin-sidebar .admin-nav-label {
+  color: #93A0AE;
+}
+
+/* kartu fungsi utama: kotak deskripsi lebih ringkas */
+form[action*="/pengaturan/highlight"] textarea {
+  height: auto !important;
+  min-height: 84px !important;
+}

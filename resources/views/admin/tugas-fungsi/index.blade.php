@@ -7,7 +7,7 @@
     <a href="{{ route('admin.tugasfungsi.create') }}" class="btn-admin btn-admin-primary">+ Tambah Kartu</a>
 </div>
 
-<form class="admin-form" action="{{ route('admin.tugasfungsi.tugaspokok.update') }}" method="POST" style="margin-bottom:28px;">
+<form class="admin-form" action="{{ route('admin.tugasfungsi.tugaspokok.update') }}" method="POST" style="margin-bottom:28px;max-width:none;width:100%;box-sizing:border-box;">
     @csrf
     @method('PUT')
     <div class="form-group">
@@ -17,7 +17,7 @@
     <button type="submit" class="btn-admin btn-admin-primary">Simpan Tugas Pokok</button>
 </form>
 
-<hr style="border:none;border-top:1px solid #ECEAE2;margin:0 0 28px;">
+
 
 <div class="admin-table-wrapper">
     <table class="admin-table">
@@ -52,4 +52,4 @@
         </tbody>
     </table>
 </div>
-@endsection.
+@endsection

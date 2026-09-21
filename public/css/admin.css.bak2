@@ -1,0 +1,227 @@
+/* Admin panel — dipisah dari app.css milik halaman publik supaya tidak bentrok */
+.admin-body{margin:0;background:#F2F1EC;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);}
+.admin-shell{display:flex;min-height:100vh;}
+
+.admin-sidebar{
+  width:240px;flex-shrink:0;background:var(--navy-deep);color:#fff;
+  padding:24px 18px;display:flex;flex-direction:column;gap:28px;justify-content:space-between;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  z-index:40;
+  transition:transform .25s ease;
+}
+.admin-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;text-decoration:none;color:#fff;}
+.admin-brand img{height:32px;width:32px;}
+.admin-sidebar nav{display:flex;flex-direction:column;gap:6px;}
+.admin-sidebar nav a{
+  color:#B9C2CC;padding:10px 12px;border-radius:8px;font-size:14px;
+}
+.admin-sidebar nav a:hover,.admin-sidebar nav a.active{background:rgba(255,255,255,.08);color:#fff;}
+
+/* Konten utama — dibuat FULL, tanpa max-width supaya memenuhi layar di semua ukuran */
+.admin-main{
+  flex:1;
+  min-width:0; /* penting: cegah tabel lebar mendorong seluruh halaman */
+  padding:36px 40px;
+  width:100%;
+}
+.admin-alert{
+  background:#E7F4E8;border:1px solid #9FCFA4;color:#1F6B2A;
+  padding:12px 16px;border-radius:10px;margin-bottom:22px;font-size:14px;
+}
+
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;flex-wrap:wrap;gap:12px;}
+.admin-header h1{font-family:'Fraunces',serif;font-size:24px;color:var(--navy);margin:0;}
+.admin-header-sub{font-size:18px !important;}
+.admin-subtitle{color:var(--slate);font-size:14.5px;margin:-16px 0 28px;}
+
+/* Wrapper supaya tabel bisa discroll horizontal di layar sempit, tanpa merusak layout */
+.admin-table-wrapper{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+}
+.admin-table-wrapper .admin-table{box-shadow:none;border-radius:0;}
+
+.admin-table{width:100%;min-width:640px;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.admin-table th,.admin-table td{text-align:left;padding:14px 16px;font-size:14px;border-bottom:1px solid #ECEAE2;vertical-align:middle;}
+.admin-table th{background:#FAF9F5;color:var(--slate);font-weight:600;text-transform:uppercase;font-size:11.5px;letter-spacing:.05em;white-space:nowrap;}
+.admin-table tr:last-child td{border-bottom:none;}
+.admin-table td:last-child,.admin-table th:last-child{padding-right:20px;}
+.admin-table img{vertical-align:middle;}
+.badge{padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;}
+.badge-on{background:#E7F4E8;color:#1F6B2A;}
+.badge-off{background:#F4E7E7;color:#A3312B;}
+
+.admin-form{
+  background:#fff;padding:28px;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);
+  max-width:1200px;
+  width:100%;
+}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;color:var(--navy);}
+.form-group input[type=text],
+.form-group input[type=date],
+.form-group input[type=file],
+.form-group select,
+.form-group textarea{
+  width:100%;padding:10px 12px;border:1px solid #DDD8C9;border-radius:8px;
+  font-family:inherit;font-size:14px;background:#FEFDFB;
+  box-sizing:border-box;
+}
+.form-group textarea{min-height:120px;resize:vertical;}
+.checkbox-row{display:flex;align-items:center;gap:8px;}
+.checkbox-row input{width:auto;}
+
+.btn-admin{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 18px;
+  border-radius:999px;font-weight:600;font-size:13.5px;border:none;cursor:pointer;
+  white-space:nowrap;line-height:1.2;
+}
+.btn-admin-primary{background:var(--navy);color:#fff;}
+.btn-admin-primary:hover{background:var(--navy-soft);}
+.btn-admin-danger{background:#A3312B;color:#fff;}
+.btn-admin-ghost{background:#EDEBE2;color:var(--ink);}
+.row-actions{white-space:nowrap;}
+.row-actions .btn-admin,
+.row-actions form{display:inline-block;vertical-align:middle;margin-right:8px;}
+.row-actions form{margin-bottom:0;}
+.row-actions .btn-admin:last-child,
+.row-actions form:last-child{margin-right:0;}
+
+/* ---------- Sidebar footer: user info + ganti password + logout ---------- */
+.admin-sidebar-footer{
+  display:flex;flex-direction:column;gap:4px;
+  padding-top:16px;border-top:1px solid rgba(255,255,255,.1);
+}
+.admin-user{padding:6px 12px 10px;}
+.admin-user-name{display:block;color:#fff;font-size:13.5px;font-weight:600;}
+.admin-user-email{display:block;color:#8895A2;font-size:12px;}
+.admin-sidebar-link{
+  color:#B9C2CC;padding:9px 12px;border-radius:8px;font-size:13.5px;
+  text-align:left;background:none;border:none;cursor:pointer;font-family:inherit;
+  width:100%;display:block;
+}
+.admin-sidebar-link:hover{background:rgba(255,255,255,.08);color:#fff;}
+.admin-logout-btn{color:#E3B3B0;}
+.admin-logout-btn:hover{background:rgba(163,49,43,.2);color:#fff;}
+
+/* ---------- Sidebar: label grup & sub-item (struktur Dashboard > Profil > ...) ---------- */
+.admin-nav-label{
+  display:block;padding:16px 12px 6px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:#6B7785;
+}
+.admin-nav-sub{padding-left:22px !important;font-size:13px !important;}
+
+/* ---------- Dashboard: kartu statistik & quick links ---------- */
+.dash-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+}
+.dash-stat-card{
+  position:relative;
+  background:#fff;border:1px solid #ECEAE2;border-radius:14px;
+  padding:20px 18px;display:flex;align-items:center;gap:16px;
+  text-decoration:none;overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+/* Garis aksen tipis di atas tiap kartu, warnanya beda per kategori */
+.dash-stat-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:4px;
+  background:var(--accent, var(--navy));
+}
+.dash-stat-card:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(11,42,74,.12);border-color:var(--accent, var(--gold));}
+
+.dash-stat-icon{
+  flex-shrink:0;width:46px;height:46px;border-radius:12px;
+  background:var(--accent-bg, var(--cream));color:var(--accent, var(--navy));
+  display:flex;align-items:center;justify-content:center;
+}
+.dash-stat-icon svg{width:22px;height:22px;}
+
+.dash-stat-body{display:flex;flex-direction:column;gap:2px;}
+.dash-stat-number{font-family:'Fraunces',serif;font-size:27px;font-weight:700;color:var(--navy);line-height:1.1;}
+.dash-stat-label{font-size:12.5px;color:var(--slate);line-height:1.4;font-weight:500;}
+
+/* Palet warna per kategori — dipakai lewat --accent & --accent-bg */
+.dash-c-blue    { --accent:#2B6CB0; --accent-bg:#E7F0FA; }
+.dash-c-green   { --accent:#2E8B57; --accent-bg:#E5F5EC; }
+.dash-c-purple  { --accent:#8656C6; --accent-bg:#F0E9FA; }
+.dash-c-orange  { --accent:#D07C2C; --accent-bg:#FBEEE0; }
+.dash-c-teal    { --accent:#1B8A8A; --accent-bg:#E3F4F3; }
+.dash-c-red     { --accent:#B3241D; --accent-bg:#FBE7E5; }
+.dash-c-gold    { --accent:#B5872F; --accent-bg:#F7EFDC; }
+.dash-c-slate   { --accent:#6B7684; --accent-bg:#EEF0F2; }
+
+.dash-quicklinks{display:flex;flex-wrap:wrap;gap:10px;}
+.dash-quicklink{
+  padding:10px 18px;border-radius:999px;background:#fff;border:1px solid #ECEAE2;
+  font-size:13.5px;color:var(--navy);font-weight:600;
+}
+.dash-quicklink:hover{border-color:var(--gold);background:var(--cream);}
+
+/* ---------- Badge jumlah pesan belum dibaca ---------- */
+.admin-nav-badge{
+  background:var(--red);color:#fff;font-size:11px;font-weight:700;
+  padding:2px 7px;border-radius:999px;line-height:1.4;
+}
+
+/* ---------- Form lebar khusus (halaman Tentang & Visi Misi) ---------- */
+.admin-form-wide{max-width:1200px;}
+
+/* ---------- Topbar mobile (hamburger) ---------- */
+.admin-topbar{
+  display:none;align-items:center;gap:.75rem;
+  background:var(--navy-deep);color:#fff;
+  padding:.9rem 1rem;position:sticky;top:0;z-index:50;
+}
+.admin-topbar-toggle{
+  background:none;border:none;color:#fff;cursor:pointer;padding:.35rem;
+  display:flex;flex-direction:column;gap:4px;
+}
+.admin-topbar-toggle span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;}
+.admin-topbar-title{font-weight:700;font-size:.95rem;}
+.admin-overlay{
+  display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:39;
+}
+
+/* ---------- Responsive: laptop kecil / tablet ---------- */
+@media (max-width:1200px){
+  .dash-stats{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:1024px){
+  .admin-main{padding:24px;}
+}
+
+/* ---------- Responsive: HP / tablet kecil ---------- */
+@media (max-width:768px){
+  .admin-topbar{display:flex;}
+  .admin-shell{flex-direction:column;}
+
+  .admin-sidebar{
+    position:fixed;top:0;left:0;height:100vh;
+    transform:translateX(-100%);
+  }
+  .admin-sidebar.is-open{transform:translateX(0);}
+  .admin-overlay.is-open{display:block;}
+
+  .admin-main{width:100%;padding:18px;}
+  .admin-header{align-items:flex-start;}
+  .dash-stats{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:480px){
+  .dash-stats{grid-template-columns:1fr;}
+}
+/* sidebar: menu grup seragam */
+.admin-sidebar nav .admin-nav-label ~ a {
+  font-size: 13.5px !important;
+  padding-left: 22px !important;
+}
+.admin-sidebar .admin-nav-label {
+  color: #93A0AE;
+}

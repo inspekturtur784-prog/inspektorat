@@ -33,7 +33,7 @@
 
                     <span class="admin-nav-label">Profil</span>
                     <a href="{{ route('admin.pengaturan.edit') }}" class="admin-nav-sub {{ request()->routeIs('admin.pengaturan.*') ? 'active' : '' }}">
-                        Tentang Inspektorat & Visi Misi
+                        Tentang & Visi Misi
                     </a>
                     <a href="{{ route('admin.tugasfungsi.index') }}" class="admin-nav-sub {{ request()->routeIs('admin.tugasfungsi.*') ? 'active' : '' }}">
                         Tugas & Fungsi
@@ -53,13 +53,16 @@
                         Artikel / Informasi
                     </a>
                     <a href="{{ route('admin.informasidokumen.index') }}" class="{{ request()->routeIs('admin.informasidokumen.*') ? 'active' : '' }}">
-    Informasi Dokumen
+    Dokumen Informasi
 </a>
                    <a href="{{ route('admin.buletin.index') }}" class="{{ request()->routeIs('admin.buletin.*') ? 'active' : '' }}">
     Buletin
 </a>
 <a href="{{ route('admin.kms.index') }}" class="{{ request()->routeIs('admin.kms.*') || request()->routeIs('admin.kmspedoman.*') ? 'active' : '' }}">
-    KMS
+    KMS & Pedoman
+</a>
+<a href="{{ route('admin.pengaturan-situs.edit') }}" class="{{ request()->routeIs('admin.pengaturan-situs.*') ? 'active' : '' }}">
+    Pengaturan Situs
 </a>
                     <a href="{{ route('admin.pesan.index') }}" class="{{ request()->routeIs('admin.pesan.*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
                         <span>Pesan Masuk</span>
@@ -76,6 +79,7 @@
                     <span class="admin-user-name">{{ auth()->user()->name ?? 'Admin' }}</span>
                     <span class="admin-user-email">{{ auth()->user()->email ?? '' }}</span>
                 </div>
+                <a href="{{ url('/') }}" target="_blank" rel="noopener" class="admin-sidebar-link">Lihat Situs &nearr;</a>
                 <a href="{{ route('admin.password.edit') }}" class="admin-sidebar-link">Ganti Kata Sandi</a>
                 <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
