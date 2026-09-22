@@ -636,3 +636,222 @@
 }
 /* footer: ukuran teks kontak seragam dengan kolom tautan */
 footer ul li { font-size: 14.5px; line-height: 1.7; }
+
+.ins-hero{ padding-bottom: 40px !important; }
+.ins-about{ padding-top: 44px !important; }
+
+
+/* ================= HERO FULL-BLEED OVERLAY ================= */
+.ins-hero{ padding: 0 !important; border-bottom: none !important; overflow: hidden; position: relative; }
+.ins-hero-inner{
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    min-height: 560px;
+    position: relative;
+}
+.ins-hero-inner > div:first-child{
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    padding: 64px 5vw;
+    align-self: center;
+}
+.ins-hero-inner > div:first-child h1{ color: #fff !important; text-shadow: 0 2px 14px rgba(0,0,0,.5); }
+.ins-hero-inner > div:first-child .ins-welcome{ color: #f2f5fa !important; text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+.ins-hero-inner > div:first-child .ins-lead{ color: #e6ebf2 !important; text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+.ins-hero-inner > div:first-child .ins-breadcrumb{ color: #f5c343 !important; }
+
+.ins-hero-card{
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    z-index: 1;
+}
+.ins-hero-card-media, .ins-slides, .ins-slide, .ins-slide img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+.ins-hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(90deg, rgba(7,26,51,.82) 0%, rgba(7,26,51,.45) 55%, rgba(7,26,51,.05) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+@media (max-width: 768px){
+    .ins-hero-inner > div:first-child{ max-width: 100%; padding: 40px 24px; }
+    .ins-hero{ min-height: 480px; }
+}
+
+/* ================= HERO OVERRIDE (spesifisitas lebih tinggi) ================= */
+body .ins-hero{ padding: 0 !important; border-bottom: none !important; overflow: hidden; position: relative; }
+body .ins-hero-inner{
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    min-height: 560px;
+    position: relative;
+}
+body .ins-hero-inner > div:first-child{
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    padding: 64px 5vw;
+    align-self: center;
+}
+body .ins-hero-inner > div:first-child h1{ color: #fff !important; text-shadow: 0 2px 14px rgba(0,0,0,.5); }
+body .ins-hero-inner > div:first-child .ins-welcome{ color: #f2f5fa !important; text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+body .ins-hero-inner > div:first-child .ins-lead{ color: #e6ebf2 !important; text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+body .ins-hero-inner > div:first-child .ins-breadcrumb{ color: #f5c343 !important; }
+
+body .ins-hero-card{
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    z-index: 1;
+}
+body .ins-hero-card-media, body .ins-slides, body .ins-slide, body .ins-slide img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+@media (max-width: 768px){
+    body .ins-hero-inner > div:first-child{ max-width: 100%; padding: 40px 24px; }
+    body .ins-hero{ min-height: 480px; }
+}
+
+/* ================= HERO TEXT ANIMATION ================= */
+body .ins-hero-inner > div:first-child .ins-breadcrumb{
+    opacity: 0;
+    animation: insHeroFadeUp .7s ease forwards;
+    animation-delay: .1s;
+}
+body .ins-hero-inner > div:first-child .ins-welcome{
+    opacity: 0;
+    animation: insHeroFadeUp .7s ease forwards;
+    animation-delay: .28s;
+}
+body .ins-hero-inner > div:first-child h1{
+    opacity: 0;
+    animation: insHeroFadeUp .7s ease forwards;
+    animation-delay: .46s;
+}
+body .ins-hero-inner > div:first-child .ins-lead{
+    opacity: 0;
+    animation: insHeroFadeUp .7s ease forwards;
+    animation-delay: .68s;
+}
+body .ins-hero-inner > div:first-child .ins-hero-actions{
+    opacity: 0;
+    animation: insHeroFadeUp .7s ease forwards;
+    animation-delay: .88s;
+}
+@keyframes insHeroFadeUp{
+    from{ opacity: 0; transform: translateY(26px); }
+    to{ opacity: 1; transform: translateY(0); }
+}
+
+/* ================= HERO H1 - ANIMASI LEBIH DRAMATIS ================= */
+body .ins-hero-inner > div:first-child h1{
+    opacity: 0;
+    animation: insHeroBigReveal 1s cubic-bezier(.16,.84,.44,1) forwards;
+    animation-delay: .35s;
+    filter: blur(0px);
+}
+@keyframes insHeroBigReveal{
+    0%{
+        opacity: 0;
+        transform: translateY(40px) scale(1.04);
+        filter: blur(8px);
+    }
+    60%{
+        filter: blur(0px);
+    }
+    100%{
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0px);
+    }
+}
+
+/* ================= HERO TEXT SPACING & SIZING ================= */
+body .ins-hero-inner > div:first-child{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+body .ins-hero-inner > div:first-child .ins-breadcrumb{
+    margin: 0 0 4px;
+    letter-spacing: 1.5px;
+    font-size: 13px;
+    font-weight: 700;
+}
+body .ins-hero-inner > div:first-child .ins-welcome{
+    margin: 0;
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-weight: 400;
+    line-height: 1.4;
+}
+body .ins-hero-inner > div:first-child h1{
+    margin: 4px 0 6px;
+    font-size: clamp(30px, 4.2vw, 48px);
+    line-height: 1.18;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+body .ins-hero-inner > div:first-child .ins-lead{
+    margin: 0 0 8px;
+    font-size: clamp(14.5px, 1.3vw, 16px);
+    line-height: 1.65;
+    max-width: 560px;
+}
+body .ins-hero-inner > div:first-child .ins-hero-actions{
+    margin-top: 6px;
+}
+
+/* ================= HERO - SELAMAT DATANG JADI FOKUS UTAMA ================= */
+body .ins-hero-inner > div:first-child .ins-welcome{
+    font-size: clamp(28px, 4vw, 44px) !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    color: #fff !important;
+    margin: 4px 0 8px !important;
+}
+body .ins-hero-inner > div:first-child .ins-welcome strong{
+    color: #f5c343 !important;
+}
+body .ins-hero-inner > div:first-child h1{
+    font-size: clamp(16px, 1.8vw, 20px) !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0 !important;
+    margin: 0 0 10px !important;
+}
+body .ins-hero-inner > div:first-child h1 em{
+    font-style: normal;
+    color: #f5c343 !important;
+}
+body .ins-hero-inner > div:first-child .ins-lead{
+    font-size: 13.5px !important;
+    max-width: 520px !important;
+}

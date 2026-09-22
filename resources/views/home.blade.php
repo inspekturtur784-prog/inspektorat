@@ -450,7 +450,6 @@
             </p>
             <div class="ins-hero-actions">
                 <a href="{{ url('/profil') }}" class="ins-btn ins-btn-primary">Lihat Profil Kami</a>
-                <a href="{{ url('/#layanan') }}" class="ins-btn ins-btn-outline">Jelajahi Layanan</a>
             </div>
         </div>
 

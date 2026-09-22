@@ -54,7 +54,7 @@
                 </span>
             </a>
        <nav class="main-nav" id="mainNav" aria-label="Navigasi utama">
-    <a href="{{ url('/') }}">Beranda</a>
+    <a href="{{ url('/') }}" data-nav-exact>Beranda</a>
     <a href="{{ url('/profil') }}">Profil</a>
 
     <!-- Dropdown Layanan (SKM Sudah Dihapus dari Sini) -->
@@ -275,7 +275,7 @@
         if (!raw || raw.charAt(0) === '#' || a.origin !== location.origin) { return; }
         if (a.querySelector('img')) { return; }
         var p = norm(a.pathname);
-        var match = (p === here) || (p !== '/' && here.indexOf(p + '/') === 0);
+        var match = (p === here) || (p !== '/' && !a.hasAttribute('data-nav-exact') && here.indexOf(p + '/') === 0);
         if (!match) { return; }
         var dd = dropdownOf(a);
         if (dd) {
