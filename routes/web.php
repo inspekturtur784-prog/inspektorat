@@ -306,3 +306,5 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/pengaturan-situs', [\App\Http\Controllers\Admin\PengaturanSitusController::class, 'edit'])->name('pengaturan-situs.edit');
     Route::put('/pengaturan-situs', [\App\Http\Controllers\Admin\PengaturanSitusController::class, 'update'])->name('pengaturan-situs.update');
 });
+// Balas pesan via email
+Route::post('/admin/pesan/{pesan}/balas', [\App\Http\Controllers\Admin\BalasPesanController::class, 'kirim'])->name('admin.pesan.balas')->middleware('auth');

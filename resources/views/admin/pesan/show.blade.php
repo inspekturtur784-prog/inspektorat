@@ -37,4 +37,5 @@
         <button type="submit" class="btn-admin btn-admin-danger">Hapus Pesan</button>
     </form>
 </div>
+@include('admin.pesan._balas', ['pesan' => $pesan])
 @endsection

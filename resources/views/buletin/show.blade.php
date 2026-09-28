@@ -102,7 +102,7 @@
   .leaf.right-page{border-radius:0 3px 3px 0; border-left:1px solid rgba(20,33,61,.08);}
   .leaf.left-page::after{content:""; position:absolute; right:0; top:0; bottom:0; width:24px; background:linear-gradient(90deg, transparent, rgba(20,33,61,.08));}
   .leaf.right-page::after{content:""; position:absolute; left:0; top:0; bottom:0; width:24px; background:linear-gradient(270deg, transparent, rgba(20,33,61,.08));}
-  .page-idx{position:absolute; bottom:10px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:rgba(20,33,61,.45); background:rgba(255,255,255,.75); padding:1px 6px; border-radius:8px;}
+  .page-idx{display:none; position:absolute; bottom:10px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:rgba(20,33,61,.45); background:rgba(255,255,255,.75); padding:1px 6px; border-radius:8px;}
   .leaf.left-page .page-idx{left:14px;}
   .leaf.right-page .page-idx{right:14px;}
   .view.single .page-idx{ left:50%; transform:translateX(-50%); }
