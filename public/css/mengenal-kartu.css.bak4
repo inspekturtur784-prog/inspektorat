@@ -1,0 +1,43 @@
+.ins-about .ins-about-icon { display: none; }
+.ins-about .ins-about-card::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 4px;
+  background: #c9a227;
+  border-radius: 4px;
+  margin-bottom: 18px;
+  transition: width .25s;
+}
+.ins-about .ins-about-card:hover::before { width: 64px; }
+/* LATAR PUTIH */
+.ins-about#apa-itu { background: #fff; }
+.ins-about .ins-about-card:not(:hover) { box-shadow: 0 4px 14px rgba(11,37,69,.06); }
+/* SPLIT LAYOUT */
+.ins-about .ins-about-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
+}
+.ins-about .ins-about-intro { grid-column: 1; grid-row: 1; max-width: none; align-self: center; }
+.ins-about .ins-about-grid {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.ins-about .ins-about-inner::after {
+  content: "";
+  grid-column: 2;
+  grid-row: 1;
+  min-height: 340px;
+  margin-bottom: 44px;
+  border-radius: 16px;
+  background: url('../images/team-banner.png') center 30% / cover no-repeat;
+  box-shadow: 0 18px 40px -20px rgba(11,37,69,.35);
+}
+@media (max-width: 900px) {
+  .ins-about .ins-about-inner { grid-template-columns: 1fr; }
+  .ins-about .ins-about-intro { grid-row: 1; }
+  .ins-about .ins-about-inner::after { grid-column: 1; grid-row: 2; min-height: 240px; margin-bottom: 32px; }
+  .ins-about .ins-about-grid { grid-row: 3; }
+}

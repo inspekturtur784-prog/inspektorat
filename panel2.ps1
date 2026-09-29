@@ -1,0 +1,74 @@
+$root = "C:\xampp\htdocs\inspektorat"
+$f    = "$root\public\css\mengenal-kartu.css"
+Copy-Item $f "$f.bak6" -Force
+
+$isi = [IO.File]::ReadAllText($f)
+$isi = [regex]::Replace($isi, '(?s)\r?\n/\* SPLIT LAYOUT \*/.*$', '')
+
+$blok = @'
+
+/* SPLIT LAYOUT */
+.ins-about .ins-about-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
+}
+.ins-about .ins-about-intro { grid-column: 1; grid-row: 1; max-width: none; align-self: center; }
+.ins-about .ins-about-grid {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* panel motto */
+.ins-about .ins-about-inner::after {
+  content: "Menjaga Integritas, Mengawal Tata Kelola Pemerintahan";
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  margin-bottom: 44px;
+  padding: 76px 44px 44px;
+  box-sizing: border-box;
+  border: 1px solid #d9e2ef;
+  border-radius: 12px;
+  color: #0b2545;
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 600;
+  line-height: 1.5;
+  background-color: #f5f7fb;
+  background-image: linear-gradient(#c9a227, #c9a227);
+  background-repeat: no-repeat;
+  background-position: 44px 36px;
+  background-size: 48px 3px;
+}
+
+/* label kecil di atas motto */
+.ins-about .ins-about-inner::before {
+  content: "KOMITMEN KAMI";
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  justify-self: start;
+  position: relative;
+  z-index: 1;
+  margin: 52px 0 0 44px;
+  color: #8a6d12;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+
+@media (max-width: 900px) {
+  .ins-about .ins-about-inner { grid-template-columns: 1fr; }
+  .ins-about .ins-about-intro { grid-row: 1; }
+  .ins-about .ins-about-inner::after { grid-column: 1; grid-row: 2; padding: 68px 28px 28px; margin-bottom: 32px; background-position: 28px 32px; }
+  .ins-about .ins-about-inner::before { grid-column: 1; grid-row: 2; margin: 46px 0 0 28px; }
+  .ins-about .ins-about-grid { grid-row: 3; }
+}
+'@
+
+[IO.File]::WriteAllText($f, $isi + $blok, (New-Object System.Text.UTF8Encoding($false)))
+Write-Host "Selesai. Backup: $f.bak6" -ForegroundColor Green
+php "$root\artisan" view:clear

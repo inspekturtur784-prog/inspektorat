@@ -1,0 +1,12 @@
+.ins-about .ins-about-card { position: relative; padding-top: 34px; }
+.ins-about .ins-about-icon { display: none; }
+.ins-about .ins-about-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22px;
+  width: 44px;
+  height: 3px;
+  background: #c9a227;
+  border-radius: 0 0 3px 3px;
+}

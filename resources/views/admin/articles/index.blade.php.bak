@@ -7,8 +7,6 @@
     <a href="{{ route('admin.articles.create') }}" class="btn-admin btn-admin-primary">+ Tambah Artikel</a>
 </div>
 
-@include('admin.articles._arsip')
-
 <table class="admin-table">
     <thead>
         <tr>

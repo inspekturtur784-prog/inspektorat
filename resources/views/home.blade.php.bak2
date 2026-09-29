@@ -542,6 +542,9 @@
     </div>
 </section>
 
+@include('partials.produk')
+
+
 
 {{-- ============ BERITA TERKINI ============ --}}
 <section class="ins-berita" id="artikel">

@@ -16,11 +16,7 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::orderByDesc('created_at')
-            ->when(request()->filled('tahun'), fn ($q) => $q->whereRaw('YEAR(COALESCE(published_at, created_at)) = ?', [(int) request('tahun')]))
-            ->when(request()->filled('bulan'), fn ($q) => $q->whereRaw('MONTH(COALESCE(published_at, created_at)) = ?', [(int) request('bulan')]))
-            ->paginate(10)
-            ->withQueryString();
+        $articles = Article::orderByDesc('created_at')->paginate(10);
         return view('admin.articles.index', compact('articles'));
     }
 

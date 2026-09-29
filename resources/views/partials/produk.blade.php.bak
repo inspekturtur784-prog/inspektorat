@@ -1,0 +1,26 @@
+<section id="layanan" class="produk">
+  <div class="container">
+    <span class="eyebrow">PRODUK &amp; LAYANAN</span>
+    <h2>Layanan yang kami sediakan</h2>
+    <p class="sub">Akses layanan pengawasan Inspektorat Kota Mojokerto dengan mudah.</p>
+
+    <div class="produk-grid">
+      @php
+        $produk = [
+          ['judul' => 'Konsultasi Online',  'desk' => 'Layanan konsultasi pengawasan bersama auditor kami.', 'icon' => 'bi-chat-dots',        'url' => url('/konsultasi')],
+          ['judul' => 'KMS / Pedoman',      'desk' => 'Sistem Manajemen Pengetahuan: pedoman & knowledge base.', 'icon' => 'bi-journal-bookmark', 'url' => url('/kms')],
+          ['judul' => 'Buletin Pengawasan', 'desk' => 'Publikasi & wawasan berkala seputar pengawasan.', 'icon' => 'bi-newspaper',         'url' => url('/buletin')],
+        ];
+      @endphp
+
+      @foreach ($produk as $p)
+        <a href="{{ $p['url'] }}" class="produk-card">
+          <div class="produk-icon"><i class="bi {{ $p['icon'] }}"></i></div>
+          <h3>{{ $p['judul'] }}</h3>
+          <p>{{ $p['desk'] }}</p>
+          <span class="produk-link">Buka layanan →</span>
+        </a>
+      @endforeach
+    </div>
+  </div>
+</section>

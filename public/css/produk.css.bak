@@ -1,0 +1,12 @@
+html { scroll-behavior: smooth; }
+.produk { padding: 80px 0; background: #fff; }
+.produk .eyebrow { color: #c9a227; font-weight: 700; letter-spacing: .1em; font-size: .85rem; }
+.produk h2 { color: #0b2545; margin: 8px 0; }
+.produk .sub { color: #5b6b7f; margin-bottom: 40px; }
+.produk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+.produk-card { display: block; padding: 32px 28px; background: #fff; border: 1px solid #e3e8ef; border-radius: 16px; text-decoration: none; color: inherit; transition: transform .2s, box-shadow .2s, border-color .2s; }
+.produk-card:hover { transform: translateY(-6px); box-shadow: 0 16px 32px rgba(11,37,69,.12); border-color: #c9a227; }
+.produk-icon { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 14px; background: #0b2545; color: #f5c518; font-size: 1.6rem; margin-bottom: 20px; }
+.produk-card h3 { color: #0b2545; font-size: 1.2rem; margin-bottom: 8px; }
+.produk-card p { color: #5b6b7f; font-size: .95rem; line-height: 1.6; }
+.produk-link { display: inline-block; margin-top: 16px; color: #c9a227; font-weight: 600; }

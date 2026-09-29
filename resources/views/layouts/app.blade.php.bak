@@ -8,6 +8,8 @@
     <link rel="icon" href="{{ asset('images/logo-mojokerto.png') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app-extra.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{{ asset('css/produk.css') }}">
 </head>
 <body>
     <a href="#konten" class="skip-link">Langsung ke konten</a>
@@ -54,7 +56,7 @@
                 </span>
             </a>
        <nav class="main-nav" id="mainNav" aria-label="Navigasi utama">
-    <a href="{{ url('/') }}">Beranda</a>
+    <a href="{{ url('/') }}" data-nav-exact>Beranda</a>
     <a href="{{ url('/profil') }}">Profil</a>
 
     <!-- Dropdown Layanan (SKM Sudah Dihapus dari Sini) -->
@@ -275,7 +277,7 @@
         if (!raw || raw.charAt(0) === '#' || a.origin !== location.origin) { return; }
         if (a.querySelector('img')) { return; }
         var p = norm(a.pathname);
-        var match = (p === here) || (p !== '/' && here.indexOf(p + '/') === 0);
+        var match = (p === here) || (p !== '/' && !a.hasAttribute('data-nav-exact') && here.indexOf(p + '/') === 0);
         if (!match) { return; }
         var dd = dropdownOf(a);
         if (dd) {

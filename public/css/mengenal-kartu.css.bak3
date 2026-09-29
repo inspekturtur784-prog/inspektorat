@@ -1,0 +1,15 @@
+.ins-about .ins-about-icon { display: none; }
+.ins-about .ins-about-card::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 4px;
+  background: #c9a227;
+  border-radius: 4px;
+  margin-bottom: 18px;
+  transition: width .25s;
+}
+.ins-about .ins-about-card:hover::before { width: 64px; }
+/* LATAR PUTIH */
+.ins-about#apa-itu { background: #fff; }
+.ins-about .ins-about-card:not(:hover) { box-shadow: 0 4px 14px rgba(11,37,69,.06); }
