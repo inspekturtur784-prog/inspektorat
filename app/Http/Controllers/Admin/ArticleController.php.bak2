@@ -37,7 +37,7 @@ class ArticleController extends Controller
             'body'         => 'nullable|string',
             'category'     => 'nullable|string|max:100',
             'is_published' => 'nullable|boolean',
-            'cover_image'  => 'nullable|image|max:5120',
+            'cover_image'  => 'nullable|image|max:2048',
             'published_at' => 'nullable|date',
         ]);
 
@@ -70,7 +70,7 @@ class ArticleController extends Controller
             'body'         => 'nullable|string',
             'category'     => 'nullable|string|max:100',
             'is_published' => 'nullable|boolean',
-            'cover_image'  => 'nullable|image|max:5120',
+            'cover_image'  => 'nullable|image|max:2048',
             'published_at' => 'nullable|date',
         ]);
 

@@ -7,7 +7,7 @@
 @include('partials.breadcrumb', ['current' => $article->title])
 <section style="padding:64px 0 40px;">
     <div class="wrap" style="max-width:760px;">
-        <span style="display:inline-block;padding:7px 18px;border-radius:999px;background:#c9a227;color:#0b2545;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;">{{ \Illuminate\Support\Str::title(trim((string) ($article->category ?: 'Artikel'))) }}</span>
+        <span class="eyebrow">{{ $article->category ?? 'Artikel' }}</span>
         <h1 style="font-size:clamp(26px,4vw,40px);margin:16px 0 10px;">{{ $article->title }}</h1>
         <p style="color:var(--slate);font-family:'IBM Plex Mono',monospace;font-size:13px;">{{ $article->tanggal_indo }}</p>
     </div>

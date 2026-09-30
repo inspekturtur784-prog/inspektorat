@@ -1,8 +1,3 @@
-$root = "C:\xampp\htdocs\inspektorat"
-$f    = "$root\resources\views\partials\berita-slider.blade.php"
-if (Test-Path $f) { Copy-Item $f "$f.bak" -Force }
-
-$partial = @'
 @php
     $bsItems = class_exists('\App\Models\Article')
         ? \App\Models\Article::published()->limit(10)->get()
@@ -193,7 +188,3 @@ $partial = @'
 })();
 </script>
 @endif
-'@
-[IO.File]::WriteAllText($f, $partial, (New-Object System.Text.UTF8Encoding($false)))
-Write-Host "Selesai. Backup: $f.bak" -ForegroundColor Green
-php "$root\artisan" view:clear

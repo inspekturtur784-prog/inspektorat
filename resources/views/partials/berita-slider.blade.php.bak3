@@ -18,7 +18,6 @@
             'title' => $a->title,
             'date'  => $a->tanggal_indo,
             'excerpt' => $bsRingkas($a),
-            'cat'     => \Illuminate\Support\Str::title(trim((string) $a->category)),
         ];
     })->values();
 
@@ -43,10 +42,6 @@
 .ins-bs2 .ins-berita-more { margin-top: 12px; }
 .ins-bs2 .ins-bs2-excerpt { margin: 0 0 14px; color: var(--ins-slate, #5b6b7d); font-size: 14.5px; line-height: 1.65; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
 .ins-bs2 .ins-bs2-excerpt:empty { display: none; }
-.ins-bs2 .ins-berita-featured-img { position: relative; }
-.ins-bs2 .ins-bs2-cat { position: absolute; top: 14px; left: 14px; padding: 6px 14px; border-radius: 999px; background: var(--ins-gold, #c9a227); color: #0b2545; font-size: 12.5px; font-weight: 700; letter-spacing: .04em; box-shadow: 0 4px 12px rgba(0,0,0,.25); }
-.ins-bs2 .ins-bs2-cat:empty { display: none; }
-.ins-bs2 .ins-bs2-tag { font-style: normal; display: inline-block; margin-right: 8px; padding: 2px 9px; border-radius: 999px; background: rgba(201,162,39,.22); color: var(--ins-gold, #c9a227); font-size: 11.5px; font-weight: 700; }
 
 .ins-bs-nav { display: flex; gap: 8px; }
 .ins-bs-btn { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--ins-gold, #c9a227); background: transparent; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; transition: background .2s; }
@@ -71,7 +66,6 @@
       <a href="{{ route('articles.show', $bsFirst->slug) }}" class="ins-berita-featured" data-bs-featured>
         <div class="ins-berita-featured-img">
           <img src="{{ $bsFirst->cover_url }}" alt="{{ $bsFirst->title }}">
-          <span class="ins-bs2-cat" data-bs-cat>{{ \Illuminate\Support\Str::title(trim((string) $bsFirst->category)) }}</span>
         </div>
         <div class="ins-berita-featured-body">
           <span class="ins-berita-date">{{ $bsFirst->tanggal_indo }}</span>
@@ -87,7 +81,7 @@
             <a href="{{ route('articles.show', $a->slug) }}" class="ins-berita-item">
               <div class="ins-berita-item-thumb"><img src="{{ $a->cover_url }}" alt="{{ $a->title }}"></div>
               <div class="ins-berita-item-body">
-                <span class="ins-berita-date">@if (trim((string) $a->category) !== '')<em class="ins-bs2-tag">{{ \Illuminate\Support\Str::title(trim((string) $a->category)) }}</em>@endif{{ $a->tanggal_indo }}</span>
+                <span class="ins-berita-date">{{ $a->tanggal_indo }}</span>
                 <h4>{{ $a->title }}</h4>
                 <span class="ins-berita-read">Baca Selengkapnya...</span>
               </div>
@@ -143,8 +137,6 @@
     featured.querySelector('h3').textContent = f.title;
     var ex = featured.querySelector('[data-bs-excerpt]');
     if (ex) ex.textContent = f.excerpt || '';
-    var ct = featured.querySelector('[data-bs-cat]');
-    if (ct) ct.textContent = f.cat || '';
 
     list.innerHTML = '';
     for (var k = 1; k < SHOW; k++) {
@@ -157,10 +149,7 @@
       im.alt = d.title;
       th.appendChild(im);
       var body = el('div', 'ins-berita-item-body');
-      var dt = el('span', 'ins-berita-date');
-      if (d.cat) dt.appendChild(el('em', 'ins-bs2-tag', d.cat));
-      dt.appendChild(document.createTextNode(d.date));
-      body.appendChild(dt);
+      body.appendChild(el('span', 'ins-berita-date', d.date));
       body.appendChild(el('h4', null, d.title));
       body.appendChild(el('span', 'ins-berita-read', 'Baca Selengkapnya...'));
       a.appendChild(th);

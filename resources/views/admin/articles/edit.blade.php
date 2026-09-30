@@ -36,7 +36,19 @@
 
     <div class="form-group">
         <label for="category">Kategori</label>
-        <input type="text" id="category" name="category" value="{{ old('category', $article->category) }}">
+        @php
+            $kategoriPilihan = ['Berita', 'Pengumuman', 'Kegiatan'];
+            $kategoriNow = (string) old('category', $article->category ?? '');
+        @endphp
+        <select id="category" name="category" style="width:100%;padding:11px 14px;border:1px solid #d5dbe4;border-radius:10px;background:#fff;font:inherit;">
+            <option value="">-- Pilih kategori --</option>
+            @foreach ($kategoriPilihan as $k)
+                <option value="{{ $k }}" {{ strcasecmp($kategoriNow, $k) === 0 ? 'selected' : '' }}>{{ $k }}</option>
+            @endforeach
+            @if ($kategoriNow !== '' && !in_array(strtolower($kategoriNow), array_map('strtolower', $kategoriPilihan)))
+                <option value="{{ $kategoriNow }}" selected>{{ $kategoriNow }}</option>
+            @endif
+        </select>category) }}">
         @error('category')
             <span class="text-danger" style="color: red; font-size: 14px;">{{ $message }}</span>
         @enderror
