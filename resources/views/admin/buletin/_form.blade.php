@@ -14,6 +14,7 @@
 <div class="form-group">
     <label>Upload File PDF</label>
     <input type="file" name="pdf_file" accept="application/pdf" {{ isset($buletin) ? '' : 'required' }}>
+<small class="text-muted">Format: PDF. Ukuran maksimal: 20 MB.</small>
     @if(!empty($buletin?->pdf_file))
         <p><small>File saat ini: {{ $buletin->pdf_file }} — kosongkan kalau tidak ingin mengganti.</small></p>
     @endif
@@ -25,6 +26,7 @@
 <div class="form-group">
     <label>Gambar Cover</label>
     <input type="file" name="cover_image" accept="image/*" id="coverInput">
+<small class="text-muted">Format: JPG/PNG. Ukuran maksimal: 4 MB.</small>
     @if(!empty($buletin?->cover_image))
         <p><small>Gambar saat ini: {{ $buletin->cover_image }}</small></p>
     @endif

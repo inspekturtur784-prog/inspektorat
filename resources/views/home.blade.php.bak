@@ -542,6 +542,11 @@
     </div>
 </section>
 
+@include('partials.produk')
+
+
+
+@include('partials.berita-slider')
 
 {{-- ============ BERITA TERKINI ============ --}}
 <section class="ins-berita" id="artikel">

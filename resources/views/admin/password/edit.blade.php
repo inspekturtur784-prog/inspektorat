@@ -12,21 +12,25 @@
     </div>
 @endif
 
-<form class="admin-form" action="{{ route('admin.password.update') }}" method="POST">
+
+<form class="admin-form" action="{{ route('admin.akun.update') }}" method="POST" style="margin-top: 24px;" autocomplete="off">
     @csrf
     @method('PUT')
 
+    <h2 style="font-size: 18px; margin: 0 0 6px;">Ganti Username / Kata Sandi</h2>
+    <p style="margin: 0 0 16px; font-size: 13px; color: #6b7280;">Kosongkan bagian yang tidak ingin diganti.</p>
+
     <div class="form-group">
-        <label for="current_password">Kata Sandi Saat Ini</label>
-        <input type="password" id="current_password" name="current_password" required>
-        @error('current_password')
+        <label for="username">Username Baru</label>
+        <input type="text" id="username" name="username" value="{{ old('username') }}" autocomplete="off" placeholder="Masukkan username baru">
+        @error('username')
             <span style="color: red; font-size: 13px;">{{ $message }}</span>
         @enderror
     </div>
 
     <div class="form-group">
         <label for="password">Kata Sandi Baru</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" autocomplete="new-password">
         @error('password')
             <span style="color: red; font-size: 13px;">{{ $message }}</span>
         @enderror
@@ -34,28 +38,84 @@
 
     <div class="form-group">
         <label for="password_confirmation">Konfirmasi Kata Sandi Baru</label>
-        <input type="password" id="password_confirmation" name="password_confirmation" required>
+        <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="new-password">
     </div>
 
-    {{-- Checkbox untuk Lihat Kata Sandi --}}
-    <div class="form-group" style="margin-top: 10px; margin-bottom: 20px;">
-        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; font-size: 14px;">
-            <input type="checkbox" id="togglePassword" style="width: auto; cursor: pointer;">
-            Tampilkan Kata Sandi
-        </label>
+    <div class="form-group">
+        <label for="akun_current_password">Kata Sandi Saat Ini</label>
+        <input type="password" id="akun_current_password" name="akun_current_password" required autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
+        @error('akun_current_password')
+            <span style="color: red; font-size: 13px;">{{ $message }}</span>
+        @enderror
     </div>
 
-    <button type="submit" class="btn-admin btn-admin-primary">Perbarui Kata Sandi</button>
+
+    <button type="submit" class="btn-admin btn-admin-primary">Simpan Perubahan</button>
 </form>
 
+<style>
+    .pw-wrap { position: relative; display: block; width: 100%; }
+    .pw-wrap input { width: 100% !important; box-sizing: border-box; padding-right: 42px !important; }
+    .pw-wrap input::-ms-reveal, .pw-wrap input::-ms-clear { display: none; }
+    .pw-eye { position: absolute; top: 0; right: 0; height: 100%; width: 40px; display: flex; align-items: center; justify-content: center; background: none; border: 0; cursor: pointer; color: #6b7280; padding: 0; }
+    .pw-eye:hover { color: #0f2a4a; }
+</style>
 <script>
-    document.getElementById('togglePassword').addEventListener('change', function() {
-        const isChecked = this.checked;
-        const type = isChecked ? 'text' : 'password';
-        
-        document.getElementById('current_password').type = type;
-        document.getElementById('password').type = type;
-        document.getElementById('password_confirmation').type = type;
-    });
+    (function () {
+        var eye = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+        var eyeOff = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+
+        ['password', 'password_confirmation', 'akun_current_password'].forEach(function (id) {
+            var input = document.getElementById(id);
+            if (!input) return;
+
+            var wrap = document.createElement('div');
+            wrap.className = 'pw-wrap';
+            input.parentNode.insertBefore(wrap, input);
+            wrap.appendChild(input);
+
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'pw-eye';
+            btn.setAttribute('aria-label', 'Tampilkan kata sandi');
+            btn.innerHTML = eye;
+            wrap.appendChild(btn);
+
+            btn.addEventListener('click', function () {
+                var tampil = input.type === 'password';
+                input.type = tampil ? 'text' : 'password';
+                btn.innerHTML = tampil ? eyeOff : eye;
+                btn.setAttribute('aria-label', tampil ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+            });
+        });
+    })();
+</script>
+
+<script>
+    (function sinkronUkuran() {
+        var ref = document.getElementById('username');
+        if (!ref) return;
+        var cs = window.getComputedStyle(ref);
+        ['password', 'password_confirmation', 'akun_current_password'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.style.boxSizing = cs.boxSizing;
+            el.style.height = cs.height;
+            el.style.borderTop = cs.borderTop;
+            el.style.borderRight = cs.borderRight;
+            el.style.borderBottom = cs.borderBottom;
+            el.style.borderLeft = cs.borderLeft;
+            el.style.borderRadius = cs.borderRadius;
+            el.style.backgroundColor = cs.backgroundColor;
+            el.style.color = cs.color;
+            el.style.fontFamily = cs.fontFamily;
+            el.style.fontSize = cs.fontSize;
+            el.style.lineHeight = cs.lineHeight;
+            el.style.paddingTop = cs.paddingTop;
+            el.style.paddingBottom = cs.paddingBottom;
+            el.style.paddingLeft = cs.paddingLeft;
+            el.style.paddingRight = '42px';
+        });
+    })();
 </script>
 @endsection

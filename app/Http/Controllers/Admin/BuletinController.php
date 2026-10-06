@@ -92,6 +92,6 @@ class BuletinController extends Controller
         $file = $request->file('pdf_file');
         $name = time() . '_' . preg_replace('/\s+/', '-', $file->getClientOriginalName());
         $file->move(public_path('buletin-pdf'), $name);
-        return $name;
+        return 'buletin-pdf/' . $name;
     }
 }

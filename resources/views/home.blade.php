@@ -343,6 +343,26 @@
     @media (max-width: 1024px){ .ins-about-grid{ grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 560px){ .ins-about-grid{ grid-template-columns: 1fr; } }
 
+    /* ================= MENGENAL KAMI (versi simpel) ================= */
+    .ins-kenal{ padding: 80px 24px; background: #fff; }
+    .ins-kenal-inner{
+        max-width: 1180px; margin: 0 auto; display: grid;
+        grid-template-columns: 1fr 1.4fr; gap: 40px 72px; align-items: start;
+    }
+    .ins-kenal-head h2{
+        font-size: clamp(26px, 3.2vw, 36px); color: var(--ins-navy); margin: 14px 0 0; font-weight: 700; line-height: 1.25;
+    }
+    .ins-kenal-body p{ color: var(--ins-slate); font-size: 16px; line-height: 1.85; margin: 0 0 24px; }
+    .ins-kenal-link{
+        display: inline-block; font-size: 14.5px; font-weight: 600; color: var(--ins-navy);
+        text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid var(--ins-gold); transition: all .15s ease;
+    }
+    .ins-kenal-link:hover{ color: var(--ins-navy-dark); border-bottom-color: var(--ins-navy); }
+    @media (max-width: 800px){
+        .ins-kenal{ padding: 56px 24px; }
+        .ins-kenal-inner{ grid-template-columns: 1fr; gap: 20px; }
+    }
+
     /* ================= STATISTIK RINGKAS ================= */
     .ins-stats-band{
         background: linear-gradient(160deg, var(--ins-navy) 0%, var(--ins-navy-dark) 100%);
@@ -514,34 +534,20 @@
 </script>
 
 {{-- ============ MENGENAL KAMI ============ --}}
-<section class="ins-about" id="apa-itu">
-    <div class="ins-about-inner">
-        <div class="ins-about-intro">
+<section class="ins-kenal" id="apa-itu">
+    <div class="ins-kenal-inner">
+        <div class="ins-kenal-head">
             <span class="ins-breadcrumb">Mengenal Kami</span>
             <h2>Inspektorat itu apa, sebenarnya?</h2>
+        </div>
+        <div class="ins-kenal-body">
             <p>
                 {{ $p['tentang_intro'] ?? 'Inspektorat Kota Mojokerto adalah Aparat Pengawasan Intern Pemerintah (APIP) yang bertugas mengawasi jalannya penyelenggaraan pemerintahan daerah, memastikan setiap program dan anggaran dikelola secara bersih, akuntabel, dan sesuai aturan yang berlaku.' }}
             </p>
-        </div>
-
-        <div class="ins-about-grid">
-            @forelse ($highlights as $item)
-                <div class="ins-about-card">
-                    <div class="ins-about-icon">
-                        <span style="color:#fff;font-weight:700;font-size:18px;">{{ $loop->iteration }}</span>
-                    </div>
-                    <h3>{{ $item->judul }}</h3>
-                    <p>{{ $item->deskripsi }}</p>
-                </div>
-            @empty
-                <p style="color:var(--ins-slate);grid-column:1/-1;">
-                    Belum ada kartu profil. Tambahkan lewat halaman Admin &rarr; Tentang Inspektorat & Visi Misi.
-                </p>
-            @endforelse
+            <a href="{{ route('profil.index') }}" class="ins-kenal-link">Selengkapnya di halaman Profil &rarr;</a>
         </div>
     </div>
 </section>
-
 @include('partials.produk')
 
 
@@ -600,7 +606,7 @@
 <section class="ins-galeri" id="galeri">
     <div class="ins-galeri-inner">
         <div class="ins-berita-head">
-            <h2>Galeri Foto</h2>
+            <h2 style="color:#0F2A4A !important;">Galeri</h2>
             <div class="ins-berita-rule"></div>
         </div>
 

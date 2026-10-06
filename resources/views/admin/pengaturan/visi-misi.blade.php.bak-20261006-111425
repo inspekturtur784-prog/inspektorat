@@ -1,0 +1,28 @@
+@extends('admin.layout')
+@section('title', 'Visi & Misi')
+
+@section('content')
+<div class="admin-header">
+    <h1>Visi & Misi</h1>
+</div>
+<p style="color:var(--slate, #5b6b7d);font-size:13.5px;margin:-10px 0 28px;">
+    Visi dan Misi tampil di halaman Profil.
+</p>
+
+<form action="{{ route('admin.pengaturan.visimisi.update') }}" method="POST">
+    @csrf
+    @method('PUT')
+
+    <div class="form-group">
+        <label>Visi</label>
+        <textarea name="visi" rows="3" required>{{ old('visi', $p['visi'] ?? '') }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Misi (satu poin per baris)</label>
+        <textarea name="misi" rows="8" required placeholder="Contoh:&#10;Mewujudkan tata kelola pemerintahan yang bersih&#10;Meningkatkan kualitas pengawasan internal">{{ old('misi', $p['misi'] ?? '') }}</textarea>
+    </div>
+
+    <button type="submit" class="btn-admin btn-admin-primary" style="margin-top:12px;">Simpan Perubahan</button>
+</form>
+@endsection

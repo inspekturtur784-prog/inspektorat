@@ -179,10 +179,16 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // ---------- Ganti Password ----------
     Route::get('/ganti-password', [AdminPasswordController::class, 'edit'])->name('password.edit');
     Route::put('/ganti-password', [AdminPasswordController::class, 'update'])->name('password.update');
+    Route::put('/ganti-username', [AdminPasswordController::class, 'updateUsername'])->middleware('throttle:5,1')->name('username.update');
+    Route::put('/ganti-akun', [AdminPasswordController::class, 'updateAkun'])->middleware('throttle:5,1')->name('akun.update');
 
     // ---------- Pengaturan Profil ----------
     Route::get('/pengaturan', [PengaturanProfilController::class, 'edit'])->name('pengaturan.edit');
     Route::put('/pengaturan', [PengaturanProfilController::class, 'update'])->name('pengaturan.update');
+    Route::get('/pengaturan/tentang', [PengaturanProfilController::class, 'editTentang'])->name('pengaturan.tentang');
+    Route::put('/pengaturan/tentang', [PengaturanProfilController::class, 'updateTentang'])->name('pengaturan.tentang.update');
+    Route::get('/pengaturan/visi-misi', [PengaturanProfilController::class, 'editVisiMisi'])->name('pengaturan.visimisi');
+    Route::put('/pengaturan/visi-misi', [PengaturanProfilController::class, 'updateVisiMisi'])->name('pengaturan.visimisi.update');
 
     // ---------- Kartu Profil (Kedudukan, Peran, dll) ----------
     Route::post('/pengaturan/highlight', [ProfilHighlightController::class, 'store'])->name('profilhighlight.store');

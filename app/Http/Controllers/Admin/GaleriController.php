@@ -40,12 +40,12 @@ class GaleriController extends Controller
             'kategori'  => 'required|string|max:100',
             'tanggal'   => 'required|date',
             'deskripsi' => 'nullable|string',
-            'foto'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'foto'      => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
         ]);
 
         $fotoPath = null;
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('galeri', 'public');
+            $fotoPath = $this->simpanFoto($request->file('foto'));
         }
 
         Galeri::create([
@@ -82,7 +82,7 @@ class GaleriController extends Controller
             'kategori'  => 'required|string|max:100',
             'tanggal'   => 'required|date',
             'deskripsi' => 'nullable|string',
-            'foto'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'foto'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
         ]);
 
         $data = [
@@ -97,7 +97,7 @@ class GaleriController extends Controller
             if ($galeri->foto && Storage::disk('public')->exists($galeri->foto)) {
                 Storage::disk('public')->delete($galeri->foto);
             }
-            $data['foto'] = $request->file('foto')->store('galeri', 'public');
+            $data['foto'] = $this->simpanFoto($request->file('foto'));
         }
 
         $galeri->update($data);
@@ -115,5 +115,70 @@ class GaleriController extends Controller
         $galeri->delete();
 
         return redirect()->route('admin.galeri.index')->with('success', 'Data galeri berhasil dihapus');
+    }
+
+    /**
+     * Simpan foto galeri. Kalau PHP mendukung WebP, foto dikecilkan dan
+     * dikonversi ke WebP. Kalau tidak bisa, disimpan apa adanya seperti biasa.
+     */
+    private function simpanFoto(\Illuminate\Http\UploadedFile $file): string
+    {
+        if (function_exists('imagewebp') && function_exists('imagecreatefromstring')) {
+            try {
+                $ukuran = @getimagesize($file->getRealPath());
+
+                // Lewati konversi untuk gambar raksasa agar memori tidak habis
+                if ($ukuran && ($ukuran[0] * $ukuran[1]) <= 40000000) {
+                    $isi = @file_get_contents($file->getRealPath());
+                    $gambar = $isi !== false ? @imagecreatefromstring($isi) : false;
+
+                    if ($gambar !== false) {
+                        imagepalettetotruecolor($gambar);
+
+                        // Perbaiki rotasi foto dari HP (EXIF)
+                        if (function_exists('exif_read_data') && ($ukuran[2] ?? 0) === IMAGETYPE_JPEG) {
+                            $exif = @exif_read_data($file->getRealPath());
+                            $orientasi = $exif['Orientation'] ?? 1;
+                            $sudut = [3 => 180, 6 => -90, 8 => 90][$orientasi] ?? 0;
+                            if ($sudut !== 0) {
+                                $putar = imagerotate($gambar, $sudut, 0);
+                                if ($putar !== false) {
+                                    $gambar = $putar;
+                                }
+                            }
+                        }
+
+                        // Perkecil jika sisi terpanjang lebih dari 1920 px
+                        $lebar = imagesx($gambar);
+                        $tinggi = imagesy($gambar);
+                        $maks = 1920;
+                        if ($lebar > $maks || $tinggi > $maks) {
+                            $skala = $maks / max($lebar, $tinggi);
+                            $kecil = imagescale($gambar, (int) round($lebar * $skala), (int) round($tinggi * $skala));
+                            if ($kecil !== false) {
+                                $gambar = $kecil;
+                            }
+                        }
+
+                        imagealphablending($gambar, false);
+                        imagesavealpha($gambar, true);
+
+                        ob_start();
+                        $ok = imagewebp($gambar, null, 80);
+                        $webp = ob_get_clean();
+
+                        if ($ok && is_string($webp) && $webp !== '') {
+                            $path = 'galeri/' . \Illuminate\Support\Str::uuid() . '.webp';
+                            \Illuminate\Support\Facades\Storage::disk('public')->put($path, $webp);
+                            return $path;
+                        }
+                    }
+                }
+            } catch (\Throwable $e) {
+                // jatuh ke penyimpanan biasa di bawah
+            }
+        }
+
+        return $file->store('galeri', 'public');
     }
 }

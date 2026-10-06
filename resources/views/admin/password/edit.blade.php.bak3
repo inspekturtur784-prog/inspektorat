@@ -1,0 +1,41 @@
+@extends('admin.layout')
+@section('title', 'Ganti Kata Sandi')
+
+@section('content')
+<div class="admin-header">
+    <h1>Ganti Kata Sandi</h1>
+</div>
+
+@if(session('success'))
+    <div class="alert alert-success" style="margin-bottom: 20px; padding: 10px 15px; background-color: #d4edda; color: #155724; border-radius: 6px;">
+        {{ session('success') }}
+    </div>
+@endif
+
+
+<form class="admin-form" action="{{ route('admin.username.update') }}" method="POST" style="margin-top: 24px;">
+    @csrf
+    @method('PUT')
+
+    <h2 style="font-size: 18px; margin: 0 0 16px;">Ganti Username</h2>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" value="{{ old('username', auth()->user()->username) }}" required autocomplete="username">
+        @error('username')
+            <span style="color: red; font-size: 13px;">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <div class="form-group">
+        <label for="username_current_password">Kata Sandi Saat Ini</label>
+        <input type="password" id="username_current_password" name="username_current_password" required autocomplete="current-password">
+        @error('username_current_password')
+            <span style="color: red; font-size: 13px;">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <button type="submit" class="btn-admin btn-admin-primary">Perbarui Username</button>
+</form>
+
+@endsection

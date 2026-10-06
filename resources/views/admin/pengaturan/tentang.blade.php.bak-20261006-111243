@@ -1,0 +1,61 @@
+@extends('admin.layout')
+@section('title', 'Tentang Inspektorat')
+
+@section('content')
+<div class="admin-header">
+    <h1>Tentang Inspektorat</h1>
+</div>
+<p style="color:var(--slate, #5b6b7d);font-size:13.5px;margin:-10px 0 28px;">
+    Teks ini tampil di Beranda, pada bagian "Mengenal Kami".
+</p>
+
+<form action="{{ route('admin.pengaturan.tentang.update') }}" method="POST">
+    @csrf
+    @method('PUT')
+
+    <div class="form-group">
+        <div id="tentang-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;">
+            <label for="tentang_intro" style="margin:0;">Paragraf Pembuka</label>
+            <div style="display:flex;gap:8px;">
+                <button type="button" id="btn-edit-tentang" class="btn-admin btn-admin-primary" style="padding:6px 18px;font-size:13px;">Edit</button>
+                <button type="submit" id="btn-simpan-tentang" class="btn-admin btn-admin-primary" style="display:none;padding:6px 18px;font-size:13px;">Simpan Perubahan</button>
+                <button type="button" id="btn-batal-tentang" class="btn-admin" style="display:none;padding:6px 18px;font-size:13px;background:#e4e8ee;color:#0b2545;">Batal</button>
+            </div>
+        </div>
+        <textarea id="tentang_intro" name="tentang_intro" rows="6" required readonly style="background:#f7f8fa;cursor:default;">{{ old('tentang_intro', $p['tentang_intro'] ?? '') }}</textarea>
+    </div>
+</form>
+
+<script>
+(function () {
+    var ta = document.getElementById('tentang_intro');
+    var be = document.getElementById('btn-edit-tentang');
+    var bs = document.getElementById('btn-simpan-tentang');
+    var bb = document.getElementById('btn-batal-tentang');
+    var asli = ta.value;
+
+    function mulai() {
+        ta.removeAttribute('readonly');
+        ta.style.background = '';
+        ta.style.cursor = '';
+        be.style.display = 'none';
+        bs.style.display = '';
+        bb.style.display = '';
+        ta.focus();
+    }
+    function batal() {
+        ta.value = asli;
+        ta.setAttribute('readonly', 'readonly');
+        ta.style.background = '#f7f8fa';
+        ta.style.cursor = 'default';
+        be.style.display = '';
+        bs.style.display = 'none';
+        bb.style.display = 'none';
+    }
+
+    be.addEventListener('click', mulai);
+    bb.addEventListener('click', batal);
+    if ({{ $errors->any() ? 'true' : 'false' }}) { mulai(); }
+})();
+</script>
+@endsection

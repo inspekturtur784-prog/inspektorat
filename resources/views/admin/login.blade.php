@@ -133,8 +133,8 @@
                 @csrf
 
                 <div style="margin-bottom:18px;">
-                    <label for="email" style="display:block; font-weight:600; color:var(--navy, #0F2A4A); font-size:14px; margin-bottom:6px;">Email</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus
+                    <label for="username" style="display:block; font-weight:600; color:var(--navy, #0F2A4A); font-size:14px; margin-bottom:6px;">Username</label>
+                    <input type="text" name="username" id="username" value="{{ old('username') }}" required autofocus autocomplete="username"
                         style="width:100%; padding:11px 14px; border:1px solid var(--line, #E5E0D3); border-radius:8px; font-size:15px;">
                 </div>
 

@@ -41,7 +41,7 @@ class Buletin extends Model
     }
 
     public function getCoverUrlAttribute(): string
-    {
+    { 
         return $this->cover_image
             ? asset('images/buletin/' . $this->cover_image)
             : asset('images/buletin/placeholder.png');
@@ -51,7 +51,7 @@ class Buletin extends Model
     public function getPdfUrlAttribute(): ?string
     {
         return $this->pdf_file
-            ? asset('buletin-pdf/' . $this->pdf_file)
+            ? (str_contains($this->pdf_file, '/') ? asset($this->pdf_file) : asset('buletin-pdf/' . $this->pdf_file))
             : null;
     }
 

@@ -32,4 +32,98 @@ class PasswordController extends Controller
 
         return redirect()->back()->with('success', 'Kata sandi berhasil diperbarui.');
     }
+
+    public function updateUsername(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'username' => [
+                'required', 'string', 'min:4', 'max:30',
+                'regex:/^[A-Za-z0-9._-]+$/',
+                \Illuminate\Validation\Rule::unique('users', 'username')->ignore($user->id),
+            ],
+            'username_current_password' => ['required'],
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'username.min' => 'Username minimal 4 karakter.',
+            'username.max' => 'Username maksimal 30 karakter.',
+            'username.regex' => 'Username hanya boleh huruf, angka, titik, strip, dan garis bawah.',
+            'username.unique' => 'Username sudah dipakai.',
+            'username_current_password.required' => 'Kata sandi saat ini wajib diisi.',
+        ]);
+
+        if (!Hash::check($request->username_current_password, $user->password)) {
+            return back()
+                ->withErrors(['username_current_password' => 'Kata sandi saat ini tidak cocok.'])
+                ->withInput($request->only('username'));
+        }
+
+        if ($request->username === $user->username) {
+            return back()
+                ->withErrors(['username' => 'Username baru sama dengan username saat ini.'])
+                ->withInput($request->only('username'));
+        }
+
+        $user->username = $request->username;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Username berhasil diperbarui.');
+    }
+
+    public function updateAkun(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'username' => [
+                'nullable', 'string', 'min:4', 'max:30',
+                'regex:/^[A-Za-z0-9._-]+$/',
+                \Illuminate\Validation\Rule::unique('users', 'username')->ignore($user->id),
+            ],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'akun_current_password' => ['required'],
+        ], [
+            'username.min' => 'Username minimal 4 karakter.',
+            'username.max' => 'Username maksimal 30 karakter.',
+            'username.regex' => 'Username hanya boleh huruf, angka, titik, strip, dan garis bawah.',
+            'username.unique' => 'Username sudah dipakai.',
+            'password.min' => 'Kata sandi baru minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
+            'akun_current_password.required' => 'Kata sandi saat ini wajib diisi.',
+        ]);
+
+        if (!Hash::check($request->akun_current_password, $user->password)) {
+            return back()
+                ->withErrors(['akun_current_password' => 'Kata sandi saat ini tidak cocok.'])
+                ->withInput($request->only('username'));
+        }
+
+        $gantiUsername = filled($request->username) && $request->username !== $user->username;
+        $gantiPassword = filled($request->password);
+
+        if (!$gantiUsername && !$gantiPassword) {
+            return back()
+                ->withErrors(['username' => 'Tidak ada perubahan. Isi username yang berbeda dan/atau kata sandi baru.'])
+                ->withInput($request->only('username'));
+        }
+
+        if ($gantiUsername) {
+            $user->username = $request->username;
+        }
+        if ($gantiPassword) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+
+        if ($gantiUsername && $gantiPassword) {
+            $pesan = 'Username dan kata sandi berhasil diperbarui.';
+        } elseif ($gantiUsername) {
+            $pesan = 'Username berhasil diperbarui.';
+        } else {
+            $pesan = 'Kata sandi berhasil diperbarui.';
+        }
+
+        return redirect()->back()->with('success', $pesan);
+    }
 }

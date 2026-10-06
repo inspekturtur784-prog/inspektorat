@@ -31,9 +31,14 @@
                         Dashboard
                     </a>
 
+                    <span class="admin-nav-label">Beranda</span>
+                    <a href="{{ route('admin.pengaturan.tentang') }}" class="admin-nav-sub {{ request()->routeIs('admin.pengaturan.tentang*') ? 'active' : '' }}">
+                        Tentang
+                    </a>
+
                     <span class="admin-nav-label">Profil</span>
-                    <a href="{{ route('admin.pengaturan.edit') }}" class="admin-nav-sub {{ request()->routeIs('admin.pengaturan.*') ? 'active' : '' }}">
-                        Tentang & Visi Misi
+                    <a href="{{ route('admin.pengaturan.visimisi') }}" class="admin-nav-sub {{ request()->routeIs('admin.pengaturan.visimisi*') ? 'active' : '' }}">
+                        Visi Misi
                     </a>
                     <a href="{{ route('admin.tugasfungsi.index') }}" class="admin-nav-sub {{ request()->routeIs('admin.tugasfungsi.*') ? 'active' : '' }}">
                         Tugas & Fungsi

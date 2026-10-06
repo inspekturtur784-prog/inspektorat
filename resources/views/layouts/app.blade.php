@@ -36,13 +36,6 @@
                 </svg>
             </a>
             <!-- Ikon Login/Dashboard Admin (otomatis cek status login) -->
-            <a href="{{ auth()->check() ? url('/admin') : url('/admin/login') }}"
-               title="{{ auth()->check() ? 'Dashboard Admin' : 'Login Admin' }}"
-               style="position: relative; z-index: 9999; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background-color: rgba(212, 169, 74, 0.2); transition: all 0.2s; text-decoration: none; cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d4a94a" style="width: 22px; height: 22px; pointer-events: none;">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-3.8-.85-5.05-2.2.12-1.68 3.37-2.8 5.05-2.8s4.93 1.12 5.05 2.8C15.8 19.15 14.03 20 12 20z"/>
-                </svg>
-            </a>
         </div>
 
     </div>
@@ -202,7 +195,7 @@
                 @endif
             </div>
             <div class="footer-bottom">
-                <span>&copy; {{ date('Y') }} Inspektorat Kota Mojokerto. Zona Integritas — Tolak Gratifikasi.</span>
+                <span><a href="{{ auth()->check() ? url('/admin') : url('/admin/login') }}" style="color:inherit;text-decoration:none;cursor:default">&copy;</a> {{ date('Y') }} Inspektorat Kota Mojokerto. Zona Integritas — Tolak Gratifikasi.</span>
                 <span>Bagian dari <a href="https://mojokertokota.go.id" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Pemerintah Kota Mojokerto</a></span>
             </div>
         </div>
