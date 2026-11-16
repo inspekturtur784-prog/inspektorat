@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Chat Masuk - Admin Inspektorat</title>
+<style>
+body{font-family:system-ui,Arial,sans-serif;background:#f3f5f9;margin:0;padding:24px;color:#222}
+.wrap{max-width:1000px;margin:auto;background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h1{margin-top:0;font-size:22px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:left;font-size:14px;vertical-align:top}
+th{background:#f7f8fb}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;color:#fff}
+.baru{background:#dc3545}.dijawab{background:#198754}.ditutup{background:#6c757d}
+.unread{background:#0d6efd;color:#fff;border-radius:10px;padding:1px 7px;font-size:12px;margin-left:4px}
+a{color:#0d6efd;text-decoration:none}
+.filter a{margin-right:10px}
+.alert{background:#d1e7dd;padding:8px 12px;border-radius:6px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Live Chat Masuk</h1>
+    @if(session('success'))<div class="alert">{{ session('success') }}</div>@endif
+    <p class="filter">
+        <a href="{{ url('/admin/live-chat') }}">Semua</a>
+        <a href="{{ url('/admin/live-chat?status=baru') }}">Baru</a>
+        <a href="{{ url('/admin/live-chat?status=dijawab') }}">Dijawab</a>
+        <a href="{{ url('/admin/live-chat?status=ditutup') }}">Ditutup</a>
+    </p>
+    <table>
+        <thead><tr><th>Pengguna</th><th>Pesan terakhir</th><th>Status</th><th>Waktu</th><th></th></tr></thead>
+        <tbody>
+        @forelse($threads as $t)
+            <tr>
+                <td><b>{{ $t->nama }}</b>@if($t->unread)<span class="unread">{{ $t->unread }}</span>@endif<br>
+                    <small>{{ $t->email }}@if($t->telepon) - {{ $t->telepon }}@endif</small></td>
+                <td>{{ \Illuminate\Support\Str::limit($t->last_body, 80) }}</td>
+                <td><span class="badge {{ $t->status }}">{{ ucfirst($t->status) }}</span></td>
+                <td>{{ optional($t->last_message_at)->format('d/m/Y H:i') }}</td>
+                <td><a href="{{ url('/admin/live-chat/'.$t->id) }}">Buka</a></td>
+            </tr>
+        @empty
+            <tr><td colspan="5">Belum ada chat masuk.</td></tr>
+        @endforelse
+        </tbody>
+    </table>
+    <div style="margin-top:14px">{{ $threads->links() }}</div>
+</div>
+</body>
+</html>

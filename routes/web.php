@@ -314,3 +314,21 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 });
 // Balas pesan via email
 Route::post('/admin/pesan/{pesan}/balas', [\App\Http\Controllers\Admin\BalasPesanController::class, 'kirim'])->name('admin.pesan.balas')->middleware('auth');
+
+
+// === LIVE CHAT ===
+Route::prefix('live-chat')->group(function () {
+    Route::post('/', [\App\Http\Controllers\LiveChatController::class, 'store'])->middleware('throttle:5,1');
+    Route::get('/{token}/messages', [\App\Http\Controllers\LiveChatController::class, 'messages'])->middleware('throttle:60,1');
+    Route::post('/{token}/send', [\App\Http\Controllers\LiveChatController::class, 'send'])->middleware('throttle:20,1');
+});
+
+// Dashboard admin (sesuaikan middleware 'auth' dengan middleware admin yang sudah dipakai)
+Route::middleware(['auth'])->prefix('admin/live-chat')->group(function () {
+    Route::get('/', [\App\Http\Controllers\LiveChatAdminController::class, 'index']);
+    Route::get('/{thread}', [\App\Http\Controllers\LiveChatAdminController::class, 'show']);
+    Route::get('/{thread}/messages', [\App\Http\Controllers\LiveChatAdminController::class, 'messages']);
+    Route::post('/{thread}/reply', [\App\Http\Controllers\LiveChatAdminController::class, 'reply']);
+    Route::post('/{thread}/close', [\App\Http\Controllers\LiveChatAdminController::class, 'close']);
+});
+// === END LIVE CHAT ===

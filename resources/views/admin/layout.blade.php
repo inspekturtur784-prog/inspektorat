@@ -76,6 +76,18 @@
                             <span class="admin-nav-badge">{{ $belumDibaca }}</span>
                         @endif
                     </a>
+{{-- LIVECHAT-MENU --}}
+                    <a href="{{ url('/admin/live-chat') }}" class="{{ request()->is('admin/live-chat*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
+                        <span>Live Chat</span>
+                        @php
+                            $chatBaru = \Illuminate\Support\Facades\Schema::hasTable('livechat_threads')
+                                ? \App\Models\LiveChatThread::where('status', 'baru')->count()
+                                : 0;
+                        @endphp
+                        @if ($chatBaru > 0)
+                            <span class="admin-nav-badge">{{ $chatBaru }}</span>
+                        @endif
+                    </a>
                 </nav>
             </div>
 

@@ -281,5 +281,8 @@
         text-decoration: none;
     }
 </style>
+@if(request()->is('/'))
+    @include('livechat.widget')
+@endif
 </body>
 </html>
