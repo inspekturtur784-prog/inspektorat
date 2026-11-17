@@ -272,11 +272,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // ---------- KMS: Subkategori ----------
     Route::get('/kms/kategori/{kategori}/subkategori/tambah', [SubkategoriKmsController::class, 'create'])->name('kms.subkategori.create');
-    Route::post('/kms/kategori/{kategori}/subkategori', [SubkategoriKmsController::class, 'store'])->name('kms.subkategori.store');
+    Route::post('/kms/kategori/{kategori}/subkategori', [\App\Http\Controllers\Admin\KmsSubkategoriAksiController::class, 'store'])->name('kms.subkategori.store');
     Route::get('/kms/subkategori/{subkategori}', [SubkategoriKmsController::class, 'show'])->name('kms.subkategori.show');
     Route::get('/kms/subkategori/{subkategori}/edit', [SubkategoriKmsController::class, 'edit'])->name('kms.subkategori.edit');
-    Route::put('/kms/subkategori/{subkategori}', [SubkategoriKmsController::class, 'update'])->name('kms.subkategori.update');
-    Route::delete('/kms/subkategori/{subkategori}', [SubkategoriKmsController::class, 'destroy'])->name('kms.subkategori.destroy');
+    Route::put('/kms/subkategori/{subkategori}', [\App\Http\Controllers\Admin\KmsSubkategoriUbahController::class, 'update'])->name('kms.subkategori.update');
+    Route::delete('/kms/subkategori/{subkategori}', [\App\Http\Controllers\Admin\KmsSubkategoriUbahController::class, 'destroy'])->name('kms.subkategori.destroy');
 
     // ---------- KMS: Grup Dokumen ----------
     Route::get('/kms/subkategori/{subkategori}/grup/tambah', [GrupDokumenController::class, 'create'])->name('kms.grup.create');

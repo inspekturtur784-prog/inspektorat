@@ -1,0 +1,317 @@
+@extends('admin.layout')
+@section('title', 'KMS')
+
+@section('content')
+<link rel="stylesheet" href="{{ asset('css/admin-masterweb.css') }}">
+@if ($errors->any())
+<div class="admin-alert" style="background:#fdecea;color:#a12622;border-color:#f5c6cb">
+    @foreach ($errors->all() as $e)<div>{{ $e }}</div>@endforeach
+</div>
+@endif
+<style>
+    .mw-form{display:grid;grid-template-columns:1.4fr 1.4fr 1.2fr auto;gap:12px;padding:16px;align-items:end}
+    @media (max-width:900px){.mw-form{grid-template-columns:1fr}}
+    .mw-form label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:5px}
+    .mw-form input,.mw-form select{width:100%;padding:9px 10px;border:1px solid #ccc;border-radius:4px;font-size:14px;box-sizing:border-box;font-family:inherit;background:#fff}
+    .mw-save{background:#5cb85c;color:#fff;border:0;border-radius:4px;padding:10px 22px;font-weight:700;cursor:pointer;font-family:inherit}
+    .mw-hint{padding:0 16px 14px;font-size:12px;color:#888}
+    .mw-links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+    .mw-links a,.mw-links button{font-size:13px;color:#1c6ea4;background:none;border:0;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline}
+</style>
+
+<div class="kp-header">
+    <h1>KMS</h1>
+    <div class="mw-links">
+        <button type="button" onclick="mwToggleKat()">+ Kategori</button>
+        <button type="button" data-link="{{ route('kms.index') }}" onclick="mwSalinLink(this)">Salin Link KMS</button>
+    </div>
+</div>
+
+<div id="mwKatPanel" class="mw-box" style="display:none">
+    <div class="mw-box-head"><span>Tambah Kategori</span></div>
+    <form id="mwKatForm" method="POST" class="mw-form" style="grid-template-columns:1fr 1fr 1fr auto">
+        @csrf
+        <div>
+            <label>Jenis</label>
+            <select id="mwJenis">
+                <option value="kms">Kategori KMS</option>
+                <option value="sub">Subkategori KMS</option>
+                <option value="pedoman">Kategori Pedoman</option>
+            </select>
+        </div>
+        <div id="mwIndukWrap" style="display:none">
+            <label>Kategori Induk</label>
+            <select id="mwInduk">
+                <option value="">-- Pilih Kategori Induk --</option>
+                @foreach (\App\Models\Kategori::orderBy('nama')->get() as $kt)
+                    <option value="{{ $kt->id }}">{{ $kt->nama }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label>Nama</label>
+            <input type="text" name="nama" required>
+        </div>
+        <div><button type="submit" class="mw-save">Simpan</button></div>
+    </form>
+</div>
+<div class="mw-box">
+    <div class="mw-box-head"><span>Entri Dokumen</span></div>
+    <form id="mwForm" method="POST" enctype="multipart/form-data" class="mw-form">
+        @csrf
+        <input type="hidden" id="mwHidden" value="">
+        <div>
+            <label>Kategori</label>
+            <select id="mwKat" required>
+                <option value="">-- Pilih Kategori --</option>
+                <optgroup label="KMS">
+                    @foreach ($subkategoris->sortBy(fn($s) => ($s->kategori->nama ?? '') . $s->nama) as $s)
+                        <option value="kms:{{ $s->id }}">{{ $s->kategori->nama ?? '-' }} / {{ $s->nama }}</option>
+                    @endforeach
+                </optgroup>
+                <optgroup label="Pedoman (khusus petugas)">
+                    @foreach ($pedomanKategoris as $k)
+                        <option value="pedoman:{{ $k->id }}">{{ $k->nama }}</option>
+                    @endforeach
+                </optgroup>
+            </select>
+        </div>
+        <div>
+            <label>Judul Dokumen</label>
+            <input type="text" name="judul" required>
+        </div>
+        <div>
+            <label>File</label>
+            <input type="file" name="file" accept="application/pdf,video/*" required>
+        </div>
+        <div><button type="submit" class="mw-save">Simpan</button></div>
+    </form>
+    <div class="mw-hint">KMS: PDF atau video (maks 100MB). Pedoman: PDF saja (maks 20MB).</div>
+</div>
+
+<div class="mw-box">
+    <div class="mw-box-head">
+        <span>Daftar Dokumen ({{ $rows->count() }})</span>
+        <select id="mwLen" aria-label="Jumlah baris">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+    <div class="mw-toolbar">
+        <input type="search" id="mwSearch" placeholder="Cari judul atau kategori..." autocomplete="off">
+        <select id="mwFs" aria-label="Filter sumber" style="display:inline-block;width:auto;margin-left:8px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;font-family:inherit">
+            <option value="">Semua sumber</option>
+            <option value="kms">KMS</option>
+            <option value="pedoman">Pedoman</option>
+        </select>
+        <select id="mwFk" aria-label="Filter kategori" style="display:inline-block;width:auto;max-width:300px;margin-left:8px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;font-family:inherit">
+            <option value="">Semua kategori</option>
+            @foreach ($rows->pluck('kategori')->unique()->sort() as $kt)
+                <option value="{{ mb_strtolower($kt) }}">{{ $kt }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="mw-scroll">
+        <table class="mw-table" id="mwTable">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th data-sort="1">Tanggal</th>
+                    <th data-sort="2">Judul</th>
+                    <th data-sort="3">Sumber</th>
+                    <th data-sort="4">Kategori</th>
+                    <th>File</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($rows as $r)
+                <tr data-sumber="{{ strtolower($r['sumber']) }}" data-kat="{{ mb_strtolower($r['kategori']) }}" data-cari="{{ mb_strtolower($r['judul'] . ' ' . $r['sumber'] . ' ' . $r['kategori']) }}">
+                    <td class="mw-no"></td>
+                    <td data-v="{{ $r['ts'] }}">{{ $r['ts'] ? \Carbon\Carbon::createFromTimestamp($r['ts'])->format('d-m-Y') : '-' }}</td>
+                    <td>{{ $r['judul'] }}</td>
+                    <td><span class="mw-badge mw-{{ strtolower($r['sumber']) }}">{{ $r['sumber'] }}</span></td>
+                    <td>{{ $r['kategori'] }}</td>
+                    <td><a href="{{ $r['file_url'] }}" target="_blank" rel="noopener">{{ strtoupper($r['tipe'] ?? 'file') }}</a></td>
+                    <td class="row-actions">
+                        <x-btn-edit :href="$r['edit_url']" />
+                        <x-btn-hapus :action="$r['hapus_url']" konfirmasi="Hapus dokumen ini?" />
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="7" class="mw-empty">Belum ada dokumen.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="mw-footer">
+        <span id="mwInfo"></span>
+        <span class="mw-pager">
+            <button type="button" id="mwPrev">&laquo; Sebelumnya</button>
+            <button type="button" id="mwNext">Berikutnya &raquo;</button>
+        </span>
+    </div>
+</div>
+
+<div class="mw-box" id="mwDaftarKat">
+    <div class="mw-box-head"><span>Daftar Kategori</span></div>
+    <div class="mw-scroll">
+        <table class="mw-table">
+            <thead>
+                <tr><th>No</th><th>Jenis</th><th>Nama</th><th>Jumlah Dokumen</th><th>Aksi</th></tr>
+            </thead>
+            <tbody>
+                @php $no = 0; @endphp
+                @foreach (\App\Models\Kategori::with(['subkategoris' => fn ($q) => $q->withCount('dokumens')])->withCount('dokumens')->orderBy('nama')->get() as $kt)
+                <tr>
+                    <td>{{ ++$no }}</td>
+                    <td><span class="mw-badge mw-kms">Kategori KMS</span></td>
+                    <td><strong>{{ $kt->nama }}</strong></td>
+                    <td>{{ $kt->dokumens_count }}</td>
+                    <td class="row-actions">
+                        <x-btn-edit :href="route('admin.kms.kategori.edit', $kt)" />
+                        <x-btn-hapus :action="route('admin.kms.kategori.destroy', $kt)" konfirmasi="Hapus kategori ini beserta semua subkategori dan dokumennya?" />
+                    </td>
+                </tr>
+                @foreach ($kt->subkategoris->sortBy('nama') as $sb)
+                <tr>
+                    <td></td>
+                    <td><span class="mw-badge mw-kms">Subkategori</span></td>
+                    <td>&nbsp;&nbsp;&rarr; {{ $sb->nama }}</td>
+                    <td>{{ $sb->dokumens_count }}</td>
+                    <td class="row-actions">
+                        <x-btn-edit :href="route('admin.kms.subkategori.edit', $sb)" />
+                        <x-btn-hapus :action="route('admin.kms.subkategori.destroy', $sb)" konfirmasi="Hapus subkategori ini beserta dokumennya?" />
+                    </td>
+                </tr>
+                @endforeach
+                @endforeach
+                @foreach (\App\Models\PedomanKategori::withCount('dokumens')->orderBy('nama')->get() as $pk)
+                <tr>
+                    <td>{{ ++$no }}</td>
+                    <td><span class="mw-badge mw-pedoman">Pedoman</span></td>
+                    <td><strong>{{ $pk->nama }}</strong></td>
+                    <td>{{ $pk->dokumens_count }}</td>
+                    <td class="row-actions">
+                        <x-btn-edit :href="route('admin.pedoman.kategori.edit', $pk)" />
+                        <x-btn-hapus :action="route('admin.pedoman.kategori.destroy', $pk)" konfirmasi="Hapus kategori Pedoman ini beserta dokumennya?" />
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+function mwSalinLink(btn) {
+    var link = btn.getAttribute('data-link');
+    var teks = btn.textContent;
+    function selesai() { btn.textContent = 'Link tersalin'; setTimeout(function () { btn.textContent = teks; }, 1800); }
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(link).then(selesai);
+    } else {
+        var t = document.createElement('textarea');
+        t.value = link; document.body.appendChild(t); t.select();
+        document.execCommand('copy'); document.body.removeChild(t); selesai();
+    }
+}
+(function () {
+    var URL_KMS = @json(route('admin.kms.dokumen.store'));
+    var URL_PED = @json(route('admin.pedoman.dokumen.store'));
+    var form = document.getElementById('mwForm');
+    form.addEventListener('submit', function () {
+        var p = document.getElementById('mwKat').value.split(':');
+        var h = document.getElementById('mwHidden');
+        if (p[0] === 'pedoman') { form.action = URL_PED; h.name = 'pedoman_kategori_id'; }
+        else { form.action = URL_KMS; h.name = 'subkategori_id'; }
+        h.value = p[1] || '';
+    });
+
+    var tbody = document.querySelector('#mwTable tbody');
+    var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr[data-cari]'));
+    if (!rows.length) { return; }
+    var q = '', size = 10, page = 1, sortCol = null, asc = true;
+    var elSearch = document.getElementById('mwSearch');
+    var elLen = document.getElementById('mwLen');
+    var elInfo = document.getElementById('mwInfo');
+    var elPrev = document.getElementById('mwPrev');
+    var elNext = document.getElementById('mwNext');
+    var fs = '', fk = '';
+    var elFs = document.getElementById('mwFs'), elFk = document.getElementById('mwFk');
+    if (elFs) { elFs.addEventListener('change', function () { fs = elFs.value; page = 1; render(); }); }
+    if (elFk) { elFk.addEventListener('change', function () { fk = elFk.value; page = 1; render(); }); }
+
+    function val(tr, col) {
+        var td = tr.children[col];
+        if (col === 1) { return Number(td.getAttribute('data-v')) || 0; }
+        return td.textContent.trim().toLowerCase();
+    }
+    function render() {
+        var list = rows.filter(function (r) { return (!q || r.getAttribute('data-cari').indexOf(q) !== -1) && (!fs || r.getAttribute('data-sumber') === fs) && (!fk || r.getAttribute('data-kat') === fk); });
+        if (sortCol !== null) {
+            list.sort(function (a, b) {
+                var x = val(a, sortCol), y = val(b, sortCol);
+                return (x < y ? -1 : (x > y ? 1 : 0)) * (asc ? 1 : -1);
+            });
+        }
+        var pages = Math.max(1, Math.ceil(list.length / size));
+        if (page > pages) { page = pages; }
+        var start = (page - 1) * size;
+        rows.forEach(function (r) { r.style.display = 'none'; });
+        list.slice(start, start + size).forEach(function (r, i) {
+            r.style.display = '';
+            r.querySelector('.mw-no').textContent = start + i + 1;
+            tbody.appendChild(r);
+        });
+        elInfo.textContent = list.length
+            ? 'Menampilkan ' + (start + 1) + ' - ' + Math.min(start + size, list.length) + ' dari ' + list.length + ' dokumen'
+            : 'Tidak ada dokumen yang cocok.';
+        elPrev.disabled = page <= 1;
+        elNext.disabled = page >= pages;
+    }
+    elSearch.addEventListener('input', function () { q = elSearch.value.trim().toLowerCase(); page = 1; render(); });
+    elLen.addEventListener('change', function () { size = parseInt(elLen.value, 10) || 10; page = 1; render(); });
+    elPrev.addEventListener('click', function () { if (page > 1) { page--; render(); } });
+    elNext.addEventListener('click', function () { page++; render(); });
+    document.querySelectorAll('#mwTable th[data-sort]').forEach(function (th) {
+        th.addEventListener('click', function () {
+            var c = parseInt(th.getAttribute('data-sort'), 10);
+            asc = (sortCol === c) ? !asc : true;
+            sortCol = c; page = 1; render();
+        });
+    });
+    render();
+})();
+</script>
+<script>
+function mwToggleKat() {
+    var p = document.getElementById('mwKatPanel');
+    p.style.display = (p.style.display === 'none') ? 'block' : 'none';
+}
+(function () {
+    var URL_KAT = @json(route('admin.kms.kategori.store'));
+    var URL_SUB = @json(route('admin.kms.subkategori.store', ['kategori' => '__ID__']));
+    var URL_PED = @json(route('admin.pedoman.kategori.store'));
+    var f = document.getElementById('mwKatForm');
+    var jenis = document.getElementById('mwJenis');
+    var wrap = document.getElementById('mwIndukWrap');
+    var induk = document.getElementById('mwInduk');
+    function atur() {
+        var j = jenis.value;
+        wrap.style.display = (j === 'sub') ? '' : 'none';
+        if (j === 'sub') { f.action = URL_SUB.replace('__ID__', induk.value || '0'); }
+        else if (j === 'pedoman') { f.action = URL_PED; }
+        else { f.action = URL_KAT; }
+    }
+    jenis.addEventListener('change', atur);
+    induk.addEventListener('change', atur);
+    f.addEventListener('submit', function (e) {
+        atur();
+        if (jenis.value === 'sub' && !induk.value) { e.preventDefault(); alert('Pilih kategori induk dulu.'); }
+    });
+    atur();
+})();
+</script>
+@endsection

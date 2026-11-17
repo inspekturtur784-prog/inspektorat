@@ -22,11 +22,40 @@
 <div class="kp-header">
     <h1>KMS</h1>
     <div class="mw-links">
+        <button type="button" onclick="mwToggleDaftar()">Daftar Kategori</button>
+        <button type="button" onclick="mwToggleKat()">+ Kategori</button>
         <button type="button" data-link="{{ route('kms.index') }}" onclick="mwSalinLink(this)">Salin Link KMS</button>
-        <a href="{{ Route::has('admin.kms.kelola') ? route('admin.kms.kelola') : route('admin.kms.index') }}">Kelola Kategori</a>
     </div>
 </div>
 
+<div id="mwKatPanel" class="mw-box" style="display:none">
+    <div class="mw-box-head"><span>Tambah Kategori</span></div>
+    <form id="mwKatForm" method="POST" class="mw-form" style="grid-template-columns:1fr 1fr 1fr auto">
+        @csrf
+        <div>
+            <label>Jenis</label>
+            <select id="mwJenis">
+                <option value="kms">Kategori KMS</option>
+                <option value="sub">Subkategori KMS</option>
+                <option value="pedoman">Kategori Pedoman</option>
+            </select>
+        </div>
+        <div id="mwIndukWrap" style="display:none">
+            <label>Kategori Induk</label>
+            <select id="mwInduk">
+                <option value="">-- Pilih Kategori Induk --</option>
+                @foreach (\App\Models\Kategori::orderBy('nama')->get() as $kt)
+                    <option value="{{ $kt->id }}">{{ $kt->nama }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label>Nama</label>
+            <input type="text" name="nama" required>
+        </div>
+        <div><button type="submit" class="mw-save">Simpan</button></div>
+    </form>
+</div>
 <div class="mw-box">
     <div class="mw-box-head"><span>Entri Dokumen</span></div>
     <form id="mwForm" method="POST" enctype="multipart/form-data" class="mw-form">
@@ -73,6 +102,17 @@
     </div>
     <div class="mw-toolbar">
         <input type="search" id="mwSearch" placeholder="Cari judul atau kategori..." autocomplete="off">
+        <select id="mwFs" aria-label="Filter sumber" style="display:inline-block;width:auto;margin-left:8px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;font-family:inherit">
+            <option value="">Semua sumber</option>
+            <option value="kms">KMS</option>
+            <option value="pedoman">Pedoman</option>
+        </select>
+        <select id="mwFk" aria-label="Filter kategori" style="display:inline-block;width:auto;max-width:300px;margin-left:8px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;font-family:inherit">
+            <option value="">Semua kategori</option>
+            @foreach ($rows->pluck('kategori')->unique()->sort() as $kt)
+                <option value="{{ mb_strtolower($kt) }}">{{ $kt }}</option>
+            @endforeach
+        </select>
     </div>
     <div class="mw-scroll">
         <table class="mw-table" id="mwTable">
@@ -89,7 +129,7 @@
             </thead>
             <tbody>
                 @forelse ($rows as $r)
-                <tr data-cari="{{ mb_strtolower($r['judul'] . ' ' . $r['sumber'] . ' ' . $r['kategori']) }}">
+                <tr data-sumber="{{ strtolower($r['sumber']) }}" data-kat="{{ mb_strtolower($r['kategori']) }}" data-cari="{{ mb_strtolower($r['judul'] . ' ' . $r['sumber'] . ' ' . $r['kategori']) }}">
                     <td class="mw-no"></td>
                     <td data-v="{{ $r['ts'] }}">{{ $r['ts'] ? \Carbon\Carbon::createFromTimestamp($r['ts'])->format('d-m-Y') : '-' }}</td>
                     <td>{{ $r['judul'] }}</td>
@@ -116,6 +156,104 @@
     </div>
 </div>
 
+<div class="mw-box" id="mwDaftarKat" style="display:none">
+    <div class="mw-box-head"><span>Daftar Kategori</span></div>
+    @php
+        $katRows = collect();
+        foreach (\App\Models\Kategori::with(['subkategoris' => fn ($q) => $q->withCount('dokumens')])->withCount('dokumens')->orderBy('nama')->get() as $kt) {
+            $katRows->push(['jenis' => 'Kategori KMS', 'kelas' => 'mw-kms', 'nama' => $kt->nama, 'n' => $kt->dokumens_count,
+                'edit' => route('admin.kms.kategori.edit', $kt), 'hapus' => route('admin.kms.kategori.destroy', $kt),
+                'konf' => 'Hapus kategori ini beserta semua subkategori dan dokumennya?']);
+            foreach ($kt->subkategoris->sortBy('nama') as $sb) {
+                $katRows->push(['jenis' => 'Subkategori', 'kelas' => 'mw-kms', 'nama' => $kt->nama . ' / ' . $sb->nama, 'n' => $sb->dokumens_count,
+                    'edit' => route('admin.kms.subkategori.edit', $sb), 'hapus' => route('admin.kms.subkategori.destroy', $sb),
+                    'konf' => 'Hapus subkategori ini beserta dokumennya?']);
+            }
+        }
+        foreach (\App\Models\PedomanKategori::withCount('dokumens')->orderBy('nama')->get() as $pk) {
+            $katRows->push(['jenis' => 'Pedoman', 'kelas' => 'mw-pedoman', 'nama' => $pk->nama, 'n' => $pk->dokumens_count,
+                'edit' => route('admin.pedoman.kategori.edit', $pk), 'hapus' => route('admin.pedoman.kategori.destroy', $pk),
+                'konf' => 'Hapus kategori Pedoman ini beserta dokumennya?']);
+        }
+    @endphp
+    <div class="mw-toolbar">
+        <input type="search" id="mwKtSearch" placeholder="Cari kategori atau subkategori..." autocomplete="off">
+        <select id="mwKtJenis" aria-label="Filter jenis" style="display:inline-block;width:auto;margin-left:8px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;font-family:inherit">
+            <option value="">Semua jenis</option>
+            <option value="kategori kms">Kategori KMS</option>
+            <option value="subkategori">Subkategori</option>
+            <option value="pedoman">Pedoman</option>
+        </select>
+    </div>
+    <div class="mw-scroll">
+        <table class="mw-table">
+            <thead>
+                <tr><th>No</th><th>Jenis</th><th>Nama</th><th>Dokumen</th><th>Aksi</th></tr>
+            </thead>
+            <tbody id="mwKtBody">
+                @foreach ($katRows as $r)
+                <tr data-jenis="{{ mb_strtolower($r['jenis']) }}" data-cari="{{ mb_strtolower($r['nama']) }}">
+                    <td class="mw-ktno"></td>
+                    <td><span class="mw-badge {{ $r['kelas'] }}">{{ $r['jenis'] }}</span></td>
+                    <td>{{ $r['nama'] }}</td>
+                    <td>{{ $r['n'] }}</td>
+                    <td class="row-actions">
+                        <x-btn-edit :href="$r['edit']" />
+                        <x-btn-hapus :action="$r['hapus']" :konfirmasi="$r['konf']" />
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="mw-footer">
+        <span id="mwKtInfo"></span>
+        <span class="mw-pager">
+            <button type="button" id="mwKtPrev">&laquo; Sebelumnya</button>
+            <button type="button" id="mwKtNext">Berikutnya &raquo;</button>
+        </span>
+    </div>
+    <script>
+    (function () {
+        var body = document.getElementById('mwKtBody');
+        var rows = Array.prototype.slice.call(body.querySelectorAll('tr'));
+        var q = '', fj = '', page = 1, size = 10;
+        var elS = document.getElementById('mwKtSearch'), elJ = document.getElementById('mwKtJenis');
+        var elI = document.getElementById('mwKtInfo'), elP = document.getElementById('mwKtPrev'), elN = document.getElementById('mwKtNext');
+        function render() {
+            var list = rows.filter(function (r) {
+                return (!q || r.getAttribute('data-cari').indexOf(q) !== -1) && (!fj || r.getAttribute('data-jenis') === fj);
+            });
+            var pages = Math.max(1, Math.ceil(list.length / size));
+            if (page > pages) { page = pages; }
+            var start = (page - 1) * size;
+            rows.forEach(function (r) { r.style.display = 'none'; });
+            list.slice(start, start + size).forEach(function (r, i) {
+                r.style.display = '';
+                r.querySelector('.mw-ktno').textContent = start + i + 1;
+            });
+            elI.textContent = list.length
+                ? 'Menampilkan ' + (start + 1) + ' - ' + Math.min(start + size, list.length) + ' dari ' + list.length
+                : 'Tidak ada kategori yang cocok.';
+            elP.disabled = page <= 1;
+            elN.disabled = page >= pages;
+        }
+        elS.addEventListener('input', function () { q = elS.value.trim().toLowerCase(); page = 1; render(); });
+        elJ.addEventListener('change', function () { fj = elJ.value; page = 1; render(); });
+        elP.addEventListener('click', function () { if (page > 1) { page--; render(); } });
+        elN.addEventListener('click', function () { page++; render(); });
+        render();
+    })();
+    </script>
+</div>
+
+<script>
+function mwToggleDaftar() {
+    var p = document.getElementById('mwDaftarKat');
+    p.style.display = (p.style.display === 'none') ? 'block' : 'none';
+    if (p.style.display === 'block') { p.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+}
+</script>
 <script>
 function mwSalinLink(btn) {
     var link = btn.getAttribute('data-link');
@@ -150,6 +288,10 @@ function mwSalinLink(btn) {
     var elInfo = document.getElementById('mwInfo');
     var elPrev = document.getElementById('mwPrev');
     var elNext = document.getElementById('mwNext');
+    var fs = '', fk = '';
+    var elFs = document.getElementById('mwFs'), elFk = document.getElementById('mwFk');
+    if (elFs) { elFs.addEventListener('change', function () { fs = elFs.value; page = 1; render(); }); }
+    if (elFk) { elFk.addEventListener('change', function () { fk = elFk.value; page = 1; render(); }); }
 
     function val(tr, col) {
         var td = tr.children[col];
@@ -157,7 +299,7 @@ function mwSalinLink(btn) {
         return td.textContent.trim().toLowerCase();
     }
     function render() {
-        var list = rows.filter(function (r) { return !q || r.getAttribute('data-cari').indexOf(q) !== -1; });
+        var list = rows.filter(function (r) { return (!q || r.getAttribute('data-cari').indexOf(q) !== -1) && (!fs || r.getAttribute('data-sumber') === fs) && (!fk || r.getAttribute('data-kat') === fk); });
         if (sortCol !== null) {
             list.sort(function (a, b) {
                 var x = val(a, sortCol), y = val(b, sortCol);
@@ -191,6 +333,124 @@ function mwSalinLink(btn) {
         });
     });
     render();
+})();
+</script>
+<script>
+function mwToggleKat() {
+    var p = document.getElementById('mwKatPanel');
+    p.style.display = (p.style.display === 'none') ? 'block' : 'none';
+}
+(function () {
+    var URL_KAT = @json(route('admin.kms.kategori.store'));
+    var URL_SUB = @json(route('admin.kms.subkategori.store', ['kategori' => '__ID__']));
+    var URL_PED = @json(route('admin.pedoman.kategori.store'));
+    var f = document.getElementById('mwKatForm');
+    var jenis = document.getElementById('mwJenis');
+    var wrap = document.getElementById('mwIndukWrap');
+    var induk = document.getElementById('mwInduk');
+    function atur() {
+        var j = jenis.value;
+        wrap.style.display = (j === 'sub') ? '' : 'none';
+        if (j === 'sub') { f.action = URL_SUB.replace('__ID__', induk.value || '0'); }
+        else if (j === 'pedoman') { f.action = URL_PED; }
+        else { f.action = URL_KAT; }
+    }
+    jenis.addEventListener('change', atur);
+    induk.addEventListener('change', atur);
+    f.addEventListener('submit', function (e) {
+        atur();
+        if (jenis.value === 'sub' && !induk.value) { e.preventDefault(); alert('Pilih kategori induk dulu.'); }
+    });
+    atur();
+})();
+</script>
+<script>
+/* mwEditSkrip */
+(function () {
+    var form = document.getElementById('mwForm');
+    var tabel = document.getElementById('mwTable');
+    var kat = document.getElementById('mwKat');
+    if (!form || !tabel || !kat) { return; }
+    var judul = form.querySelector('input[name="judul"]');
+    var file = form.querySelector('input[name="file"]');
+    var simpan = form.querySelector('.mw-save');
+    var kepala = form.closest('.mw-box').querySelector('.mw-box-head span');
+    var teksKepala = kepala.textContent, teksSimpan = simpan.textContent;
+    var editing = false, urlUpdate = '';
+
+    var info = document.createElement('div');
+    info.style.cssText = 'font-size:12px;color:#666;margin-top:4px';
+    file.parentNode.appendChild(info);
+
+    var batal = document.createElement('button');
+    batal.type = 'button';
+    batal.textContent = 'Batal';
+    batal.style.cssText = 'display:none;margin-top:8px;background:#999;color:#fff;border:0;border-radius:4px;padding:8px 18px;cursor:pointer;font-family:inherit';
+    simpan.parentNode.appendChild(batal);
+
+    var metode = document.createElement('input');
+    metode.type = 'hidden'; metode.name = '_method'; metode.value = 'PUT'; metode.disabled = true;
+    form.appendChild(metode);
+
+    function cariOpsi(sumber, namaKat) {
+        for (var i = 0; i < kat.options.length; i++) {
+            var o = kat.options[i];
+            var g = o.parentNode && o.parentNode.tagName === 'OPTGROUP' ? o.parentNode.label : '';
+            if (g.indexOf(sumber) === 0 && o.textContent.trim() === namaKat) { return o; }
+        }
+        return null;
+    }
+
+    function selesai() {
+        editing = false;
+        form.reset();
+        kat.disabled = false;
+        file.required = true;
+        info.textContent = '';
+        kepala.textContent = teksKepala;
+        simpan.textContent = teksSimpan;
+        batal.style.display = 'none';
+        metode.disabled = true;
+    }
+
+    tabel.addEventListener('click', function (e) {
+        var a = e.target.closest('a');
+        if (!a || !a.closest('.row-actions')) { return; }
+        if (e.ctrlKey || e.metaKey || e.shiftKey) { return; }
+        var tr = a.closest('tr');
+        var f = tr.querySelector('form');
+        if (!f) { return; }
+        e.preventDefault();
+
+        var c = tr.children;
+        var sumber = c[3].textContent.trim();
+        var namaKat = c[4].textContent.trim();
+        var link = c[5].querySelector('a');
+        var nama = link ? decodeURIComponent(link.getAttribute('href').split('/').pop()) : '';
+
+        editing = true;
+        urlUpdate = f.getAttribute('action');
+        kepala.textContent = 'Edit Dokumen';
+        simpan.textContent = 'Edit';
+        batal.style.display = '';
+        judul.value = c[2].textContent.trim();
+        var op = cariOpsi(sumber, namaKat);
+        if (op) { kat.value = op.value; }
+        kat.disabled = true;
+        file.required = false;
+        file.value = '';
+        info.textContent = 'File saat ini: ' + nama + ' (kosongkan jika tidak ingin mengganti)';
+        metode.disabled = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        judul.focus();
+    });
+
+    // didaftarkan setelah listener submit bawaan, jadi tujuan form ditimpa di sini
+    form.addEventListener('submit', function () {
+        if (editing) { form.action = urlUpdate; }
+    });
+
+    batal.addEventListener('click', selesai);
 })();
 </script>
 @endsection
