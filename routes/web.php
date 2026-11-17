@@ -257,7 +257,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // ==========================================================
 
     // ---------- Dashboard gabungan (KMS + Pedoman) ----------
-    Route::get('/kms', [KmsPedomanDashboardController::class, 'index'])->name('kms.index');
+    Route::get('/kms', [\App\Http\Controllers\Admin\KmsSederhanaController::class, 'index'])->name('kms.index');
+    Route::get('/kms/kelola', [KmsPedomanDashboardController::class, 'index'])->name('kms.kelola');
+    Route::get('/kms/semua', [\App\Http\Controllers\Admin\KmsDokumenListController::class, 'index'])->name('kms.semua');
+    Route::get('/kms/baru', [\App\Http\Controllers\Admin\KmsSederhanaController::class, 'index'])->name('kms.baru');
 
     // ---------- KMS: Kategori ----------
     Route::get('/kms/kategori/tambah', [KategoriKmsController::class, 'create'])->name('kms.kategori.create');
@@ -285,10 +288,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // ---------- KMS: Dokumen ----------
     Route::get('/kms/subkategori/{subkategori}/dokumen/tambah', [DokumenController::class, 'create'])->name('kms.dokumen.create');
-    Route::post('/kms/dokumen', [DokumenController::class, 'store'])->name('kms.dokumen.store');
+    Route::post('/kms/dokumen', [\App\Http\Controllers\Admin\KmsDokumenAksiController::class, 'store'])->name('kms.dokumen.store');
     Route::get('/kms/dokumen/{dokumen}/edit', [DokumenController::class, 'edit'])->name('kms.dokumen.edit');
-    Route::put('/kms/dokumen/{dokumen}', [DokumenController::class, 'update'])->name('kms.dokumen.update');
-    Route::delete('/kms/dokumen/{dokumen}', [DokumenController::class, 'destroy'])->name('kms.dokumen.destroy');
+    Route::put('/kms/dokumen/{dokumen}', [\App\Http\Controllers\Admin\KmsDokumenAksiController::class, 'update'])->name('kms.dokumen.update');
+    Route::delete('/kms/dokumen/{dokumen}', [\App\Http\Controllers\Admin\KmsDokumenAksiController::class, 'destroy'])->name('kms.dokumen.destroy');
 
     // ---------- Pedoman: Kategori ----------
     Route::get('/pedoman/kategori/tambah', [PedomanKategoriController::class, 'create'])->name('pedoman.kategori.create');

@@ -180,10 +180,15 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/ganti-password', [AdminPasswordController::class, 'edit'])->name('password.edit');
     Route::put('/ganti-password', [AdminPasswordController::class, 'update'])->name('password.update');
     Route::put('/ganti-username', [AdminPasswordController::class, 'updateUsername'])->middleware('throttle:5,1')->name('username.update');
+    Route::put('/ganti-akun', [AdminPasswordController::class, 'updateAkun'])->middleware('throttle:5,1')->name('akun.update');
 
     // ---------- Pengaturan Profil ----------
     Route::get('/pengaturan', [PengaturanProfilController::class, 'edit'])->name('pengaturan.edit');
     Route::put('/pengaturan', [PengaturanProfilController::class, 'update'])->name('pengaturan.update');
+    Route::get('/pengaturan/tentang', [PengaturanProfilController::class, 'editTentang'])->name('pengaturan.tentang');
+    Route::put('/pengaturan/tentang', [PengaturanProfilController::class, 'updateTentang'])->name('pengaturan.tentang.update');
+    Route::get('/pengaturan/visi-misi', [PengaturanProfilController::class, 'editVisiMisi'])->name('pengaturan.visimisi');
+    Route::put('/pengaturan/visi-misi', [PengaturanProfilController::class, 'updateVisiMisi'])->name('pengaturan.visimisi.update');
 
     // ---------- Kartu Profil (Kedudukan, Peran, dll) ----------
     Route::post('/pengaturan/highlight', [ProfilHighlightController::class, 'store'])->name('profilhighlight.store');
@@ -252,7 +257,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // ==========================================================
 
     // ---------- Dashboard gabungan (KMS + Pedoman) ----------
-    Route::get('/kms', [KmsPedomanDashboardController::class, 'index'])->name('kms.index');
+    Route::get('/kms', [\App\Http\Controllers\Admin\KmsDokumenListController::class, 'index'])->name('kms.index');
+    Route::get('/kms/kelola', [KmsPedomanDashboardController::class, 'index'])->name('kms.kelola');
+    Route::get('/kms/semua', [\App\Http\Controllers\Admin\KmsDokumenListController::class, 'index'])->name('kms.semua');
+    Route::get('/kms/baru', [\App\Http\Controllers\Admin\KmsSederhanaController::class, 'index'])->name('kms.baru');
 
     // ---------- KMS: Kategori ----------
     Route::get('/kms/kategori/tambah', [KategoriKmsController::class, 'create'])->name('kms.kategori.create');
@@ -309,3 +317,21 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 });
 // Balas pesan via email
 Route::post('/admin/pesan/{pesan}/balas', [\App\Http\Controllers\Admin\BalasPesanController::class, 'kirim'])->name('admin.pesan.balas')->middleware('auth');
+
+
+// === LIVE CHAT ===
+Route::prefix('live-chat')->group(function () {
+    Route::post('/', [\App\Http\Controllers\LiveChatController::class, 'store'])->middleware('throttle:5,1');
+    Route::get('/{token}/messages', [\App\Http\Controllers\LiveChatController::class, 'messages'])->middleware('throttle:60,1');
+    Route::post('/{token}/send', [\App\Http\Controllers\LiveChatController::class, 'send'])->middleware('throttle:20,1');
+});
+
+// Dashboard admin (sesuaikan middleware 'auth' dengan middleware admin yang sudah dipakai)
+Route::middleware(['auth'])->prefix('admin/live-chat')->group(function () {
+    Route::get('/', [\App\Http\Controllers\LiveChatAdminController::class, 'index']);
+    Route::get('/{thread}', [\App\Http\Controllers\LiveChatAdminController::class, 'show']);
+    Route::get('/{thread}/messages', [\App\Http\Controllers\LiveChatAdminController::class, 'messages']);
+    Route::post('/{thread}/reply', [\App\Http\Controllers\LiveChatAdminController::class, 'reply']);
+    Route::post('/{thread}/close', [\App\Http\Controllers\LiveChatAdminController::class, 'close']);
+});
+// === END LIVE CHAT ===

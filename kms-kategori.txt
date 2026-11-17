@@ -1,0 +1,253 @@
+﻿===== app\Http\Controllers\Admin\KategoriKmsController.php =====
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Kategori;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+class KategoriKmsController extends Controller
+{
+    public function index()
+    {
+        $kategoris = Kategori::withCount(['subkategoris', 'dokumens'])->orderBy('nama')->get();
+
+        return view('kms.kategori.index', compact('kategoris'));
+    }
+
+    public function create()
+    {
+        return view('kms.kategori.create');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'nama' => 'required|string|max:255',
+        ]);
+
+        $data['slug'] = Str::slug($data['nama']) . '-' . uniqid();
+
+        Kategori::create($data);
+
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori berhasil ditambahkan.');
+    }
+
+    public function show(Kategori $kategori)
+    {
+        $kategori->load(['subkategoris' => function ($q) {
+            $q->withCount(['grupDokumens', 'dokumensLangsung']);
+        }]);
+
+        return view('kms.kategori.show', compact('kategori'));
+    }
+
+    public function edit(Kategori $kategori)
+    {
+        return view('kms.kategori.edit', compact('kategori'));
+    }
+
+    public function update(Request $request, Kategori $kategori)
+    {
+        $data = $request->validate([
+            'nama' => 'required|string|max:255',
+        ]);
+
+        $kategori->update($data);
+
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori berhasil diperbarui.');
+    }
+
+    public function destroy(Kategori $kategori)
+    {
+        $kategori->delete();
+
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori berhasil dihapus.');
+    }
+}
+===== app\Http\Controllers\Admin\SubkategoriKmsController.php =====
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Kategori;
+use App\Models\Subkategori;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+class SubkategoriKmsController extends Controller
+{
+    public function create(Kategori $kategori)
+    {
+        return view('kms.subkategori.create', compact('kategori'));
+    }
+
+    public function store(Request $request, Kategori $kategori)
+    {
+        $data = $request->validate([
+            'nama' => 'required|string|max:255',
+        ]);
+
+        $data['kategori_id'] = $kategori->id;
+        $data['slug'] = Str::slug($data['nama']) . '-' . uniqid();
+
+        Subkategori::create($data);
+
+        return redirect()->route('admin.kms.kategori.show', $kategori)->with('status', 'Subkategori berhasil ditambahkan.');
+    }
+
+    public function show(Subkategori $subkategori)
+    {
+        $subkategori->load([
+            'kategori',
+            'grupDokumens' => fn ($q) => $q->withCount('dokumens'),
+            'dokumensLangsung',
+        ]);
+
+        return view('kms.subkategori.show', compact('subkategori'));
+    }
+
+    public function edit(Subkategori $subkategori)
+    {
+        return view('kms.subkategori.edit', compact('subkategori'));
+    }
+
+    public function update(Request $request, Subkategori $subkategori)
+    {
+        $data = $request->validate([
+            'nama' => 'required|string|max:255',
+        ]);
+
+        $subkategori->update($data);
+
+        return redirect()->route('admin.kms.kategori.show', $subkategori->kategori_id)->with('status', 'Subkategori berhasil diperbarui.');
+    }
+
+    public function destroy(Subkategori $subkategori)
+    {
+        $kategoriId = $subkategori->kategori_id;
+        $subkategori->delete();
+        return redirect()->route('admin.kms.kategori.show', $kategoriId)->with('status', 'Subkategori berhasil dihapus.');
+    }
+}
+===== app\Http\Controllers\Admin\PedomanKategoriController.php =====
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\PedomanKategori;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+class PedomanKategoriController extends Controller
+{
+    public function create()
+    {
+        return view('admin.kms-pedoman.pedoman.kategori-form', ['kategori' => null]);
+    }
+
+    public function store(Request $request)
+    {
+        $data = $this->validated($request);
+        $data['slug'] = Str::slug($data['nama']);
+
+        PedomanKategori::create($data);
+
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori Pedoman berhasil ditambahkan.');
+    }
+
+    public function show(PedomanKategori $kategori)
+    {
+        $kategori->load('dokumens');
+
+        return view('admin.kms-pedoman.pedoman.kategori-show', compact('kategori'));
+    }
+
+    public function edit(PedomanKategori $kategori)
+    {
+        return view('admin.kms-pedoman.pedoman.kategori-form', compact('kategori'));
+    }
+
+    public function update(Request $request, PedomanKategori $kategori)
+    {
+        $data = $this->validated($request);
+        $data['slug'] = Str::slug($data['nama']);
+
+        $kategori->update($data);
+
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori Pedoman berhasil diperbarui.');
+    }
+
+    public function destroy(PedomanKategori $kategori)
+    {
+        $kategori->delete();
+
+        return redirect()->route('admin.kms.index')->with('status', 'Kategori Pedoman berhasil dihapus.');
+    }
+
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'nama' => 'required|string|max:255',
+        ]);
+    }
+}
+===== resources\views\kms\kategori\create.blade.php =====
+@extends('admin.layout')
+
+@section('title', 'Tambah Kategori')
+
+@section('content')
+<h1>Tambah Kategori KMS</h1>
+
+<form action="{{ route('admin.kms.kategori.store') }}" method="POST" class="admin-form">
+    @csrf
+    <div class="form-group">
+        <label>Nama Kategori</label>
+        <input type="text" name="nama" value="{{ old('nama') }}" class="form-control" required placeholder="Contoh: Diklat Fungsional Auditor">
+        @error('nama') <div style="color:#b91c1c;font-size:13px;">{{ $message }}</div> @enderror
+    </div>
+    <button type="submit" class="btn-admin btn-admin-primary">Simpan</button>
+</form>
+@endsection
+===== resources\views\kms\subkategori\create.blade.php =====
+@extends('admin.layout')
+
+@section('title', 'Tambah Subkategori')
+
+@section('content')
+<h1>Tambah Subkategori &mdash; {{ $kategori->nama }}</h1>
+
+<form action="{{ route('admin.kms.subkategori.store', $kategori) }}" method="POST" class="admin-form">
+    @csrf
+    <div class="form-group">
+        <label>Nama Subkategori</label>
+        <input type="text" name="nama" value="{{ old('nama') }}" class="form-control" required>
+        @error('nama') <div style="color:#b91c1c;font-size:13px;">{{ $message }}</div> @enderror
+    </div>
+    <button type="submit" class="btn-admin btn-admin-primary">Simpan</button>
+</form>
+@endsection
+===== resources\views\admin\kms-pedoman\pedoman\kategori-form.blade.php =====
+@extends('admin.layout')
+
+@section('title', $kategori ? 'Edit Kategori Pedoman' : 'Tambah Kategori Pedoman')
+
+@section('content')
+<h1>{{ $kategori ? 'Edit Kategori Pedoman' : 'Tambah Kategori Pedoman' }}</h1>
+
+<form action="{{ $kategori ? route('admin.pedoman.kategori.update', $kategori) : route('admin.pedoman.kategori.store') }}" method="POST" class="admin-form">
+    @csrf
+    @if ($kategori) @method('PUT') @endif
+    <div class="form-group">
+        <label>Nama Kategori</label>
+        <input type="text" name="nama" value="{{ old('nama', $kategori->nama ?? '') }}" class="form-control" required>
+        @error('nama') <div style="color:#b91c1c;font-size:13px;">{{ $message }}</div> @enderror
+    </div>
+    <button type="submit" class="btn-admin btn-admin-primary">Simpan</button>
+</form>
+@endsection

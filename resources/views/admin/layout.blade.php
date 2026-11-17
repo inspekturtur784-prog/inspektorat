@@ -64,7 +64,7 @@
     Buletin
 </a>
 <a href="{{ route('admin.kms.index') }}" class="{{ request()->routeIs('admin.kms.*') || request()->routeIs('admin.kmspedoman.*') ? 'active' : '' }}">
-    KMS & Pedoman
+    KMS
 </a>
 <a href="{{ route('admin.pengaturan-situs.edit') }}" class="{{ request()->routeIs('admin.pengaturan-situs.*') ? 'active' : '' }}">
     Pengaturan Situs

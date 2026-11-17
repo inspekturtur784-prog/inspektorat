@@ -1,0 +1,1226 @@
+﻿
+
+===== app\Http\Controllers\Admin\KmsPedomanDashboardController.php =====
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Kategori;
+use App\Models\Subkategori;
+use App\Models\GrupDokumen;
+use App\Models\Dokumen;
+use App\Models\PedomanKategori;
+use App\Models\PedomanDokumen;
+
+class KmsPedomanDashboardController extends Controller
+{
+    public function index()
+    {
+        // KMS
+        $kmsKategoris = Kategori::orderBy('nama')->get();
+        $kmsSubkategoris = Subkategori::with('kategori')->orderBy('nama')->get();
+        $kmsGrups = GrupDokumen::with('subkategori.kategori')->orderBy('nama')->get();
+        $kmsDokumens = Dokumen::with(['kategori', 'subkategori', 'grupDokumen'])->orderByDesc('created_at')->get();
+
+        // Pedoman
+        $pedomanKategoris = PedomanKategori::orderBy('nama')->get();
+        $pedomanDokumens = PedomanDokumen::with('kategori')->orderByDesc('created_at')->get();
+
+        return view('admin.kms-pedoman.index', compact(
+            'kmsKategoris', 'kmsSubkategoris', 'kmsGrups', 'kmsDokumens',
+            'pedomanKategoris', 'pedomanDokumens'
+        ));
+    }
+}
+
+===== app\Http\Controllers\Admin\DokumenController.php =====
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Subkategori;
+use App\Models\GrupDokumen;
+use App\Models\Dokumen;
+use Illuminate\Http\Request;
+
+class DokumenController extends Controller
+{
+    public function create(Request $request, Subkategori $subkategori)
+    {
+        $grup = null;
+        if ($request->filled('grup')) {
+            $grup = GrupDokumen::find($request->query('grup'));
+        }
+
+        return view('kms.dokumen.create', compact('subkategori', 'grup'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'subkategori_id'   => 'required|exists:subkategoris,id',
+            'grup_dokumen_id'  => 'nullable|exists:grup_dokumens,id',
+            'judul'            => 'required|string|max:255',
+            'deskripsi'        => 'nullable|string',
+            'file'             => 'required|file|mimes:pdf,mp4,mov,avi,wmv,mkv|max:102400',
+        ]);
+
+        $subkategori = Subkategori::findOrFail($data['subkategori_id']);
+
+        $upload = $this->handleUpload($request);
+
+        Dokumen::create([
+            'kategori_id'      => $subkategori->kategori_id,
+            'subkategori_id'   => $subkategori->id,
+            'grup_dokumen_id'  => $data['grup_dokumen_id'] ?? null,
+            'judul'            => $data['judul'],
+            'deskripsi'        => $data['deskripsi'] ?? null,
+            'file_path'        => $upload['file_path'],
+            'file_type'        => $upload['file_type'],
+        ]);
+
+        return redirect()->route('admin.kms.subkategori.show', $subkategori)->with('status', 'Dokumen berhasil ditambahkan.');
+    }
+
+    public function edit(Dokumen $dokumen)
+    {
+        return view('kms.dokumen.edit', compact('dokumen'));
+    }
+
+    public function update(Request $request, Dokumen $dokumen)
+    {
+        $data = $request->validate([
+            'judul'      => 'required|string|max:255',
+            'deskripsi'  => 'nullable|string',
+            'file'       => 'nullable|file|mimes:pdf,mp4,mov,avi,wmv,mkv|max:102400',
+        ]);
+
+        if ($request->hasFile('file')) {
+            $upload = $this->handleUpload($request);
+            $data['file_path'] = $upload['file_path'];
+            $data['file_type'] = $upload['file_type'];
+        }
+
+        $dokumen->update($data);
+
+        return redirect()->route('admin.kms.subkategori.show', $dokumen->subkategori_id)->with('status', 'Dokumen berhasil diperbarui.');
+    }
+
+    public function destroy(Dokumen $dokumen)
+    {
+        $subkategoriId = $dokumen->subkategori_id;
+        $dokumen->delete();
+
+        return redirect()->route('admin.kms.subkategori.show', $subkategoriId)->with('status', 'Dokumen berhasil dihapus.');
+    }
+
+    private function handleUpload(Request $request): array
+    {
+        $file = $request->file('file');
+        $name = time() . '_' . preg_replace('/\s+/', '-', $file->getClientOriginalName());
+        $file->move(public_path('files'), $name);
+
+        return [
+            'file_path' => $name,
+            'file_type' => $file->getClientOriginalExtension(),
+        ];
+    }
+}
+
+===== app\Http\Controllers\Admin\PedomanDokumenController.php =====
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\PedomanDokumen;
+use App\Models\PedomanKategori;
+use Illuminate\Http\Request;
+
+class PedomanDokumenController extends Controller
+{
+    public function create()
+    {
+        return view('admin.kms-pedoman.pedoman.dokumen-form', [
+            'dokumen' => null,
+            'kategoris' => PedomanKategori::orderBy('nama')->get(),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $data = $this->validated($request, true);
+        $data = $this->handleUpload($request, $data);
+
+        PedomanDokumen::create($data);
+
+        return redirect()->route('admin.kms.index')->with('status', 'Dokumen Pedoman berhasil ditambahkan.');
+    }
+
+    public function edit(PedomanDokumen $dokumen)
+    {
+        return view('admin.kms-pedoman.pedoman.dokumen-form', [
+            'dokumen' => $dokumen,
+            'kategoris' => PedomanKategori::orderBy('nama')->get(),
+        ]);
+    }
+
+    public function update(Request $request, PedomanDokumen $dokumen)
+    {
+        $data = $this->validated($request, false);
+        $data = $this->handleUpload($request, $data);
+
+        $dokumen->update($data);
+
+        return redirect()->route('admin.kms.index')->with('status', 'Dokumen Pedoman berhasil diperbarui.');
+    }
+
+    public function destroy(PedomanDokumen $dokumen)
+    {
+        $dokumen->delete();
+
+        return redirect()->route('admin.kms.index')->with('status', 'Dokumen Pedoman berhasil dihapus.');
+    }
+
+    private function validated(Request $request, bool $isCreate): array
+    {
+        return $request->validate([
+            'pedoman_kategori_id' => 'required|exists:pedoman_kategoris,id',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'file' => ($isCreate ? 'required' : 'nullable') . '|file|mimes:pdf|max:20480',
+        ]);
+    }
+
+    private function handleUpload(Request $request, array $data): array
+    {
+        unset($data['file']);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $size = $file->getSize();
+            $name = time() . '_' . preg_replace('/\s+/', '-', $file->getClientOriginalName());
+            $extension = $file->getClientOriginalExtension();
+
+            $file->move(public_path('files'), $name);
+
+            $data['file_path'] = $name;
+            $data['file_type'] = $extension;
+            $data['ukuran_kb'] = intdiv($size, 1024);
+        }
+
+        return $data;
+    }
+}
+
+===== app\Models\Dokumen.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Dokumen extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'kategori_id',
+        'subkategori_id',
+        'grup_dokumen_id',
+        'judul',
+        'deskripsi',
+        'file_path',
+        'file_type',
+        'dilihat',
+    ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
+    }
+
+    public function subkategori()
+    {
+        return $this->belongsTo(Subkategori::class);
+    }
+
+    public function grupDokumen()
+    {
+        return $this->belongsTo(GrupDokumen::class);
+    }
+}
+
+===== app\Models\Grup.php (TIDAK ADA) =====
+
+===== app\Models\GrupDokumen.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class GrupDokumen extends Model
+{
+    protected $fillable = ['subkategori_id', 'nama', 'slug'];
+
+    public function subkategori()
+    {
+        return $this->belongsTo(Subkategori::class);
+    }
+
+    public function dokumens()
+    {
+        return $this->hasMany(Dokumen::class);
+    }
+}
+
+===== app\Models\Kategori.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Kategori extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['nama', 'slug'];
+
+    public function subkategoris()
+    {
+        return $this->hasMany(Subkategori::class);
+    }
+
+    public function dokumens()
+    {
+        return $this->hasMany(Dokumen::class);
+    }
+}
+
+===== app\Models\KategoriKms.php (TIDAK ADA) =====
+
+===== app\Models\Subkategori.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Subkategori extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['kategori_id', 'nama', 'slug'];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
+    }
+
+    public function dokumens()
+    {
+        return $this->hasMany(Dokumen::class);
+    }
+
+    public function grupDokumens()
+    {
+        return $this->hasMany(GrupDokumen::class);
+    }
+
+    public function dokumensLangsung()
+    {
+        return $this->hasMany(Dokumen::class)->whereNull('grup_dokumen_id');
+    }
+}
+
+===== app\Models\SubkategoriKms.php (TIDAK ADA) =====
+
+===== app\Models\PedomanDokumen.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class PedomanDokumen extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'pedoman_kategori_id',
+        'judul',
+        'deskripsi',
+        'file_path',
+        'file_type',
+        'ukuran_kb',
+        'downloads',
+    ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(PedomanKategori::class, 'pedoman_kategori_id');
+    }
+
+    // Biar bisa ditulis $dokumen->ukuran (otomatis convert KB ke MB kalau perlu)
+    public function getUkuranAttribute()
+    {
+        $kb = $this->ukuran_kb;
+        if ($kb >= 1024) {
+            return round($kb / 1024, 2) . ' MB';
+        }
+        return $kb . ' KB';
+    }
+}
+
+===== app\Models\PedomanKategori.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class PedomanKategori extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['nama', 'slug'];
+
+    public function dokumens()
+    {
+        return $this->hasMany(PedomanDokumen::class);
+    }
+}
+
+===== resources\views\admin\kms-pedoman\index.blade.php =====
+@extends('admin.layout')
+@section('title', 'KMS')
+
+@section('content')
+<style>
+    .kp-panel { display:none; margin-bottom:28px; }
+    .kp-panel.open { display:block; }
+    .kp-upload-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    @media (max-width: 900px) { .kp-upload-grid { grid-template-columns:1fr; } }
+    .kp-upload-card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,.06); border-top:4px solid #1e2a4a; }
+    .kp-upload-card h3 { margin:0 0 4px; font-size:16px; color:#1e2a4a; }
+    .kp-upload-card p.kp-desc { margin:0 0 16px; font-size:13px; color:#888; }
+    .kp-field { margin-bottom:14px; }
+    .kp-field label { display:block; font-size:13px; font-weight:600; color:#555; margin-bottom:6px; }
+    .kp-field input, .kp-field select { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box; font-family:inherit; }
+    .kp-upload-card .kp-btn-primary { width:100%; padding:11px; font-size:14px; margin-top:4px; }
+</style>
+
+@php
+    $kpDocs = $kmsDokumens->map(fn ($d) => [
+        'judul'  => $d->judul,
+        'sumber' => 'KMS',
+        'lokasi' => ($d->kategori->nama ?? '-') . ' / ' . ($d->subkategori->nama ?? '-'),
+        'lihat'  => url('/files/' . $d->file_path),
+        'edit'   => route('admin.kms.dokumen.edit', $d),
+    ])->concat($pedomanDokumens->map(fn ($d) => [
+        'judul'  => $d->judul,
+        'sumber' => 'Pedoman',
+        'lokasi' => $d->kategori->nama ?? '-',
+        'lihat'  => url('/files/' . $d->file_path),
+        'edit'   => route('admin.pedoman.dokumen.edit', $d),
+    ]))->values();
+@endphp
+
+<div class="kp-header">
+    <h1>KMS</h1>
+    <div class="kp-top-actions">
+        <button type="button" class="kp-btn kp-btn-primary" onclick="kpTogglePanel()">+ Tambah Dokumen</button>
+        <a href="{{ route('admin.kms.kategori.create') }}" class="kp-btn kp-btn-outline">+ Kategori KMS</a>
+        <a href="{{ route('admin.pedoman.kategori.create') }}" class="kp-btn kp-btn-outline">+ Kategori Pedoman</a>
+        <button type="button" class="kp-btn kp-btn-outline" data-link="{{ route('kms.index') }}" onclick="kpSalinLink(this)">Salin Link KMS</button>
+    </div>
+</div>
+
+<div class="kp-search">
+    <input type="search" id="kpSearch" placeholder="Cari dokumen atau kategori..." autocomplete="off">
+</div>
+
+<div id="kpHasil" class="kp-card" style="display:none;">
+    <div class="kp-group-title" id="kpHasilInfo"></div>
+    <table class="kp-table">
+        <thead><tr><th>Judul</th><th>Sumber</th><th>Lokasi</th><th style="width:150px;">Aksi</th></tr></thead>
+        <tbody id="kpHasilBody"></tbody>
+    </table>
+</div>
+
+<div id="kpPanel" class="kp-panel">
+    <div class="kp-upload-grid">
+        <div class="kp-upload-card">
+            <h3>Dokumen KMS</h3>
+            <p class="kp-desc">Pilih subkategori, isi judul, unggah filenya.</p>
+            <form action="{{ route('admin.kms.dokumen.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="grup_dokumen_id" value="">
+                <div class="kp-field">
+                    <label>Kategori / Subkategori</label>
+                    <select name="subkategori_id" required>
+                        <option value="">-- Pilih Subkategori --</option>
+                        @foreach ($kmsSubkategoris->sortBy(fn($s) => ($s->kategori->nama ?? '') . $s->nama)->groupBy(fn($s) => $s->kategori->nama ?? '-') as $namaKategori => $subs)
+                            <optgroup label="{{ $namaKategori }}">
+                                @foreach ($subs as $sub)
+                                    <option value="{{ $sub->id }}">{{ $sub->nama }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="kp-field">
+                    <label>Judul Dokumen</label>
+                    <input type="text" name="judul" required>
+                </div>
+                <div class="kp-field">
+                    <label>File PDF atau Video (mp4, mov, avi, wmv, mkv &mdash; maks 100MB)</label>
+                    <input type="file" name="file" accept="application/pdf,video/*" required>
+                </div>
+                <button type="submit" class="kp-btn kp-btn-primary">Upload Dokumen KMS</button>
+            </form>
+        </div>
+
+        <div class="kp-upload-card">
+            <h3>Dokumen Pedoman</h3>
+            <p class="kp-desc">Pilih kategori, isi judul, unggah filenya.</p>
+            <form action="{{ route('admin.pedoman.dokumen.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="kp-field">
+                    <label>Kategori</label>
+                    <select name="pedoman_kategori_id" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        @foreach ($pedomanKategoris->sortBy('nama') as $k)
+                            <option value="{{ $k->id }}">{{ $k->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="kp-field">
+                    <label>Judul Dokumen</label>
+                    <input type="text" name="judul" required>
+                </div>
+                <div class="kp-field">
+                    <label>File PDF (maks 20MB)</label>
+                    <input type="file" name="file" accept="application/pdf" required>
+                </div>
+                <button type="submit" class="kp-btn kp-btn-primary">Upload Dokumen Pedoman</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="kp-section-head">
+    <h2>Kategori KMS</h2>
+    <p>{{ $kmsKategoris->count() }} kategori &middot; {{ $kmsDokumens->count() }} dokumen</p>
+</div>
+<div class="kp-card">
+    <table class="kp-table">
+        <thead><tr><th>Nama Kategori</th><th>Jumlah Dokumen</th><th style="width:200px;">Aksi</th></tr></thead>
+        <tbody>
+            @forelse ($kmsKategoris as $kategori)
+            <tr data-cari="{{ mb_strtolower($kategori->nama) }}">
+                <td>{{ $kategori->nama }}</td>
+                <td>{{ $kmsDokumens->where('kategori_id', $kategori->id)->count() }}</td>
+                <td class="row-actions">
+                    <a href="{{ route('admin.kms.kategori.show', $kategori) }}" class="kp-btn kp-btn-outline">Kelola</a>
+                    <x-btn-edit :href="route('admin.kms.kategori.edit', $kategori)" />
+                    <x-btn-hapus :action="route('admin.kms.kategori.destroy', $kategori)" konfirmasi="Hapus kategori ini beserta semua isinya?" />
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="3" class="kp-empty">Belum ada kategori KMS.</td></tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
+<div class="kp-section-head">
+    <h2>Pedoman</h2>
+    <p>{{ $pedomanKategoris->count() }} kategori &middot; {{ $pedomanDokumens->count() }} dokumen</p>
+</div>
+<div class="kp-card">
+    <table class="kp-table">
+        <thead><tr><th>Nama Kategori</th><th>Jumlah Dokumen</th><th style="width:200px;">Aksi</th></tr></thead>
+        <tbody>
+            @forelse ($pedomanKategoris as $kategori)
+            <tr data-cari="{{ mb_strtolower($kategori->nama) }}">
+                <td>{{ $kategori->nama }}</td>
+                <td>{{ $pedomanDokumens->where('pedoman_kategori_id', $kategori->id)->count() }}</td>
+                <td class="row-actions">
+                    <a href="{{ route('admin.pedoman.kategori.show', $kategori) }}" class="kp-btn kp-btn-outline">Kelola</a>
+                    <x-btn-edit :href="route('admin.pedoman.kategori.edit', $kategori)" />
+                    <x-btn-hapus :action="route('admin.pedoman.kategori.destroy', $kategori)" konfirmasi="Hapus kategori pedoman ini beserta semua isinya?" />
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="3" class="kp-empty">Belum ada kategori Pedoman.</td></tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
+<script>
+function kpTogglePanel() {
+    var p = document.getElementById('kpPanel');
+    p.classList.toggle('open');
+    if (p.classList.contains('open')) { p.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+}
+function kpSalinLink(btn) {
+    var link = btn.getAttribute('data-link');
+    var teks = btn.textContent;
+    function selesai() { btn.textContent = 'Link tersalin'; setTimeout(function () { btn.textContent = teks; }, 1800); }
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(link).then(selesai);
+    } else {
+        var t = document.createElement('textarea');
+        t.value = link; document.body.appendChild(t); t.select();
+        document.execCommand('copy'); document.body.removeChild(t); selesai();
+    }
+}
+(function () {
+    var DOCS = @json($kpDocs);
+    var ICO_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
+    var input = document.getElementById('kpSearch');
+    var box = document.getElementById('kpHasil');
+    var body = document.getElementById('kpHasilBody');
+    var info = document.getElementById('kpHasilInfo');
+
+    function esc(s) { var d = document.createElement('div'); d.textContent = (s == null ? '' : s); return d.innerHTML; }
+    function attr(s) { return esc(s).replace(/"/g, '&quot;'); }
+
+    input.addEventListener('input', function () {
+        var q = input.value.trim().toLowerCase();
+
+        document.querySelectorAll('tr[data-cari]').forEach(function (tr) {
+            tr.style.display = (!q || tr.getAttribute('data-cari').indexOf(q) !== -1) ? '' : 'none';
+        });
+
+        if (!q) { box.style.display = 'none'; body.innerHTML = ''; return; }
+
+        var hasil = DOCS.filter(function (d) {
+            return (d.judul + ' ' + d.lokasi).toLowerCase().indexOf(q) !== -1;
+        });
+
+        info.textContent = hasil.length + ' dokumen ditemukan' + (hasil.length > 50 ? ' (50 pertama ditampilkan)' : '');
+        body.innerHTML = hasil.length ? hasil.slice(0, 50).map(function (d) {
+            return '<tr><td>' + esc(d.judul) + '</td><td>' + esc(d.sumber) + '</td><td>' + esc(d.lokasi) + '</td>' +
+                '<td class="row-actions"><a href="' + attr(d.lihat) + '" target="_blank" class="kp-btn kp-btn-outline">Lihat</a>' +
+                '<a href="' + attr(d.edit) + '" class="btn-icon" title="Edit" aria-label="Edit">' + ICO_EDIT + '</a></td></tr>';
+        }).join('') : '<tr><td colspan="4" class="kp-empty">Tidak ada dokumen yang cocok.</td></tr>';
+        box.style.display = 'block';
+    });
+})();
+</script>
+@endsection
+
+===== resources\views\admin\layout.blade.php =====
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Admin') â€” Inspektorat Kota Mojokerto</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+</head>
+<body class="admin-body">
+
+    <!-- Topbar khusus HP/tablet -->
+    <div class="admin-topbar">
+        <button type="button" class="admin-topbar-toggle" id="adminSidebarToggle" aria-label="Buka menu">
+            <span></span><span></span><span></span>
+        </button>
+        <span class="admin-topbar-title">Admin Inspektorat</span>
+    </div>
+
+    <div class="admin-overlay" id="adminSidebarOverlay"></div>
+
+    <div class="admin-shell">
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div>
+                <a href="{{ route('admin.dashboard') }}" class="admin-brand">
+                    <img src="{{ asset('images/logo-mojokerto.png') }}" alt="Logo">
+                    <span>Admin Inspektorat</span>
+                </a>
+                <nav>
+                    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                        Dashboard
+                    </a>
+
+                    <span class="admin-nav-label">Beranda</span>
+                    <a href="{{ route('admin.pengaturan.tentang') }}" class="admin-nav-sub {{ request()->routeIs('admin.pengaturan.tentang*') ? 'active' : '' }}">
+                        Tentang
+                    </a>
+
+                    <span class="admin-nav-label">Profil</span>
+                    <a href="{{ route('admin.pengaturan.visimisi') }}" class="admin-nav-sub {{ request()->routeIs('admin.pengaturan.visimisi*') ? 'active' : '' }}">
+                        Visi Misi
+                    </a>
+                    <a href="{{ route('admin.tugasfungsi.index') }}" class="admin-nav-sub {{ request()->routeIs('admin.tugasfungsi.*') ? 'active' : '' }}">
+                        Tugas & Fungsi
+                    </a>
+                    <a href="{{ route('admin.struktur.index') }}" class="admin-nav-sub {{ request()->routeIs('admin.struktur.*') ? 'active' : '' }}">
+                        Struktur Organisasi
+                    </a>
+                    <a href="{{ route('admin.pegawai.index') }}" class="admin-nav-sub {{ request()->routeIs('admin.pegawai.*') ? 'active' : '' }}">
+                        Data Pegawai
+                    </a>
+                    <a href="{{ route('admin.galeri.index') }}" class="admin-nav-sub {{ request()->routeIs('admin.galeri.*') ? 'active' : '' }}">
+                        Galeri
+                    </a>
+
+                    <span class="admin-nav-label">Konten Lain</span>
+                    <a href="{{ route('admin.articles.index') }}" class="{{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
+                        Artikel / Informasi
+                    </a>
+                    <a href="{{ route('admin.informasidokumen.index') }}" class="{{ request()->routeIs('admin.informasidokumen.*') ? 'active' : '' }}">
+    Dokumen Informasi
+</a>
+                   <a href="{{ route('admin.buletin.index') }}" class="{{ request()->routeIs('admin.buletin.*') ? 'active' : '' }}">
+    Buletin
+</a>
+<a href="{{ route('admin.kms.index') }}" class="{{ request()->routeIs('admin.kms.*') || request()->routeIs('admin.kmspedoman.*') ? 'active' : '' }}">
+    KMS
+</a>
+<a href="{{ route('admin.pengaturan-situs.edit') }}" class="{{ request()->routeIs('admin.pengaturan-situs.*') ? 'active' : '' }}">
+    Pengaturan Situs
+</a>
+                    <a href="{{ route('admin.pesan.index') }}" class="{{ request()->routeIs('admin.pesan.*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
+                        <span>Pesan Masuk</span>
+                        @php $belumDibaca = \App\Models\Pesan::where('is_read', false)->count(); @endphp
+                        @if ($belumDibaca > 0)
+                            <span class="admin-nav-badge">{{ $belumDibaca }}</span>
+                        @endif
+                    </a>
+{{-- LIVECHAT-MENU --}}
+                    <a href="{{ url('/admin/live-chat') }}" class="{{ request()->is('admin/live-chat*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
+                        <span>Live Chat</span>
+                        @php
+                            $chatBaru = \Illuminate\Support\Facades\Schema::hasTable('livechat_threads')
+                                ? \App\Models\LiveChatThread::where('status', 'baru')->count()
+                                : 0;
+                        @endphp
+                        @if ($chatBaru > 0)
+                            <span class="admin-nav-badge">{{ $chatBaru }}</span>
+                        @endif
+                    </a>
+                </nav>
+            </div>
+
+            <div class="admin-sidebar-footer">
+                <div class="admin-user">
+                    <span class="admin-user-name">{{ auth()->user()->name ?? 'Admin' }}</span>
+                    <span class="admin-user-email">{{ auth()->user()->email ?? '' }}</span>
+                </div>
+                <a href="{{ url('/') }}" target="_blank" rel="noopener" class="admin-sidebar-link">Lihat Situs &nearr;</a>
+                <a href="{{ route('admin.password.edit') }}" class="admin-sidebar-link">Ganti Kata Sandi</a>
+                <form action="{{ route('admin.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="admin-sidebar-link admin-logout-btn">Keluar</button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Tempat konten dinamis tiap halaman ditampilkan -->
+        <main class="admin-main">
+            @if (session('status'))
+                <div class="admin-alert">{{ session('status') }}</div>
+            @endif
+            @yield('content')
+        </main>
+    </div>
+
+    <script>
+        (function () {
+            var sidebar = document.getElementById('adminSidebar');
+            var overlay = document.getElementById('adminSidebarOverlay');
+            var toggle = document.getElementById('adminSidebarToggle');
+
+            function closeSidebar() {
+                sidebar.classList.remove('is-open');
+                overlay.classList.remove('is-open');
+            }
+
+            function openSidebar() {
+                sidebar.classList.add('is-open');
+                overlay.classList.add('is-open');
+            }
+
+            toggle.addEventListener('click', function () {
+                if (sidebar.classList.contains('is-open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay.addEventListener('click', closeSidebar);
+
+            // Bungkus otomatis semua tabel .admin-table yang belum punya wrapper,
+            // supaya bisa discroll horizontal rapi di layar sempit (HP/tablet).
+            document.querySelectorAll('table.admin-table').forEach(function (table) {
+                var parent = table.parentElement;
+                if (!parent || !parent.classList.contains('admin-table-wrapper')) {
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'admin-table-wrapper';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
+
+===== 2026_08_11_015507_create_kategoris_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('kms_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('kms_categories');
+    }
+};
+
+===== 2026_08_11_015525_create_dokumens_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('kms_documents', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('kms_category_id')
+                ->constrained('kms_categories')
+                ->cascadeOnDelete();
+            $table->string('title');
+            // Tag bebas, pengganti "Subkategori" + "Grup Dokumen" lama.
+            // Boleh dikosongkan kalau dokumen tidak perlu dikelompokkan lagi.
+            $table->string('tag')->nullable();
+            $table->string('file_path');
+            $table->string('original_name');
+            $table->string('file_type', 20)->nullable(); // PDF, DOCX, dst
+            $table->unsignedInteger('views')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('kms_documents');
+    }
+};
+
+===== 2026_08_11_033248_create_subkategoris_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+       Schema::create('subkategoris', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('kategori_id')->constrained()->onDelete('cascade');
+        $table->string('nama');
+        $table->string('slug');
+        $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('subkategoris');
+    }
+};
+
+===== 2026_08_11_033452_update_dokumens_add_subkategori.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('dokumens', function (Blueprint $table) {
+        $table->foreignId('subkategori_id')->nullable()->after('kategori_id')->constrained()->onDelete('cascade');
+    });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+       Schema::table('dokumens', function (Blueprint $table) {
+        $table->dropForeign(['subkategori_id']);
+        $table->dropColumn('subkategori_id');
+    }); 
+    }
+};
+
+===== 2026_08_19_011331_create_pedoman_kategoris_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+{
+    Schema::create('pedoman_kategoris', function (Blueprint $table) {
+        $table->id();
+        $table->string('nama');
+        $table->string('slug')->unique();
+        $table->timestamps();
+    });
+}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('pedoman_kategoris');
+    }
+};
+
+===== 2026_08_19_011403_create_pedoman_dokumens_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+         Schema::create('pedoman_dokumens', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('pedoman_kategori_id')->constrained()->onDelete('cascade');
+        $table->string('judul');
+        $table->text('deskripsi')->nullable();
+        $table->string('file_path');
+        $table->string('file_type')->default('pdf');
+        $table->unsignedBigInteger('ukuran_kb')->nullable();
+        $table->integer('downloads')->default(0);
+        $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('pedoman_dokumens');
+    }
+};
+
+===== 2026_08_23_000000_make_galeri_kategori_flexible.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
+/**
+ * Ubah kolom "kategori" dari enum kaku (harus migration tiap tambah kategori)
+ * jadi string bebas â€” supaya kategori bisa disesuaikan DUDI kapan saja lewat
+ * Admin, tanpa perlu ubah kode/migration lagi.
+ *
+ * Ditulis dengan cara "buat tabel baru, pindah data, buang yang lama" karena
+ * SQLite tidak mendukung ALTER COLUMN enum secara langsung.
+ */
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('galeris_new', function (Blueprint $table) {
+            $table->id();
+            $table->string('judul');
+            $table->string('slug')->unique();
+            $table->string('kategori'); // bebas, tidak dibatasi enum lagi
+            $table->date('tanggal');
+            $table->text('deskripsi')->nullable();
+            $table->string('foto');
+            $table->timestamps();
+        });
+
+        DB::statement('INSERT INTO galeris_new (id, judul, slug, kategori, tanggal, deskripsi, foto, created_at, updated_at)
+            SELECT id, judul, slug, kategori, tanggal, deskripsi, foto, created_at, updated_at FROM galeris');
+
+        Schema::drop('galeris');
+        Schema::rename('galeris_new', 'galeris');
+    }
+
+    public function down(): void
+    {
+        // Tidak perlu rollback presisi untuk perubahan struktural ini.
+    }
+};
+
+===== 2026_08_26_012817_create_grup_dokumens_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+{
+    Schema::create('grup_dokumens', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('subkategori_id')->constrained()->onDelete('cascade');
+        $table->string('nama');
+        $table->string('slug');
+        $table->timestamps();
+    });
+}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('grup_dokumens');
+    }
+};
+
+===== 2026_08_26_013206_add_grup_dokumen_id_to_dokumens_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+{
+    Schema::table('dokumens', function (Blueprint $table) {
+        $table->foreignId('grup_dokumen_id')->nullable()->after('subkategori_id')->constrained()->onDelete('cascade');
+    });
+}
+
+public function down(): void
+{
+    Schema::table('dokumens', function (Blueprint $table) {
+        $table->dropForeign(['grup_dokumen_id']);
+        $table->dropColumn('grup_dokumen_id');
+    });
+}
+};
+
+===== 2026_09_15_000001_create_kms_categories_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('kms_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('kms_categories');
+    }
+};
+
+===== 2026_09_15_000002_create_kms_documents_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('kms_documents', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('kms_category_id')
+                ->constrained('kms_categories')
+                ->cascadeOnDelete();
+            $table->string('title');
+            $table->string('tag')->nullable();
+            $table->string('file_path');
+            $table->string('original_name');
+            $table->string('file_type', 20)->nullable();
+            $table->unsignedInteger('views')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('kms_documents');
+    }
+};
+
+===== 2026_09_18_000001_create_informasi_dokumens_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+/**
+ * Tabel generik untuk semua dokumen di menu navbar "Informasi":
+ * SOP, Informasi Berkala, Informasi Setiap Saat, IKM, Persepsi Korupsi, dll.
+ *
+ * Nama tabel/model sengaja "informasi_dokumens" / InformasiDokumen (BUKAN
+ * "dokumens" / Dokumen) karena App\Models\Dokumen dan
+ * App\Http\Controllers\Admin\DokumenController SUDAH DIPAKAI oleh fitur
+ * KMS yang sudah jalan - supaya tidak bentrok/menimpa.
+ */
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('informasi_dokumens', function (Blueprint $table) {
+            $table->id();
+            $table->string('judul');
+            $table->string('slug')->unique();
+            $table->string('kategori');
+            $table->unsignedInteger('urutan')->default(0);
+            $table->text('keterangan')->nullable();
+            $table->string('file');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('informasi_dokumens');
+    }
+};
+
+===== 2026_09_18_032221_create_informasi_dokumens_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('informasi_dokumens', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('informasi_dokumens');
+    }
+};
+
+===== 2026_09_18_102239_create_informasi_dokumens_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('informasi_dokumens', function (Blueprint $table) {
+            $table->id();
+            $table->string('judul');
+            $table->string('slug')->unique();
+            $table->string('kategori');
+            $table->unsignedInteger('urutan')->default(0);
+            $table->text('keterangan')->nullable();
+            $table->string('file');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('informasi_dokumens');
+    }
+};

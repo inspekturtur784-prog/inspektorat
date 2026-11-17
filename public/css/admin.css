@@ -231,3 +231,37 @@ form[action*="/pengaturan/highlight"] textarea {
   height: auto !important;
   min-height: 84px !important;
 }
+
+/* MASTER-KMS: gaya bersama halaman KMS (tabel, tombol, ikon aksi) */
+.kp-back{display:inline-block;margin-bottom:14px;color:#1e2a4a;text-decoration:none;font-size:14px;}
+.kp-back:hover{text-decoration:underline;}
+.kp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.kp-header h1{font-size:22px;font-weight:700;color:#1e2a4a;margin:0;}
+.kp-top-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.kp-btn{border:none;cursor:pointer;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block;}
+.kp-btn-primary{background:#1e2a4a;color:#fff;}
+.kp-btn-primary:hover{background:#28345c;color:#fff;}
+.kp-btn-outline{background:#eeece6;color:#333;margin-right:6px;}
+.kp-btn-outline:hover{background:#e2ded4;color:#333;}
+.kp-top-actions .kp-btn-outline{margin-right:0;}
+.kp-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;margin-bottom:24px;}
+.kp-table{width:100%;border-collapse:collapse;}
+.kp-table thead th{text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#8b8b8b;padding:14px 18px;border-bottom:1px solid #eee;}
+.kp-table tbody td{padding:14px 18px;border-bottom:1px solid #f2f2f2;font-size:14px;color:#333;vertical-align:middle;}
+.kp-table tbody tr:last-child td{border-bottom:none;}
+.kp-table tbody tr:hover{background:#fafafa;}
+.kp-empty{text-align:center;color:#999;padding:28px;}
+.kp-subtitle{font-size:15px;font-weight:700;color:#1e2a4a;margin:24px 0 12px;}
+.kp-section-head{margin:28px 0 12px;}
+.kp-section-head h2{font-size:18px;font-weight:700;color:#1e2a4a;margin:0;}
+.kp-section-head p{font-size:13px;color:#888;margin:2px 0 0;}
+.kp-search{margin-bottom:20px;}
+.kp-search input{width:100%;max-width:480px;padding:10px 16px;border:1px solid #ddd;border-radius:999px;font-size:14px;box-sizing:border-box;font-family:inherit;background:#fff;}
+.kp-group-title{font-size:13px;font-weight:700;color:#1e2a4a;background:#f4f2ec;padding:10px 18px;border-bottom:1px solid #eee;}
+.btn-icon{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:none;background:#EDEBE2;color:var(--ink);cursor:pointer;text-decoration:none;vertical-align:middle;transition:background .15s;padding:0;}
+.btn-icon:hover{background:#E0DDD1;}
+.btn-icon svg{width:16px;height:16px;}
+.btn-icon-danger{background:#A3312B;color:#fff;}
+.btn-icon-danger:hover{background:#8B2823;}
+.row-actions .btn-icon{margin-right:8px;}
+.row-actions form .btn-icon{margin-right:0;}
