@@ -48,7 +48,7 @@
             @if ($kategoriNow !== '' && !in_array(strtolower($kategoriNow), array_map('strtolower', $kategoriPilihan)))
                 <option value="{{ $kategoriNow }}" selected>{{ $kategoriNow }}</option>
             @endif
-        </select>category) }}">
+        </select>
         @error('category')
             <span class="text-danger" style="color: red; font-size: 14px;">{{ $message }}</span>
         @enderror

@@ -69,13 +69,6 @@
 <a href="{{ route('admin.pengaturan-situs.edit') }}" class="{{ request()->routeIs('admin.pengaturan-situs.*') ? 'active' : '' }}">
     Pengaturan Situs
 </a>
-                    <a href="{{ route('admin.pesan.index') }}" class="{{ request()->routeIs('admin.pesan.*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
-                        <span>Pesan Masuk</span>
-                        @php $belumDibaca = \App\Models\Pesan::where('is_read', false)->count(); @endphp
-                        @if ($belumDibaca > 0)
-                            <span class="admin-nav-badge">{{ $belumDibaca }}</span>
-                        @endif
-                    </a>
 {{-- LIVECHAT-MENU --}}
                     <a href="{{ url('/admin/live-chat') }}" class="{{ request()->is('admin/live-chat*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
                         <span>Live Chat</span>

@@ -32,7 +32,6 @@ use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
 use App\Http\Controllers\Admin\BuletinController as AdminBuletinController;
 use App\Http\Controllers\Admin\PengaturanProfilController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\PesanController as AdminPesanController;
 use App\Http\Controllers\Admin\TugasFungsiController;
 use App\Http\Controllers\Admin\StrukturBagianController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
@@ -111,8 +110,6 @@ Route::get('/artikel/{slug}', [ArticleController::class, 'show'])
 Route::get('/kontak', [KontakController::class, 'show'])
     ->name('kontak.show');
 
-Route::post('/kontak', [KontakController::class, 'store'])
-    ->name('kontak.store');
 
 // ---------- Informasi (SOP, Informasi Berkala, Informasi Setiap Saat, IKM, Persepsi Korupsi) ----------
 Route::get('/informasi/{slug}', [InformasiController::class, 'show'])
@@ -171,10 +168,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // ---------- Dashboard Utama ----------
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // ---------- Pesan ----------
-    Route::get('/pesan', [AdminPesanController::class, 'index'])->name('pesan.index');
-    Route::get('/pesan/{pesan}', [AdminPesanController::class, 'show'])->name('pesan.show');
-    Route::delete('/pesan/{pesan}', [AdminPesanController::class, 'destroy'])->name('pesan.destroy');
 
     // ---------- Ganti Password ----------
     Route::get('/ganti-password', [AdminPasswordController::class, 'edit'])->name('password.edit');
@@ -315,8 +308,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/pengaturan-situs', [\App\Http\Controllers\Admin\PengaturanSitusController::class, 'edit'])->name('pengaturan-situs.edit');
     Route::put('/pengaturan-situs', [\App\Http\Controllers\Admin\PengaturanSitusController::class, 'update'])->name('pengaturan-situs.update');
 });
-// Balas pesan via email
-Route::post('/admin/pesan/{pesan}/balas', [\App\Http\Controllers\Admin\BalasPesanController::class, 'kirim'])->name('admin.pesan.balas')->middleware('auth');
 
 
 // === LIVE CHAT ===

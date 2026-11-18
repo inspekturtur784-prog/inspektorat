@@ -15,9 +15,9 @@ class HomeController extends Controller
     public function index()
     {
         // 1. Ambil artikel dipublikasi (dengan fallback jika Model Article belum siap)
-        $articles = class_exists('\App\Models\Article') 
-            ? Article::published()->limit(3)->get() 
-            : collect();
+        $articles = class_exists('\App\Models\Article')
+    ? Article::published()->limit(6)->get()
+    : collect();
 
         // 2. Ambil data Pengaturan Profil
         $p = class_exists('\App\Models\PengaturanProfil') 

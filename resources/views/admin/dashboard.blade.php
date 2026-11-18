@@ -56,15 +56,6 @@
             <span class="dash-stat-label">Kartu Fungsi</span>
         </span>
     </a>
-    <a href="{{ route('admin.pesan.index') }}" class="dash-stat-card {{ $stats['pesan'] > 0 ? 'dash-c-red' : 'dash-c-slate' }}">
-        <span class="dash-stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4V6Z"/></svg>
-        </span>
-        <span class="dash-stat-body">
-            <span class="dash-stat-number">{{ $stats['pesan'] }}</span>
-            <span class="dash-stat-label">Pesan Belum Dibaca</span>
-        </span>
-    </a>
     <a href="{{ route('admin.buletin.index') }}" class="dash-stat-card dash-c-gold">
         <span class="dash-stat-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M8 9h7M8 13h7M8 17h4"/></svg>
@@ -95,48 +86,10 @@
     <a href="{{ route('admin.pegawai.index') }}" class="dash-quicklink">Data Pegawai</a>
     <a href="{{ route('admin.galeri.index') }}" class="dash-quicklink">Galeri</a>
     <a href="{{ route('admin.articles.index') }}" class="dash-quicklink">Artikel / Informasi</a>
-    <a href="{{ route('admin.pesan.index') }}" class="dash-quicklink">Pesan Masuk</a>
     <a href="{{ route('admin.buletin.index') }}" class="dash-quicklink">Buletin</a>
     <a href="{{ route('admin.informasidokumen.index') }}" class="dash-quicklink">Dokumen Informasi</a>
     <a href="{{ route('admin.kms.index') }}" class="dash-quicklink">KMS & Pedoman</a>
 </div>
 
-@php $pesanTerbaru = \App\Models\Pesan::terbaru()->take(5)->get(); @endphp
-<div class="admin-header" style="margin-top:44px;">
-    <h1 class="admin-header-sub">Pesan Masuk Terbaru</h1>
-    <a href="{{ route('admin.pesan.index') }}" class="btn-admin btn-admin-ghost">Lihat semua</a>
-</div>
-<table class="admin-table">
-    <thead>
-        <tr>
-            <th>Status</th>
-            <th>Nama</th>
-            <th>Pesan</th>
-            <th>Tanggal</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse ($pesanTerbaru as $p)
-            <tr>
-                <td>
-                    @if ($p->is_read)
-                        <span class="badge badge-off" style="background:#dcfce7;color:#166534;">Sudah dibaca</span>
-                    @else
-                        <span class="badge badge-on">Baru</span>
-                    @endif
-                </td>
-                <td>{{ $p->nama }}</td>
-                <td>{{ \Illuminate\Support\Str::limit($p->pesan, 60) }}</td>
-                <td>{{ $p->created_at->format('d/m/Y H:i') }}</td>
-                <td class="row-actions">
-                    <a href="{{ route('admin.pesan.show', $p) }}" class="btn-admin btn-admin-ghost">Baca</a>
-                </td>
-            </tr>
-        @empty
-            <tr><td colspan="5">Belum ada pesan masuk.</td></tr>
-        @endforelse
-    </tbody>
-</table>
 
 @endsection

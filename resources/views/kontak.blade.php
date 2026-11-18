@@ -1,28 +1,70 @@
 @extends('layouts.app')
 
 @section('title', 'Kontak Kami — Inspektorat Kota Mojokerto')
-@section('meta_description', 'Hubungi Inspektorat Kota Mojokerto — alamat, telepon, email, jam layanan, dan formulir pesan.')
+@section('meta_description', 'Hubungi Inspektorat Kota Mojokerto — alamat, telepon, email, dan jam layanan.')
 
 @section('content')
+{{-- kontak-rapi:start --}}
+<style>
+.kontak-info{grid-template-columns:repeat(4,1fr)!important;gap:20px!important;align-items:stretch!important;}
+.kontak-info .kontak-info-item{
+    display:flex!important;flex-direction:column;gap:14px;
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:24px;margin:0!important;min-width:0;
+    transition:box-shadow .2s ease,transform .2s ease;
+}
+.kontak-info .kontak-info-item:hover{box-shadow:0 10px 28px rgba(15,35,64,.08);transform:translateY(-2px);}
+.kontak-info .kontak-info-item h3{margin:0 0 6px;}
+.kontak-info .kontak-info-item p{margin:0;line-height:1.7;overflow-wrap:anywhere;}
+.kontak-info .kontak-info-item>div:last-child{min-width:0;}
+
+/* Media Sosial: bar selebar penuh */
+.kontak-info .kontak-info-item:nth-child(5){
+    grid-column:1/-1;flex-direction:row;align-items:center;gap:18px;
+}
+.kontak-info .kontak-info-item:nth-child(5)>div:last-child{
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+}
+.kontak-info .kontak-info-item:nth-child(5) h3{margin:0;}
+.kontak-info .kontak-info-item:nth-child(5) .footer-social{margin-top:0!important;}
+
+/* Peta */
+.kontak-info .kontak-map{
+    border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 6px 20px rgba(15,35,64,.06);
+}
+.kontak-info .kontak-map iframe{display:block;width:100%;height:380px;border:0;}
+
+@media (max-width:1100px){
+    .kontak-info{grid-template-columns:repeat(2,1fr)!important;}
+}
+@media (max-width:640px){
+    .kontak-info{grid-template-columns:1fr!important;}
+    .kontak-info .kontak-info-item{padding:20px;}
+    .kontak-info .kontak-info-item:nth-child(5){flex-direction:column;align-items:flex-start;}
+    .kontak-info .kontak-map iframe{height:280px;}
+}
+</style>
+{{-- kontak-rapi:end --}}
 
 @include('partials.breadcrumb', ['current' => 'Kontak Kami'])
 
 <section style="padding:64px 0 30px;background:var(--paper);border-bottom:1px solid var(--line);">
-    <div class="wrap" style="max-width:720px;">
+    <div class="wrap">
         <span class="eyebrow">Hubungi Kami</span>
         <h1 style="font-size:clamp(28px,4vw,42px);margin:16px 0 16px;">Kontak Kami</h1>
-        <p style="color:var(--slate);font-size:16.5px;">
-            Ada pertanyaan atau ingin datang langsung ke kantor kami? Berikut informasi kontak dan formulir pesan.
+        <p style="color:var(--slate);font-size:16.5px;max-width:760px;">
+            Ada pertanyaan atau ingin datang langsung ke kantor kami? Berikut informasi kontak kami.
         </p>
     </div>
 </section>
 
 <section style="padding:56px 0 96px;background:var(--paper);">
     <div class="wrap">
-        <div class="kontak-grid">
+        <div class="kontak-grid" style="display:block;">
 
             {{-- Kolom kiri: info kontak --}}
-            <div class="kontak-info">
+            <div class="kontak-info" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px 40px;align-items:start;">
                 <div class="kontak-info-item">
                     <div class="kontak-info-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -83,7 +125,7 @@
                     </div>
                 </div>
 
-                <div class="kontak-map">
+                <div class="kontak-map" style="grid-column:1/-1;margin-top:8px;">
                     <iframe
                         src="https://www.google.com/maps?q=Jl.+Benteng+Pancasila+No.+23,+Magersari,+Kota+Mojokerto,+Jawa+Timur+61314&output=embed"
                         loading="lazy" referrerpolicy="no-referrer-when-downgrade"
@@ -91,46 +133,6 @@
                 </div>
             </div>
 
-            {{-- Kolom kanan: form pesan --}}
-            <div class="kontak-form-wrap">
-                <h2 style="font-size:20px;color:var(--navy);margin:0 0 6px;">Kirim Pesan</h2>
-                <p style="color:var(--slate);font-size:14px;margin:0 0 20px;">Isi formulir di bawah, tim kami akan membalas ke email Anda.</p>
-
-                @if (session('status'))
-                    <div class="kontak-alert-success">{{ session('status') }}</div>
-                @endif
-
-                <form action="{{ route('kontak.store') }}" method="POST" class="kontak-form">
-                    @csrf
-
-                    <div class="form-group">
-                        <label for="nama">Nama Lengkap</label>
-                        <input type="text" id="nama" name="nama" value="{{ old('nama') }}" required>
-                        @error('nama') <p class="kontak-error">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" required>
-                        @error('email') <p class="kontak-error">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="telepon">No. Telepon (opsional)</label>
-                        <input type="text" id="telepon" name="telepon" value="{{ old('telepon') }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="pesan">Pesan</label>
-                        <textarea id="pesan" name="pesan" style="min-height:140px;" required>{{ old('pesan') }}</textarea>
-                        @error('pesan') <p class="kontak-error">{{ $message }}</p> @enderror
-                    </div>
-
-                    <button type="submit" class="btn btn-gold kontak-submit-btn">
-                        Kirim Pesan
-                    </button>
-                </form>
-            </div>
 
         </div>
     </div>

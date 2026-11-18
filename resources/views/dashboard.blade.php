@@ -56,15 +56,6 @@
             <span class="dash-stat-label">Kartu Fungsi</span>
         </span>
     </a>
-    <a href="{{ route('admin.pesan.index') }}" class="dash-stat-card {{ $stats['pesan'] > 0 ? 'dash-stat-card-alert' : '' }}">
-        <span class="dash-stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4V6Z"/></svg>
-        </span>
-        <span class="dash-stat-body">
-            <span class="dash-stat-number">{{ $stats['pesan'] }}</span>
-            <span class="dash-stat-label">Pesan Belum Dibaca</span>
-        </span>
-    </a>
     <a href="{{ route('admin.buletin.index') }}" class="dash-stat-card">
         <span class="dash-stat-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M8 9h7M8 13h7M8 17h4"/></svg>
@@ -86,7 +77,6 @@
     <a href="{{ route('admin.pegawai.index') }}" class="dash-quicklink">Data Pegawai</a>
     <a href="{{ route('admin.galeri.index') }}" class="dash-quicklink">Galeri</a>
     <a href="{{ route('admin.articles.index') }}" class="dash-quicklink">Artikel / Informasi</a>
-    <a href="{{ route('admin.pesan.index') }}" class="dash-quicklink">Pesan Masuk</a>
     <a href="{{ route('admin.buletin.index') }}" class="dash-quicklink">Buletin</a>
 </div>
 @endsection

@@ -1,0 +1,138 @@
+﻿app\Http\Controllers\Admin\BalasPesanController.php:6  use App\Mail\BalasanPesan;
+app\Http\Controllers\Admin\BalasPesanController.php:7  use App\Models\Pesan;
+app\Http\Controllers\Admin\BalasPesanController.php:11  class BalasPesanController extends Controller
+app\Http\Controllers\Admin\BalasPesanController.php:13  public function kirim(Request $request, Pesan $pesan)
+app\Http\Controllers\Admin\BalasPesanController.php:20  Mail::to($pesan->email)->send(new BalasanPesan($pesan, $request->balasan));
+app\Http\Controllers\Admin\BalasPesanController.php:28  $pesan->forceFill([
+app\Http\Controllers\Admin\BalasPesanController.php:33  return back()->with('balas_status', 'Balasan berhasil dikirim ke ' . $pesan->email);
+app\Http\Controllers\Admin\ContactMessageController.php:12  /** Daftar pesan masuk (terbaru dulu), dengan badge jumlah belum dibaca. */
+app\Http\Controllers\Admin\ContactMessageController.php:15  $pesan = ContactMessage::latest()->paginate(15);
+app\Http\Controllers\Admin\ContactMessageController.php:18  return view('admin.contact-messages.index', compact('pesan', 'jumlahBelumDibaca'));
+app\Http\Controllers\Admin\ContactMessageController.php:21  /** Lihat detail satu pesan, otomatis ditandai sudah dibaca. */
+app\Http\Controllers\Admin\ContactMessageController.php:26  return view('admin.contact-messages.show', ['pesan' => $contactMessage]);
+app\Http\Controllers\Admin\ContactMessageController.php:29  /** Hapus pesan. */
+app\Http\Controllers\Admin\ContactMessageController.php:36  ->with('status', 'Pesan berhasil dihapus.');
+app\Http\Controllers\Admin\DashboardController.php:11  use App\Models\Pesan;
+app\Http\Controllers\Admin\DashboardController.php:24  'pesan'     => Pesan::where('is_read', false)->count(),
+app\Http\Controllers\Admin\PasswordController.php:120  $pesan = 'Username dan kata sandi berhasil diperbarui.';
+app\Http\Controllers\Admin\PasswordController.php:122  $pesan = 'Username berhasil diperbarui.';
+app\Http\Controllers\Admin\PasswordController.php:124  $pesan = 'Kata sandi berhasil diperbarui.';
+app\Http\Controllers\Admin\PasswordController.php:127  return redirect()->back()->with('success', $pesan);
+app\Http\Controllers\Admin\PesanController.php:6  use App\Models\Pesan;
+app\Http\Controllers\Admin\PesanController.php:8  class PesanController extends Controller
+app\Http\Controllers\Admin\PesanController.php:12  $pesans = Pesan::terbaru()->paginate(15);
+app\Http\Controllers\Admin\PesanController.php:13  return view('admin.pesan.index', compact('pesans'));
+app\Http\Controllers\Admin\PesanController.php:16  public function show(Pesan $pesan)
+app\Http\Controllers\Admin\PesanController.php:18  if (! $pesan->is_read) {
+app\Http\Controllers\Admin\PesanController.php:19  $pesan->update(['is_read' => true]);
+app\Http\Controllers\Admin\PesanController.php:22  return view('admin.pesan.show', compact('pesan'));
+app\Http\Controllers\Admin\PesanController.php:25  public function destroy(Pesan $pesan)
+app\Http\Controllers\Admin\PesanController.php:27  $pesan->delete();
+app\Http\Controllers\Admin\PesanController.php:28  return redirect()->route('admin.pesan.index')->with('status', 'Pesan berhasil dihapus.');
+app\Http\Controllers\KontakController.php:5  use App\Models\Pesan;
+app\Http\Controllers\KontakController.php:10  /** Halaman /kontak — info kontak + form kirim pesan. */
+app\Http\Controllers\KontakController.php:16  /** Proses kirim pesan dari form. */
+app\Http\Controllers\KontakController.php:23  'pesan'   => 'required|string|max:2000',
+app\Http\Controllers\KontakController.php:26  Pesan::create($data);
+app\Http\Controllers\KontakController.php:28  return back()->with('status', 'Pesan Anda berhasil terkirim. Terima kasih, kami akan segera menghubungi Anda kembali.');
+app\Http\Controllers\LiveChatAdminController.php:60  $data = $request->validate(['pesan' => 'required|string|max:3000']);
+app\Http\Controllers\LiveChatAdminController.php:65  'body'     => $data['pesan'],
+app\Http\Controllers\LiveChatAdminController.php:78  . $data['pesan'] . "\n"
+app\Http\Controllers\LiveChatController.php:21  'pesan'   => 'required|string|max:2000',
+app\Http\Controllers\LiveChatController.php:35  'body'   => $data['pesan'],
+app\Http\Controllers\LiveChatController.php:38  $this->notifyAdmin($thread, $data['pesan'], true);
+app\Http\Controllers\LiveChatController.php:46  // Polling pesan baru (dipanggil widget tiap beberapa detik)
+app\Http\Controllers\LiveChatController.php:61  // Pengguna mengirim pesan lanjutan
+app\Http\Controllers\LiveChatController.php:70  $data = $request->validate(['pesan' => 'required|string|max:2000']);
+app\Http\Controllers\LiveChatController.php:74  'body'   => $data['pesan'],
+app\Http\Controllers\LiveChatController.php:79  $this->notifyAdmin($thread, $data['pesan'], false);
+app\Http\Controllers\LiveChatController.php:94  private function notifyAdmin(LiveChatThread $thread, string $pesan, bool $baru): void
+app\Http\Controllers\LiveChatController.php:101  $subject = ($baru ? 'Live chat baru' : 'Pesan baru live chat') . ' dari ' . $thread->nama;
+app\Http\Controllers\LiveChatController.php:105  . ($baru ? "Ada konsultasi baru" : "Ada pesan lanjutan") . " di live chat website Inspektorat.\n\n"
+app\Http\Controllers\LiveChatController.php:109  . "Pesan:\n{$pesan}\n\n"
+app\Mail\BalasanPesan.php:9  class BalasanPesan extends Mailable
+app\Mail\BalasanPesan.php:13  public function __construct(public $pesan, public string $balasan) {}
+app\Models\Pesan.php:7  class Pesan extends Model
+app\Models\Pesan.php:9  protected $fillable = ['nama', 'email', 'telepon', 'pesan', 'is_read'];
+routes\web.php:35  use App\Http\Controllers\Admin\PesanController as AdminPesanController;
+routes\web.php:174  // ---------- Pesan ----------
+routes\web.php:175  Route::get('/pesan', [AdminPesanController::class, 'index'])->name('pesan.index');
+routes\web.php:176  Route::get('/pesan/{pesan}', [AdminPesanController::class, 'show'])->name('pesan.show');
+routes\web.php:177  Route::delete('/pesan/{pesan}', [AdminPesanController::class, 'destroy'])->name('pesan.destroy');
+routes\web.php:318  // Balas pesan via email
+routes\web.php:319  Route::post('/admin/pesan/{pesan}/balas', [\App\Http\Controllers\Admin\BalasPesanController::class, 'kirim'])->name('admin.pesan.balas')->middleware('auth');
+resources\views\admin\pesan\index.blade.php:2  @section('title', 'Pesan Masuk')
+resources\views\admin\pesan\index.blade.php:6  <h1>Pesan Masuk</h1>
+resources\views\admin\pesan\index.blade.php:20  @forelse ($pesans as $pesan)
+resources\views\admin\pesan\index.blade.php:23  @if ($pesan->is_read)
+resources\views\admin\pesan\index.blade.php:29  <td>{{ $pesan->nama }}</td>
+resources\views\admin\pesan\index.blade.php:30  <td>{{ $pesan->email }}</td>
+resources\views\admin\pesan\index.blade.php:31  <td>{{ $pesan->created_at->format('d/m/Y H:i') }}</td>
+resources\views\admin\pesan\index.blade.php:33  <a href="{{ route('admin.pesan.show', $pesan) }}" class="btn-admin btn-admin-ghost">Baca</a>
+resources\views\admin\pesan\index.blade.php:34  <form action="{{ route('admin.pesan.destroy', $pesan) }}" method="POST" onsubmit="return confirm('Hapus pesan ini?');">
+resources\views\admin\pesan\index.blade.php:42  <tr><td colspan="5">Belum ada pesan masuk.</td></tr>
+resources\views\admin\pesan\index.blade.php:47  <div style="margin-top:20px;">{{ $pesans->links() }}</div>
+resources\views\admin\pesan\show.blade.php:2  @section('title', 'Detail Pesan')
+resources\views\admin\pesan\show.blade.php:6  <h1>Pesan dari {{ $pesan->nama }}</h1>
+resources\views\admin\pesan\show.blade.php:12  <p style="margin:0;">{{ $pesan->nama }}</p>
+resources\views\admin\pesan\show.blade.php:16  <p style="margin:0;"><a href="mailto:{{ $pesan->email }}">{{ $pesan->email }}</a></p>
+resources\views\admin\pesan\show.blade.php:18  @if ($pesan->telepon)
+resources\views\admin\pesan\show.blade.php:21  <p style="margin:0;">{{ $pesan->telepon }}</p>
+resources\views\admin\pesan\show.blade.php:26  <p style="margin:0;">{{ $pesan->created_at->format('d F Y, H:i') }} WIB</p>
+resources\views\admin\pesan\show.blade.php:29  <label>Isi Pesan</label>
+resources\views\admin\pesan\show.blade.php:30  <p style="margin:0;white-space:pre-line;line-height:1.7;">{{ $pesan->pesan }}</p>
+resources\views\admin\pesan\show.blade.php:33  <a href="{{ route('admin.pesan.index') }}" class="btn-admin btn-admin-ghost">← Kembali ke Pesan Masuk</a>
+resources\views\admin\pesan\show.blade.php:34  <form action="{{ route('admin.pesan.destroy', $pesan) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus pesan ini?');">
+resources\views\admin\pesan\show.blade.php:37  <button type="submit" class="btn-admin btn-admin-danger">Hapus Pesan</button>
+resources\views\admin\pesan\show.blade.php:40  @include('admin.pesan._balas', ['pesan' => $pesan])
+resources\views\admin\pesan\_balas.blade.php:11  <form action="{{ route('admin.pesan.balas', $pesan) }}" method="POST" style="margin-bottom:20px;">
+resources\views\admin\pesan\_balas.blade.php:16  @if ($pesan->dibalas_pada)
+resources\views\admin\pesan\_balas.blade.php:17  <small style="color:#666;">Terakhir dibalas: {{ \Carbon\Carbon::parse($pesan->dibalas_pada)->format('d F Y, H:i') }} WIB</small>
+resources\views\admin\struktur\index.blade.php:10  {{-- Pesan Notifikasi Sukses --}}
+resources\views\admin\dashboard.blade.php:59  <a href="{{ route('admin.pesan.index') }}" class="dash-stat-card {{ $stats['pesan'] > 0 ? 'dash-c-red' : 'dash-c-slate' }}">
+resources\views\admin\dashboard.blade.php:64  <span class="dash-stat-number">{{ $stats['pesan'] }}</span>
+resources\views\admin\dashboard.blade.php:65  <span class="dash-stat-label">Pesan Belum Dibaca</span>
+resources\views\admin\dashboard.blade.php:98  <a href="{{ route('admin.pesan.index') }}" class="dash-quicklink">Pesan Masuk</a>
+resources\views\admin\dashboard.blade.php:104  @php $pesanTerbaru = \App\Models\Pesan::terbaru()->take(5)->get(); @endphp
+resources\views\admin\dashboard.blade.php:106  <h1 class="admin-header-sub">Pesan Masuk Terbaru</h1>
+resources\views\admin\dashboard.blade.php:107  <a href="{{ route('admin.pesan.index') }}" class="btn-admin btn-admin-ghost">Lihat semua</a>
+resources\views\admin\dashboard.blade.php:114  <th>Pesan</th>
+resources\views\admin\dashboard.blade.php:120  @forelse ($pesanTerbaru as $p)
+resources\views\admin\dashboard.blade.php:130  <td>{{ \Illuminate\Support\Str::limit($p->pesan, 60) }}</td>
+resources\views\admin\dashboard.blade.php:133  <a href="{{ route('admin.pesan.show', $p) }}" class="btn-admin btn-admin-ghost">Baca</a>
+resources\views\admin\dashboard.blade.php:137  <tr><td colspan="5">Belum ada pesan masuk.</td></tr>
+resources\views\admin\layout.blade.php:72  <a href="{{ route('admin.pesan.index') }}" class="{{ request()->routeIs('admin.pesan.*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
+resources\views\admin\layout.blade.php:73  <span>Pesan Masuk</span>
+resources\views\admin\layout.blade.php:74  @php $belumDibaca = \App\Models\Pesan::where('is_read', false)->count(); @endphp
+resources\views\emails\balasan.blade.php:1  <p>Yth. {{ $pesan->nama }},</p>
+resources\views\emails\balasan.blade.php:6  <p><small>Pesan Anda sebelumnya:<br>{{ $pesan->pesan }}</small></p>
+resources\views\layouts\admin.blade.php:62  <a href="{{ route('admin.pesan.index') }}" class="{{ request()->routeIs('admin.pesan.*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
+resources\views\layouts\admin.blade.php:63  <span>Pesan Masuk</span>
+resources\views\layouts\admin.blade.php:64  @php $belumDibaca = \App\Models\Pesan::where('is_read', false)->count(); @endphp
+resources\views\livechat\admin\index.blade.php:24  <th>Pesan Terakhir</th>
+resources\views\livechat\admin\show.blade.php:46  <textarea name="pesan" placeholder="Tulis balasan... (pengguna akan menerima email pemberitahuan)" required></textarea>
+resources\views\livechat\widget.blade.php:38  <textarea id="kns-pesan" placeholder="Tulis pertanyaan / konsultasi Anda *" maxlength="2000"></textarea>
+resources\views\livechat\widget.blade.php:46  <input id="kns-input" placeholder="Tulis pesan..." maxlength="2000">
+resources\views\livechat\widget.blade.php:129  pesan: $('kns-pesan').value.trim()
+resources\views\livechat\widget.blade.php:131  if (!payload.nama || !payload.email || !payload.pesan) {
+resources\views\livechat\widget.blade.php:132  err.textContent = 'Nama, email, dan pesan wajib diisi.'; return;
+resources\views\livechat\widget.blade.php:144  $('kns-pesan').value = '';
+resources\views\livechat\widget.blade.php:153  api('POST', BASE + '/' + token + '/send', { pesan: text }).then(function (r) {
+resources\views\livechat\widget.blade.php:155  else { inp.value = text; alert((r.data && r.data.message) || 'Gagal mengirim pesan.'); }
+resources\views\dashboard.blade.php:59  <a href="{{ route('admin.pesan.index') }}" class="dash-stat-card {{ $stats['pesan'] > 0 ? 'dash-stat-card-alert' : '' }}">
+resources\views\dashboard.blade.php:64  <span class="dash-stat-number">{{ $stats['pesan'] }}</span>
+resources\views\dashboard.blade.php:65  <span class="dash-stat-label">Pesan Belum Dibaca</span>
+resources\views\dashboard.blade.php:89  <a href="{{ route('admin.pesan.index') }}" class="dash-quicklink">Pesan Masuk</a>
+resources\views\kontak.blade.php:4  @section('meta_description', 'Hubungi Inspektorat Kota Mojokerto — alamat, telepon, email, jam layanan, dan formulir pesan.')
+resources\views\kontak.blade.php:15  Ada pertanyaan atau ingin datang langsung ke kantor kami? Berikut informasi kontak dan formulir pesan.
+resources\views\kontak.blade.php:94  {{-- Kolom kanan: form pesan --}}
+resources\views\kontak.blade.php:96  <h2 style="font-size:20px;color:var(--navy);margin:0 0 6px;">Kirim Pesan</h2>
+resources\views\kontak.blade.php:124  <label for="pesan">Pesan</label>
+resources\views\kontak.blade.php:125  <textarea id="pesan" name="pesan" style="min-height:140px;" required>{{ old('pesan') }}</textarea>
+resources\views\kontak.blade.php:126  @error('pesan') <p class="kontak-error">{{ $message }}</p> @enderror
+resources\views\kontak.blade.php:130  Kirim Pesan
+database\migrations\2026_08_26_000000_create_pesans_table.php:11  Schema::create('pesans', function (Blueprint $table) {
+database\migrations\2026_08_26_000000_create_pesans_table.php:16  $table->text('pesan');
+database\migrations\2026_08_26_000000_create_pesans_table.php:24  Schema::dropIfExists('pesans');
+database\migrations\2026_09_28_024957_add_balasan_to_pesans_table.php:11  Schema::table('pesans', function (Blueprint $table) {
+database\migrations\2026_09_28_024957_add_balasan_to_pesans_table.php:19  Schema::table('pesans', function (Blueprint $table) {

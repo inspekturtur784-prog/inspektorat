@@ -18,7 +18,7 @@
             'title' => $a->title,
             'date'  => $a->tanggal_indo,
             'excerpt' => $bsRingkas($a),
-            'cat'     => \Illuminate\Support\Str::title(trim((string) $a->category)),
+            'cat' => ucfirst(trim((string) $a->category)),
         ];
     })->values();
 
@@ -30,8 +30,14 @@
 <style>
 #artikel.ins-berita { display: none; }
 
-.ins-bs2 .ins-berita-grid { align-items: stretch; transition: opacity .25s ease; }
-.ins-bs2 .ins-berita-grid.is-fading { opacity: 0; }
+.ins-bs2 .ins-berita-grid {
+    align-items: stretch;
+    transition: opacity .4s ease;
+}
+
+.ins-bs2 .ins-berita-grid.is-fading {
+    opacity: .35;
+}
 .ins-bs2 .ins-berita-featured { display: flex; flex-direction: column; }
 .ins-bs2 .ins-berita-featured-body { flex: 1; }
 .ins-bs2 .ins-berita-featured-body h3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }

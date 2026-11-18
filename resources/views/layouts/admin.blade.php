@@ -59,13 +59,6 @@
     KMS / Pedoman
 </a>
 
-                    <a href="{{ route('admin.pesan.index') }}" class="{{ request()->routeIs('admin.pesan.*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
-                        <span>Pesan Masuk</span>
-                        @php $belumDibaca = \App\Models\Pesan::where('is_read', false)->count(); @endphp
-                        @if ($belumDibaca > 0)
-                            <span class="admin-nav-badge">{{ $belumDibaca }}</span>
-                        @endif
-                    </a>
                 </nav>
             </div>
 

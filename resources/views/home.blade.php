@@ -243,6 +243,7 @@
         .ins-topbar-inner{ font-size: 12px; }
     }
 
+
     /* ================= LAYANAN KAMI (grid) ================= */
     .ins-layanan{
         padding: 72px 24px;
@@ -516,13 +517,18 @@
     const dots = root.querySelectorAll('.ins-slide-dot');
 
     function goTo(index){
-        slides[current].classList.remove('is-active');
-        dots[current].classList.remove('is-active');
-        current = (index + slides.length) % slides.length;
-        slides[current].classList.add('is-active');
-        dots[current].classList.add('is-active');
-        resetTimer();
-    }
+    if (slides.length === 0) return;
+
+    slides[current].classList.remove('is-active');
+    dots[current].classList.remove('is-active');
+
+    current = (index + slides.length) % slides.length;
+
+    slides[current].classList.add('is-active');
+    dots[current].classList.add('is-active');
+
+    resetTimer();
+}
     function next(){ goTo(current + 1); }
     function prev(){ goTo(current - 1); }
     function resetTimer(){ clearInterval(timer); timer = setInterval(next, 5000); }
