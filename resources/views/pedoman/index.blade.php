@@ -24,7 +24,7 @@
             <div>
                 <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
                 <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg text-white hover:text-[#D4AF6A] transition block">
-                    Knowledge Management System &amp; Pedoman
+                    Knowledge Management System (KMS)
                 </a>
             </div>
         </div>
@@ -36,7 +36,7 @@
     <nav class="bg-[#06182E] px-6 md:px-12">
         <div class="flex gap-8">
             <a href="{{ route('kms.index') }}" class="font-mono text-xs uppercase tracking-widest text-white/70 hover:text-white py-3 border-b-2 border-transparent hover:border-[#B08D57] transition">
-                Knowledge Base
+                KMS
             </a>
             <a href="{{ route('pedoman.index') }}" class="font-mono text-xs uppercase tracking-widest text-white py-3 border-b-2 border-[#B08D57] transition">
                 Pedoman

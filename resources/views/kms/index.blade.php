@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knowledge Base - Inspektorat</title>
+    <title>KMS - Inspektorat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
         <div>
             <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
             <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg text-white hover:text-[#D4AF6A] transition block">
-                Knowledge Management System &amp; Pedoman
+                Knowledge Management System (KMS)
             </a>
         </div>
     </div>
@@ -35,7 +35,7 @@
 </header>    <nav class="bg-[#06182E] px-6 md:px-12">
         <div class="flex gap-8">
             <a href="{{ route('kms.index') }}" class="font-mono text-xs uppercase tracking-widest text-white py-3 border-b-2 border-[#B08D57] transition">
-                Knowledge Base
+                KMS
             </a>
             <a href="{{ route('pedoman.index') }}" class="font-mono text-xs uppercase tracking-widest text-white/70 hover:text-white py-3 border-b-2 border-transparent hover:border-[#B08D57] transition">
                 Pedoman

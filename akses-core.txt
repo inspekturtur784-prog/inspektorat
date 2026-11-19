@@ -1,0 +1,1333 @@
+﻿===== routes\web.php =====
+<?php
+
+Route::get('/kms-file/{path}', function ($path) {
+    $fullPath = public_path('kms-files/' . $path);
+
+    if (!file_exists($fullPath)) {
+        abort(404);
+    }
+
+    return response()->file($fullPath);
+})->where('path', '.*');
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KmsController;
+use App\Http\Controllers\PedomanController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\StrukturController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\GaleriController;
+use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\SkmController;
+use App\Http\Controllers\KonsultasiController;
+use App\Http\Controllers\KontakController;
+use App\Http\Controllers\InformasiController;
+use App\Models\Buletin;
+
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\PegawaiController as AdminPegawaiController;
+use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
+use App\Http\Controllers\Admin\BuletinController as AdminBuletinController;
+use App\Http\Controllers\Admin\PengaturanProfilController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\TugasFungsiController;
+use App\Http\Controllers\Admin\StrukturBagianController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
+use App\Http\Controllers\Admin\ProfilHighlightController;
+use App\Http\Controllers\Admin\KmsPedomanDashboardController;
+use App\Http\Controllers\Admin\KategoriKmsController;
+use App\Http\Controllers\Admin\SubkategoriKmsController;
+use App\Http\Controllers\Admin\GrupDokumenController;
+use App\Http\Controllers\Admin\DokumenController;
+use App\Http\Controllers\Admin\PedomanKategoriController;
+use App\Http\Controllers\Admin\PedomanDokumenController;
+use App\Http\Controllers\Admin\InformasiDokumenController;
+
+// ---------- Beranda ----------
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// ---------- Pengaduan ----------
+Route::get('/pengaduan', function () {
+    return view('pengaduan');
+})->name('pengaduan');
+
+// ---------- Profil Publik ----------
+Route::redirect('/profile-dinas', '/profil', 301);
+
+Route::get('/profil', [ProfilController::class, 'index'])
+    ->name('profil.index');
+
+Route::get('/profil/struktur/{struktur}', [StrukturController::class, 'show'])
+    ->name('struktur.show');
+
+Route::get('/profil/data-pegawai', [PegawaiController::class, 'index'])
+    ->name('pegawai.index');
+
+Route::get('/profil/data-pegawai/{pegawai}', [PegawaiController::class, 'show'])
+    ->name('pegawai.show');
+
+// ---------- Galeri Publik ----------
+Route::get('/profil/galeri', [GaleriController::class, 'index'])
+    ->name('galeri.index');
+
+Route::get('/profil/galeri/{slug}', [GaleriController::class, 'show'])
+    ->name('galeri.show');
+
+// ---------- Layanan ----------
+Route::redirect('/layanan', '/#layanan');
+
+Route::get('/layanan/konsultansi', [KonsultasiController::class, 'index'])
+    ->name('konsultasi.index');
+
+Route::post('/konsultasi', [KonsultasiController::class, 'store'])
+    ->name('konsultasi.store');
+
+Route::get('/layanan/konsultasi', function () {
+    return redirect()->route('konsultasi.index');
+});
+
+Route::view('/layanan/kms', 'coming-soon', [
+    'title' => 'KMS / Pedoman'
+]);
+
+Route::redirect('/layanan/buletin', '/buletin', 301);
+
+Route::view('/layanan/skm', 'coming-soon', [
+    'title' => 'SKM Inspektorat'
+]);
+
+// ---------- Berita & Artikel Publik ----------
+Route::get('/berita', [BeritaController::class, 'index'])
+    ->name('berita.index');
+
+Route::get('/artikel/{slug}', [ArticleController::class, 'show'])
+    ->name('articles.show');
+
+// ---------- Kontak ----------
+Route::get('/kontak', [KontakController::class, 'show'])
+    ->name('kontak.show');
+
+
+// ---------- Informasi (SOP, Informasi Berkala, Informasi Setiap Saat, IKM, Persepsi Korupsi) ----------
+Route::get('/informasi/{slug}', [InformasiController::class, 'show'])
+    ->name('informasi.show');
+
+// ---------- Knowledge Base & Pedoman (PUBLIK Ã¢â‚¬â€ TIDAK DIUBAH) ----------
+Route::get('/knowledge-base', [KmsController::class, 'index'])->name('kms.index');
+Route::get('/knowledge-base/{slug}', [KmsController::class, 'kategori'])->name('kms.kategori');
+
+Route::get('/pedoman', [PedomanController::class, 'index'])->name('pedoman.index');
+Route::get('/pedoman/{slug}', [PedomanController::class, 'kategori'])->name('pedoman.kategori');
+Route::get('/pedoman/{slug}/{id}', [PedomanController::class, 'detail'])->name('pedoman.detail');
+
+// ==========================================================
+// BULETIN PUBLIK (dari database)
+// ==========================================================
+Route::get('/buletin', function () {
+    $buletins = Buletin::published()->get();
+    return view('buletin.index', ['buletins' => $buletins]);
+})->name('buletin.index');
+
+Route::get('/buletin/{slug}', function ($slug) {
+    $buletin = Buletin::where('slug', $slug)->published()->firstOrFail();
+    return view('buletin.show', ['buletin' => $buletin]);
+})->name('buletin.show');
+
+// ---------- Redirect Login User ke Admin Login ----------
+Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
+
+// ==========================================================
+// ADMIN AUTHENTICATION (LOGIN / LOGOUT)
+// ==========================================================
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'showLogin'])
+        ->name('login')
+        ->middleware('guest');
+
+    Route::post('/login', [AdminAuthController::class, 'login'])
+        ->name('login.submit')
+        ->middleware('guest');
+
+    // Menggunakan match agar logout bisa diakses via GET maupun POST
+    Route::match(['get', 'post'], '/logout', [AdminAuthController::class, 'logout'])
+        ->name('logout')
+        ->middleware('auth');
+});
+
+// Redirect /dashboard biasa ke Dashboard Admin
+Route::get('/dashboard', fn () => redirect()->route('admin.dashboard'))->middleware('auth');
+
+// ==========================================================
+// ADMIN DASHBOARD & PANEL (WAJIB LOGIN)
+// ==========================================================
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+
+    // ---------- Dashboard Utama ----------
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+
+    // ---------- Ganti Password ----------
+    Route::get('/ganti-password', [AdminPasswordController::class, 'edit'])->name('password.edit');
+    Route::put('/ganti-password', [AdminPasswordController::class, 'update'])->name('password.update');
+    Route::put('/ganti-username', [AdminPasswordController::class, 'updateUsername'])->middleware('throttle:5,1')->name('username.update');
+    Route::put('/ganti-akun', [AdminPasswordController::class, 'updateAkun'])->middleware('throttle:5,1')->name('akun.update');
+
+    // ---------- Pengaturan Profil ----------
+    Route::get('/pengaturan', [PengaturanProfilController::class, 'edit'])->name('pengaturan.edit');
+    Route::put('/pengaturan', [PengaturanProfilController::class, 'update'])->name('pengaturan.update');
+    Route::get('/pengaturan/tentang', [PengaturanProfilController::class, 'editTentang'])->name('pengaturan.tentang');
+    Route::put('/pengaturan/tentang', [PengaturanProfilController::class, 'updateTentang'])->name('pengaturan.tentang.update');
+    Route::get('/pengaturan/visi-misi', [PengaturanProfilController::class, 'editVisiMisi'])->name('pengaturan.visimisi');
+    Route::put('/pengaturan/visi-misi', [PengaturanProfilController::class, 'updateVisiMisi'])->name('pengaturan.visimisi.update');
+
+    // ---------- Kartu Profil (Kedudukan, Peran, dll) ----------
+    Route::post('/pengaturan/highlight', [ProfilHighlightController::class, 'store'])->name('profilhighlight.store');
+    Route::put('/pengaturan/highlight/{profilhighlight}', [ProfilHighlightController::class, 'update'])->name('profilhighlight.update');
+    Route::delete('/pengaturan/highlight/{profilhighlight}', [ProfilHighlightController::class, 'destroy'])->name('profilhighlight.destroy');
+
+    // ---------- Tugas & Fungsi ----------
+    Route::get('/tugas-fungsi', [TugasFungsiController::class, 'index'])->name('tugasfungsi.index');
+    Route::put('/tugas-fungsi/tugas-pokok', [TugasFungsiController::class, 'updateTugasPokok'])->name('tugasfungsi.tugaspokok.update');
+    Route::get('/tugas-fungsi/tambah', [TugasFungsiController::class, 'create'])->name('tugasfungsi.create');
+    Route::post('/tugas-fungsi', [TugasFungsiController::class, 'store'])->name('tugasfungsi.store');
+    Route::get('/tugas-fungsi/{tugasFungsi}/edit', [TugasFungsiController::class, 'edit'])->name('tugasfungsi.edit');
+    Route::put('/tugas-fungsi/{tugasFungsi}', [TugasFungsiController::class, 'update'])->name('tugasfungsi.update');
+    Route::delete('/tugas-fungsi/{tugasFungsi}', [TugasFungsiController::class, 'destroy'])->name('tugasfungsi.destroy');
+
+    // ---------- Struktur ----------
+    Route::get('/struktur', [StrukturBagianController::class, 'index'])->name('struktur.index');
+    Route::get('/struktur/tambah', [StrukturBagianController::class, 'create'])->name('struktur.create');
+    Route::post('/struktur', [StrukturBagianController::class, 'store'])->name('struktur.store');
+    Route::get('/struktur/{struktur}/edit', [StrukturBagianController::class, 'edit'])->name('struktur.edit');
+    Route::put('/struktur/{struktur}', [StrukturBagianController::class, 'update'])->name('struktur.update');
+    Route::delete('/struktur/{struktur}', [StrukturBagianController::class, 'destroy'])->name('struktur.destroy');
+
+    // ---------- Artikel ----------
+    Route::get('/artikel', [AdminArticleController::class, 'index'])->name('articles.index');
+    Route::get('/artikel/tambah', [AdminArticleController::class, 'create'])->name('articles.create');
+    Route::post('/artikel', [AdminArticleController::class, 'store'])->name('articles.store');
+    Route::get('/artikel/{article}/edit', [AdminArticleController::class, 'edit'])->name('articles.edit');
+    Route::put('/artikel/{article}', [AdminArticleController::class, 'update'])->name('articles.update');
+    Route::delete('/artikel/{article}', [AdminArticleController::class, 'destroy'])->name('articles.destroy');
+
+    // ---------- Pegawai ----------
+    Route::get('/pegawai', [AdminPegawaiController::class, 'index'])->name('pegawai.index');
+    Route::get('/pegawai/tambah', [AdminPegawaiController::class, 'create'])->name('pegawai.create');
+    Route::post('/pegawai', [AdminPegawaiController::class, 'store'])->name('pegawai.store');
+    Route::get('/pegawai/{pegawai}/edit', [AdminPegawaiController::class, 'edit'])->name('pegawai.edit');
+    Route::put('/pegawai/{pegawai}', [AdminPegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('/pegawai/{pegawai}', [AdminPegawaiController::class, 'destroy'])->name('pegawai.destroy');
+
+    // ---------- Galeri ----------
+    Route::get('/galeri', [AdminGaleriController::class, 'index'])->name('galeri.index');
+    Route::get('/galeri/tambah', [AdminGaleriController::class, 'create'])->name('galeri.create');
+    Route::post('/galeri', [AdminGaleriController::class, 'store'])->name('galeri.store');
+    Route::get('/galeri/{galeri}/edit', [AdminGaleriController::class, 'edit'])->name('galeri.edit');
+    Route::put('/galeri/{galeri}', [AdminGaleriController::class, 'update'])->name('galeri.update');
+    Route::delete('/galeri/{galeri}', [AdminGaleriController::class, 'destroy'])->name('galeri.destroy');
+
+    // ---------- Buletin ----------
+    Route::get('/buletin', [AdminBuletinController::class, 'index'])->name('buletin.index');
+    Route::get('/buletin/tambah', [AdminBuletinController::class, 'create'])->name('buletin.create');
+    Route::post('/buletin', [AdminBuletinController::class, 'store'])->name('buletin.store');
+    Route::get('/buletin/{buletin}/edit', [AdminBuletinController::class, 'edit'])->name('buletin.edit');
+    Route::put('/buletin/{buletin}', [AdminBuletinController::class, 'update'])->name('buletin.update');
+    Route::delete('/buletin/{buletin}', [AdminBuletinController::class, 'destroy'])->name('buletin.destroy');
+
+    // ---------- Dokumen Informasi (SOP, IKM, Persepsi Korupsi, dst) ----------
+    Route::get('/informasi-dokumen', [InformasiDokumenController::class, 'index'])->name('informasidokumen.index');
+    Route::get('/informasi-dokumen/tambah', [InformasiDokumenController::class, 'create'])->name('informasidokumen.create');
+    Route::post('/informasi-dokumen', [InformasiDokumenController::class, 'store'])->name('informasidokumen.store');
+    Route::get('/informasi-dokumen/{informasiDokumen}/edit', [InformasiDokumenController::class, 'edit'])->name('informasidokumen.edit');
+    Route::put('/informasi-dokumen/{informasiDokumen}', [InformasiDokumenController::class, 'update'])->name('informasidokumen.update');
+    Route::delete('/informasi-dokumen/{informasiDokumen}', [InformasiDokumenController::class, 'destroy'])->name('informasidokumen.destroy');
+
+    // ==========================================================
+    // KMS & PEDOMAN (dashboard admin, terpisah dari halaman publik)
+    // ==========================================================
+
+    // ---------- Dashboard gabungan (KMS + Pedoman) ----------
+    Route::get('/kms', [\App\Http\Controllers\Admin\KmsSederhanaController::class, 'index'])->name('kms.index');
+    Route::get('/kms/kelola', [KmsPedomanDashboardController::class, 'index'])->name('kms.kelola');
+    Route::get('/kms/semua', [\App\Http\Controllers\Admin\KmsDokumenListController::class, 'index'])->name('kms.semua');
+    Route::get('/kms/baru', [\App\Http\Controllers\Admin\KmsSederhanaController::class, 'index'])->name('kms.baru');
+
+    // ---------- KMS: Kategori ----------
+    Route::get('/kms/kategori/tambah', [KategoriKmsController::class, 'create'])->name('kms.kategori.create');
+    Route::post('/kms/kategori', [KategoriKmsController::class, 'store'])->name('kms.kategori.store');
+    Route::get('/kms/kategori/{kategori}', [KategoriKmsController::class, 'show'])->name('kms.kategori.show');
+    Route::get('/kms/kategori/{kategori}/edit', [KategoriKmsController::class, 'edit'])->name('kms.kategori.edit');
+    Route::put('/kms/kategori/{kategori}', [KategoriKmsController::class, 'update'])->name('kms.kategori.update');
+    Route::delete('/kms/kategori/{kategori}', [KategoriKmsController::class, 'destroy'])->name('kms.kategori.destroy');
+
+    // ---------- KMS: Subkategori ----------
+    Route::get('/kms/kategori/{kategori}/subkategori/tambah', [SubkategoriKmsController::class, 'create'])->name('kms.subkategori.create');
+    Route::post('/kms/kategori/{kategori}/subkategori', [\App\Http\Controllers\Admin\KmsSubkategoriAksiController::class, 'store'])->name('kms.subkategori.store');
+    Route::get('/kms/subkategori/{subkategori}', [SubkategoriKmsController::class, 'show'])->name('kms.subkategori.show');
+    Route::get('/kms/subkategori/{subkategori}/edit', [SubkategoriKmsController::class, 'edit'])->name('kms.subkategori.edit');
+    Route::put('/kms/subkategori/{subkategori}', [\App\Http\Controllers\Admin\KmsSubkategoriUbahController::class, 'update'])->name('kms.subkategori.update');
+    Route::delete('/kms/subkategori/{subkategori}', [\App\Http\Controllers\Admin\KmsSubkategoriUbahController::class, 'destroy'])->name('kms.subkategori.destroy');
+
+    // ---------- KMS: Grup Dokumen ----------
+    Route::get('/kms/subkategori/{subkategori}/grup/tambah', [GrupDokumenController::class, 'create'])->name('kms.grup.create');
+    Route::post('/kms/subkategori/{subkategori}/grup', [GrupDokumenController::class, 'store'])->name('kms.grup.store');
+    Route::get('/kms/grup/{grup}', [GrupDokumenController::class, 'show'])->name('kms.grup.show');
+    Route::get('/kms/grup/{grup}/edit', [GrupDokumenController::class, 'edit'])->name('kms.grup.edit');
+    Route::put('/kms/grup/{grup}', [GrupDokumenController::class, 'update'])->name('kms.grup.update');
+    Route::delete('/kms/grup/{grup}', [GrupDokumenController::class, 'destroy'])->name('kms.grup.destroy');
+
+    // ---------- KMS: Dokumen ----------
+    Route::get('/kms/subkategori/{subkategori}/dokumen/tambah', [DokumenController::class, 'create'])->name('kms.dokumen.create');
+    Route::post('/kms/dokumen', [\App\Http\Controllers\Admin\KmsDokumenAksiController::class, 'store'])->name('kms.dokumen.store');
+    Route::get('/kms/dokumen/{dokumen}/edit', [DokumenController::class, 'edit'])->name('kms.dokumen.edit');
+    Route::put('/kms/dokumen/{dokumen}', [\App\Http\Controllers\Admin\KmsDokumenAksiController::class, 'update'])->name('kms.dokumen.update');
+    Route::delete('/kms/dokumen/{dokumen}', [\App\Http\Controllers\Admin\KmsDokumenAksiController::class, 'destroy'])->name('kms.dokumen.destroy');
+
+    // ---------- Pedoman: Kategori ----------
+    Route::get('/pedoman/kategori/tambah', [PedomanKategoriController::class, 'create'])->name('pedoman.kategori.create');
+    Route::post('/pedoman/kategori', [PedomanKategoriController::class, 'store'])->name('pedoman.kategori.store');
+    Route::get('/pedoman/kategori/{kategori}', [PedomanKategoriController::class, 'show'])->name('pedoman.kategori.show');
+    Route::get('/pedoman/kategori/{kategori}/edit', [PedomanKategoriController::class, 'edit'])->name('pedoman.kategori.edit');
+    Route::put('/pedoman/kategori/{kategori}', [PedomanKategoriController::class, 'update'])->name('pedoman.kategori.update');
+    Route::delete('/pedoman/kategori/{kategori}', [PedomanKategoriController::class, 'destroy'])->name('pedoman.kategori.destroy');
+
+    // ---------- Pedoman: Dokumen ----------
+    Route::get('/pedoman/dokumen/tambah', [PedomanDokumenController::class, 'create'])->name('pedoman.dokumen.create');
+    Route::post('/pedoman/dokumen', [PedomanDokumenController::class, 'store'])->name('pedoman.dokumen.store');
+    Route::get('/pedoman/dokumen/{dokumen}/edit', [PedomanDokumenController::class, 'edit'])->name('pedoman.dokumen.edit');
+    Route::put('/pedoman/dokumen/{dokumen}', [PedomanDokumenController::class, 'update'])->name('pedoman.dokumen.update');
+    Route::delete('/pedoman/dokumen/{dokumen}', [PedomanDokumenController::class, 'destroy'])->name('pedoman.dokumen.destroy');
+
+});
+
+// ---------- Tambahan: Pengaturan Situs & Log Aktivitas ----------
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    Route::get('/pengaturan-situs', [\App\Http\Controllers\Admin\PengaturanSitusController::class, 'edit'])->name('pengaturan-situs.edit');
+    Route::put('/pengaturan-situs', [\App\Http\Controllers\Admin\PengaturanSitusController::class, 'update'])->name('pengaturan-situs.update');
+});
+
+
+// === LIVE CHAT ===
+Route::prefix('live-chat')->group(function () {
+    Route::post('/', [\App\Http\Controllers\LiveChatController::class, 'store'])->middleware('throttle:5,1');
+    Route::get('/{token}/messages', [\App\Http\Controllers\LiveChatController::class, 'messages'])->middleware('throttle:60,1');
+    Route::post('/{token}/send', [\App\Http\Controllers\LiveChatController::class, 'send'])->middleware('throttle:20,1');
+});
+
+// Dashboard admin (sesuaikan middleware 'auth' dengan middleware admin yang sudah dipakai)
+Route::middleware(['auth'])->prefix('admin/live-chat')->group(function () {
+    Route::get('/', [\App\Http\Controllers\LiveChatAdminController::class, 'index']);
+    Route::get('/{thread}', [\App\Http\Controllers\LiveChatAdminController::class, 'show']);
+    Route::get('/{thread}/messages', [\App\Http\Controllers\LiveChatAdminController::class, 'messages']);
+    Route::post('/{thread}/reply', [\App\Http\Controllers\LiveChatAdminController::class, 'reply']);
+    Route::post('/{thread}/close', [\App\Http\Controllers\LiveChatAdminController::class, 'close']);
+});
+// === END LIVE CHAT ===
+===== bootstrap\app.php =====
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        //
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        //
+    })->create();
+===== config\auth.php =====
+<?php
+
+use App\Models\User;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Defaults
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the default authentication "guard" and password
+    | reset "broker" for your application. You may change these values
+    | as required, but they're a perfect start for most applications.
+    |
+    */
+
+    'defaults' => [
+        'guard' => env('AUTH_GUARD', 'web'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Guards
+    |--------------------------------------------------------------------------
+    |
+    | Next, you may define every authentication guard for your application.
+    | Of course, a great default configuration has been defined for you
+    | which utilizes session storage plus the Eloquent user provider.
+    |
+    | All authentication guards have a user provider, which defines how the
+    | users are actually retrieved out of your database or other storage
+    | system used by the application. Typically, Eloquent is utilized.
+    |
+    | Supported: "session"
+    |
+    */
+
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Providers
+    |--------------------------------------------------------------------------
+    |
+    | All authentication guards have a user provider, which defines how the
+    | users are actually retrieved out of your database or other storage
+    | system used by the application. Typically, Eloquent is utilized.
+    |
+    | If you have multiple user tables or models you may configure multiple
+    | providers to represent the model / table. These providers may then
+    | be assigned to any extra authentication guards you have defined.
+    |
+    | Supported: "database", "eloquent"
+    |
+    */
+
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Resetting Passwords
+    |--------------------------------------------------------------------------
+    |
+    | These configuration options specify the behavior of Laravel's password
+    | reset functionality, including the table utilized for token storage
+    | and the user provider that is invoked to actually retrieve users.
+    |
+    | The expiry time is the number of minutes that each reset token will be
+    | considered valid. This security feature keeps tokens short-lived so
+    | they have less time to be guessed. You may change this as needed.
+    |
+    | The throttle setting is the number of seconds a user must wait before
+    | generating more password reset tokens. This prevents the user from
+    | quickly generating a very large amount of password reset tokens.
+    |
+    */
+
+    'passwords' => [
+        'users' => [
+            'provider' => 'users',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Password Confirmation Timeout
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define the number of seconds before a password confirmation
+    | window expires and users are asked to re-enter their password via the
+    | confirmation screen. By default, the timeout lasts for three hours.
+    |
+    */
+
+    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+];
+===== app\Models\User.php =====
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+}
+===== app\Http\Controllers\Admin\AuthController.php =====
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+
+class AuthController extends Controller
+{
+    /**
+     * Tampilkan form login admin.
+     */
+    public function showLogin(): View
+    {
+        return view('admin.login');
+    }
+
+    /**
+     * Proses login admin.
+     */
+    public function login(Request $request): RedirectResponse
+    {
+        $credentials = $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'password.required' => 'Password wajib diisi.',
+        ]);
+
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+
+            return redirect()->route('admin.dashboard');
+        }
+
+        return back()
+            ->withErrors([
+                'username' => 'Username atau password salah.'
+            ])
+            ->onlyInput('username');
+    }
+
+    /**
+     * Logout admin.
+     */
+    public function logout(Request $request): RedirectResponse
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login');
+    }
+}
+===== app\Http\Controllers\Auth\AuthenticatedSessionController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+
+class AuthenticatedSessionController extends Controller
+{
+    /**
+     * Display the login view.
+     */
+    public function create(): View
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Handle an incoming authentication request.
+     */
+    public function store(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('dashboard', absolute: false));
+    }
+
+    /**
+     * Destroy an authenticated session.
+     */
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+}
+===== app\Http\Controllers\Auth\ConfirmablePasswordController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
+
+class ConfirmablePasswordController extends Controller
+{
+    /**
+     * Show the confirm password view.
+     */
+    public function show(): View
+    {
+        return view('auth.confirm-password');
+    }
+
+    /**
+     * Confirm the user's password.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        if (! Auth::guard('web')->validate([
+            'email' => $request->user()->email,
+            'password' => $request->password,
+        ])) {
+            throw ValidationException::withMessages([
+                'password' => __('auth.password'),
+            ]);
+        }
+
+        $request->session()->put('auth.password_confirmed_at', time());
+
+        return redirect()->intended(route('dashboard', absolute: false));
+    }
+}
+===== app\Http\Controllers\Auth\EmailVerificationNotificationController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class EmailVerificationNotificationController extends Controller
+{
+    /**
+     * Send a new email verification notification.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('status', 'verification-link-sent');
+    }
+}
+===== app\Http\Controllers\Auth\EmailVerificationPromptController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class EmailVerificationPromptController extends Controller
+{
+    /**
+     * Display the email verification prompt.
+     */
+    public function __invoke(Request $request): RedirectResponse|View
+    {
+        return $request->user()->hasVerifiedEmail()
+                    ? redirect()->intended(route('dashboard', absolute: false))
+                    : view('auth.verify-email');
+    }
+}
+===== app\Http\Controllers\Auth\NewPasswordController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
+
+class NewPasswordController extends Controller
+{
+    /**
+     * Display the password reset view.
+     */
+    public function create(Request $request): View
+    {
+        return view('auth.reset-password', ['request' => $request]);
+    }
+
+    /**
+     * Handle an incoming new password request.
+     *
+     * @throws ValidationException
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'token' => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        // Here we will attempt to reset the user's password. If it is successful we
+        // will update the password on an actual user model and persist it to the
+        // database. Otherwise we will parse the error and return the response.
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($request->password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        // If the password was successfully reset, we will redirect the user back to
+        // the application's home authenticated view. If there is an error we can
+        // redirect them back to where they came from with their error message.
+        return $status == Password::PASSWORD_RESET
+                    ? redirect()->route('login')->with('status', __($status))
+                    : back()->withInput($request->only('email'))
+                        ->withErrors(['email' => __($status)]);
+    }
+}
+===== app\Http\Controllers\Auth\PasswordController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+
+class PasswordController extends Controller
+{
+    /**
+     * Update the user's password.
+     */
+    public function update(Request $request): RedirectResponse
+    {
+        $validated = $request->validateWithBag('updatePassword', [
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', Password::defaults(), 'confirmed'],
+        ]);
+
+        $request->user()->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        return back()->with('status', 'password-updated');
+    }
+}
+===== app\Http\Controllers\Auth\PasswordResetLinkController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
+
+class PasswordResetLinkController extends Controller
+{
+    /**
+     * Display the password reset link request view.
+     */
+    public function create(): View
+    {
+        return view('auth.forgot-password');
+    }
+
+    /**
+     * Handle an incoming password reset link request.
+     *
+     * @throws ValidationException
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        // We will send the password reset link to this user. Once we have attempted
+        // to send the link, we will examine the response then see the message we
+        // need to show to the user. Finally, we'll send out a proper response.
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status == Password::RESET_LINK_SENT
+                    ? back()->with('status', __($status))
+                    : back()->withInput($request->only('email'))
+                        ->withErrors(['email' => __($status)]);
+    }
+}
+===== app\Http\Controllers\Auth\RegisteredUserController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
+
+class RegisteredUserController extends Controller
+{
+    /**
+     * Display the registration view.
+     */
+    public function create(): View
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Handle an incoming registration request.
+     *
+     * @throws ValidationException
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(route('dashboard', absolute: false));
+    }
+}
+===== app\Http\Controllers\Auth\VerifyEmailController.php =====
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\RedirectResponse;
+
+class VerifyEmailController extends Controller
+{
+    /**
+     * Mark the authenticated user's email address as verified.
+     */
+    public function __invoke(EmailVerificationRequest $request): RedirectResponse
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+        }
+
+        if ($request->user()->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+        }
+
+        return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+    }
+}
+===== app\Http\Requests\Auth\LoginRequest.php =====
+<?php
+
+namespace App\Http\Requests\Auth;
+
+use Illuminate\Auth\Events\Lockout;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+
+class LoginRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
+        ];
+    }
+
+    /**
+     * Attempt to authenticate the request's credentials.
+     *
+     * @throws ValidationException
+     */
+    public function authenticate(): void
+    {
+        $this->ensureIsNotRateLimited();
+
+        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => trans('auth.failed'),
+            ]);
+        }
+
+        RateLimiter::clear($this->throttleKey());
+    }
+
+    /**
+     * Ensure the login request is not rate limited.
+     *
+     * @throws ValidationException
+     */
+    public function ensureIsNotRateLimited(): void
+    {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+            return;
+        }
+
+        event(new Lockout($this));
+
+        $seconds = RateLimiter::availableIn($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'email' => trans('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => ceil($seconds / 60),
+            ]),
+        ]);
+    }
+
+    /**
+     * Get the rate limiting throttle key for the request.
+     */
+    public function throttleKey(): string
+    {
+        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+    }
+}
+===== resources\views\admin\login.blade.php =====
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin â€” Inspektorat Kota Mojokerto</title>
+    <link rel="icon" href="{{ asset('images/logo-mojokerto.png') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-extra.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            background-color: #071a33;
+        }
+
+        /* Layer foto background */
+        .bg-image-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            z-index: 1;
+        }
+
+        /* Overlay transparan */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 26, 51, 0.45);
+            z-index: 2;
+        }
+
+        /* Container login */
+        .login-wrapper {
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .brand-title {
+            font-size: 20px;
+            color: #ffffff !important;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .brand-subtitle {
+            color: #e2e8f0 !important;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .back-link {
+            color: #ffffff !important;
+            font-size: 13.5px;
+            text-decoration: none;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Wrapper Password & Ikon Mata */
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding: 11px 40px 11px 14px;
+            border: 1px solid var(--line, #E5E0D3);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+        }
+
+        .toggle-password:hover {
+            color: var(--navy, #0F2A4A);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image-layer" style="background-image: url('{{ asset('images/alun-alun.jpg') }}');"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="login-wrapper">
+        <div style="text-align:center; margin-bottom:28px;">
+            <img src="{{ asset('images/logo-mojokerto.png') }}" alt="Logo Pemerintah Kota Mojokerto" style="height:56px; margin-bottom:12px;">
+            <h1 class="brand-title">Inspektorat Kota Mojokerto</h1>
+            <p class="brand-subtitle">Login Panel Admin</p>
+        </div>
+
+        <div style="background:#fff; border:1px solid var(--line, #E5E0D3); border-radius:14px; padding:32px; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
+            @if ($errors->any())
+                <div style="background:#FDECEA; color:#B3261E; border-radius:8px; padding:12px 16px; margin-bottom:20px; font-size:14px;">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('admin.login.submit') }}">
+                @csrf
+
+                <div style="margin-bottom:18px;">
+                    <label for="username" style="display:block; font-weight:600; color:var(--navy, #0F2A4A); font-size:14px; margin-bottom:6px;">Username</label>
+                    <input type="text" name="username" id="username" value="{{ old('username') }}" required autofocus autocomplete="username"
+                        style="width:100%; padding:11px 14px; border:1px solid var(--line, #E5E0D3); border-radius:8px; font-size:15px;">
+                </div>
+
+                <div style="margin-bottom:14px;">
+                    <label for="password" style="display:block; font-weight:600; color:var(--navy, #0F2A4A); font-size:14px; margin-bottom:6px;">Password</label>
+                    <div class="password-container">
+                        <input type="password" name="password" id="password" required>
+                        <button type="button" id="togglePassword" class="toggle-password" aria-label="Tampilkan Password">
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin:14px 0 22px;">
+                    <label style="display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--slate, #6b7280); cursor:pointer;">
+                        <input type="checkbox" name="remember" style="cursor:pointer;"> Ingat saya
+                    </label>
+                </div>
+
+                <button type="submit"
+                    style="width:100%; padding:12px; background:var(--navy, #0F2A4A); color:#fff; border:0; border-radius:8px; font-weight:600; font-size:15px; cursor:pointer;">
+                    Masuk
+                </button>
+            </form>
+        </div>
+
+        <p style="text-align:center; margin-top:20px;">
+            <a href="{{ url('/') }}" class="back-link">&larr; Kembali ke Website</a>
+        </p>
+    </div>
+
+    <script>
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        togglePasswordBtn.addEventListener('click', function() {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+
+            if (isPassword) {
+                // SVG Mata Coret (Hide)
+                eyeIcon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+            } else {
+                // SVG Mata Terbuka (Show)
+                eyeIcon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+            }
+        });
+    </script>
+</body>
+</html>
+===== resources\views\auth\login.blade.php =====
+<x-guest-layout>
+    <!-- Session Status -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+
+        <!-- Email Address -->
+        <div>
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            required autocomplete="current-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Remember Me -->
+        <div class="block mt-4">
+            <label for="remember_me" class="inline-flex items-center">
+                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
+                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+            </label>
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            @if (Route::has('password.request'))
+                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                    {{ __('Forgot your password?') }}
+                </a>
+            @endif
+
+            <x-primary-button class="ms-3">
+                {{ __('Log in') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout>
+===== database\migrations\0001_01_01_000000_create_users_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
+    }
+};
+===== database\migrations\2026_10_01_000000_add_username_to_users_table.php =====
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('username')->nullable()->unique()->after('name');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropUnique(['username']);
+            $table->dropColumn('username');
+        });
+    }
+};

@@ -326,3 +326,10 @@ Route::middleware(['auth'])->prefix('admin/live-chat')->group(function () {
     Route::post('/{thread}/close', [\App\Http\Controllers\LiveChatAdminController::class, 'close']);
 });
 // === END LIVE CHAT ===
+
+
+// === AKSES STAF (KMS / PEDOMAN) ===
+Route::get('/login-staf', [\App\Http\Controllers\StafAuthController::class, 'showLogin'])->name('staf.login');
+Route::post('/login-staf', [\App\Http\Controllers\StafAuthController::class, 'login'])->middleware('throttle:5,1')->name('staf.login.submit');
+Route::post('/keluar-staf', [\App\Http\Controllers\StafAuthController::class, 'logout'])->name('staf.logout');
+// === END AKSES STAF ===
