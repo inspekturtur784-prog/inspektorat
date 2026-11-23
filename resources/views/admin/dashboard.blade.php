@@ -88,7 +88,7 @@
     <a href="{{ route('admin.articles.index') }}" class="dash-quicklink">Artikel / Informasi</a>
     <a href="{{ route('admin.buletin.index') }}" class="dash-quicklink">Buletin</a>
     <a href="{{ route('admin.informasidokumen.index') }}" class="dash-quicklink">Dokumen Informasi</a>
-    <a href="{{ route('admin.kms.index') }}" class="dash-quicklink">KMS & Pedoman</a>
+    <a href="{{ route('admin.kms.index') }}" class="dash-quicklink">KMS</a>
 </div>
 
 

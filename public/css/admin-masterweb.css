@@ -1,24 +1,25 @@
 .mw-box{background:#fff;border:1px solid #d9d9d9;border-radius:4px;margin-bottom:24px;overflow:hidden}
-.mw-box-head{background:#3fb6e0;color:#fff;font-weight:700;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.mw-box-head{background:var(--navy-deep);color:#fff;font-weight:700;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
 .mw-box-head select{padding:5px 8px;border:1px solid #ccc;border-radius:4px;background:#fff;color:#333}
 .mw-toolbar{padding:12px 16px;border-bottom:1px solid #eee}
 .mw-toolbar input{width:100%;max-width:380px;padding:8px 12px;border:1px solid #ccc;border-radius:4px;font-size:14px;font-family:inherit}
 .mw-scroll{overflow-x:auto}
 .mw-table{width:100%;border-collapse:collapse;font-size:14px}
-.mw-table thead th{background:#428bca;color:#fff;text-align:left;padding:10px 12px;font-weight:600;white-space:nowrap;border-right:1px solid rgba(255,255,255,.25)}
+.mw-table thead th{background:var(--navy-deep);color:#fff;text-align:left;padding:10px 12px;font-weight:600;white-space:nowrap;border-right:1px solid rgba(255,255,255,.25)}
 .mw-table thead th[data-sort]{cursor:pointer;user-select:none}
 .mw-table thead th[data-sort]::after{content:" \21C5";opacity:.6;font-size:12px}
 .mw-table td{padding:10px 12px;border-bottom:1px solid #e5e5e5;vertical-align:top}
-.mw-table tbody tr:hover{background:#f3f9fd}
+.mw-table tbody tr:hover{background:#f3f5f8}
 .mw-table .mw-no{width:48px;color:#777}
 .mw-table .row-actions{white-space:nowrap}
 .mw-table .row-actions form{display:inline-block;margin:0 0 0 4px}
 .mw-table a.btn-icon{background:#f0ad4e;color:#fff;border-color:#f0ad4e}
 .mw-table .row-actions form button{background:#e8445a;color:#fff;border-color:#e8445a}
 .mw-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:600}
-.mw-kms{background:#e3f1fb;color:#1c6ea4}
+.mw-kms{background:#e6ebf2;color:var(--navy-deep)}
 .mw-pedoman{background:#fdecd2;color:#a05a00}
 .mw-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;font-size:13px;color:#666}
 .mw-pager button{padding:5px 12px;border:1px solid #ccc;background:#fff;border-radius:4px;cursor:pointer;font-family:inherit}
 .mw-pager button:disabled{opacity:.45;cursor:default}
 .mw-empty{text-align:center;color:#888;padding:24px !important}
+/* mwWarnaNavy */

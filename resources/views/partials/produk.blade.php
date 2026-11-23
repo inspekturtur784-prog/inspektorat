@@ -8,7 +8,7 @@
       @php
         $produk = [
           ['judul' => 'Konsultasi Online',  'desk' => 'Layanan konsultasi pengawasan bersama auditor kami.', 'icon' => 'bi-chat-dots',        'url' => route('konsultasi.index')],
-          ['judul' => 'KMS / Pedoman',      'desk' => 'Sistem Manajemen Pengetahuan: pedoman & knowledge base.', 'icon' => 'bi-journal-bookmark', 'url' => route('kms.index')],
+          ['judul' => 'KMS',      'desk' => 'Sistem Manajemen Pengetahuan: pedoman & knowledge base.', 'icon' => 'bi-journal-bookmark', 'url' => route('kms.index')],
           ['judul' => 'Buletin Pengawasan', 'desk' => 'Publikasi & wawasan berkala seputar pengawasan.', 'icon' => 'bi-newspaper',         'url' => route('buletin.index')],
         ];
       @endphp

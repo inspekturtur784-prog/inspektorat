@@ -90,7 +90,7 @@ Route::get('/layanan/konsultasi', function () {
 });
 
 Route::view('/layanan/kms', 'coming-soon', [
-    'title' => 'KMS / Pedoman'
+    'title' => 'KMS'
 ]);
 
 Route::redirect('/layanan/buletin', '/buletin', 301);

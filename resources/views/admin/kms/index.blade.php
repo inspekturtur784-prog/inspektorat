@@ -32,7 +32,7 @@
 
 <div class="kms-wrap">
     <div class="kms-header">
-        <h1>Kelola KMS / Pedoman</h1>
+        <h1>Kelola KMS</h1>
         <button type="button" class="kms-btn kms-btn-primary" onclick="kmsOpen('modalTambahKategori')">+ Tambah Kategori</button>
     </div>
 

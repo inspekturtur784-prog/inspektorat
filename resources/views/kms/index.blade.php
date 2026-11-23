@@ -25,7 +25,7 @@
         <div>
             <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
             <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg text-white hover:text-[#D4AF6A] transition block">
-                Knowledge Management System (KMS)
+                Knowledge Management System
             </a>
         </div>
     </div>
@@ -34,12 +34,18 @@
     </p>
 </header>    <nav class="bg-[#06182E] px-6 md:px-12">
         <div class="flex gap-8">
-            <a href="{{ route('kms.index') }}" class="font-mono text-xs uppercase tracking-widest text-white py-3 border-b-2 border-[#B08D57] transition">
-                KMS
+            @auth
+            <form method="POST" action="{{ route('staf.logout') }}" class="ml-auto">
+                @csrf
+                <button type="submit" class="font-mono text-xs uppercase tracking-widest text-white/70 hover:text-white py-3 border-b-2 border-transparent hover:border-[#B08D57] transition">
+                    Keluar ({{ auth()->user()->username ?? auth()->user()->name }})
+                </button>
+            </form>
+        @else
+            <a href="{{ route('staf.login') }}" class="ml-auto font-mono text-xs uppercase tracking-widest text-white/70 hover:text-white py-3 border-b-2 border-transparent hover:border-[#B08D57] transition">
+                Login Staf
             </a>
-            <a href="{{ route('pedoman.index') }}" class="font-mono text-xs uppercase tracking-widest text-white/70 hover:text-white py-3 border-b-2 border-transparent hover:border-[#B08D57] transition">
-                Pedoman
-            </a>
+        @endauth
         </div>
     </nav>
 
@@ -111,7 +117,30 @@
                     <span class="font-display text-3xl text-[#06182E]/10 group-hover:text-[#B08D57] transition">→</span>
                 </a>
             @endforeach
-        </div>
+            {{-- mwPedomanKartu --}}
+            @php $noPed = $kategoris->count() + 1; @endphp
+            @auth
+                <a href="{{ route('pedoman.index') }}"
+                   class="group bg-[#EEF1EF] hover:bg-white p-6 flex items-center justify-between transition">
+                    <div>
+                        <span class="font-mono text-xs gold">{{ sprintf('%02d', $noPed) }} /</span>
+                        <p class="font-display text-xl mt-1 maroon group-hover:translate-x-1 transition">Pedoman</p>
+                        <p class="font-mono text-xs text-[#06182E]/40 mt-1">{{ \App\Models\PedomanDokumen::count() }} dokumen tersimpan</p>
+                    </div>
+                    <span class="font-display text-3xl text-[#06182E]/10 group-hover:text-[#B08D57] transition">&rarr;</span>
+                </a>
+            @else
+                <a href="{{ route('staf.login') }}"
+                   class="group bg-[#EEF1EF] hover:bg-white p-6 flex items-center justify-between transition">
+                    <div>
+                        <span class="font-mono text-xs gold">{{ sprintf('%02d', $noPed) }} /</span>
+                        <p class="font-display text-xl mt-1 maroon group-hover:translate-x-1 transition">&#128274; Pedoman</p>
+                        <p class="font-mono text-xs text-[#06182E]/40 mt-1">Khusus staf &middot; login diperlukan</p>
+                    </div>
+                    <span class="font-display text-3xl text-[#06182E]/10 group-hover:text-[#B08D57] transition">&rarr;</span>
+                </a>
+            @endauth
+                </div>
     </section>
 
 </body>

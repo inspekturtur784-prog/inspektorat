@@ -1,9 +1,9 @@
 @extends('admin.layout')
-@section('title', 'KMS / Pedoman')
+@section('title', 'KMS')
 
 @section('content')
 <div class="admin-header">
-    <h1>Kelola KMS / Pedoman</h1>
+    <h1>Kelola KMS</h1>
     <a href="{{ route('admin.kms.kategori.create') }}" class="btn-admin btn-admin-primary">+ Tambah Kategori</a>
 </div>
 

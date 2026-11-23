@@ -1,9 +1,9 @@
 @extends('admin.layouts.app')
 
-@section('title', 'KMS / Pedoman')
+@section('title', 'KMS')
 
 @section('content')
-<h1 style="margin-bottom: 4px;">KMS / Pedoman</h1>
+<h1 style="margin-bottom: 4px;">KMS</h1>
 <p style="color:#666; margin-bottom: 20px;">Kelola konten Knowledge Base dan Pedoman dalam satu halaman.</p>
 
 <div class="admin-tabs" style="display:flex; gap:8px; border-bottom:1px solid #ddd; margin-bottom:20px;">

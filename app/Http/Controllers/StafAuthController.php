@@ -12,7 +12,7 @@ class StafAuthController extends Controller
     public function showLogin(): View|RedirectResponse
     {
         if (Auth::check()) {
-            return redirect()->route('kms.index');
+            return redirect()->route('pedoman.index');
         }
         return view('staf.login');
     }
@@ -35,7 +35,7 @@ class StafAuthController extends Controller
 
         if ($ok) {
             $request->session()->regenerate();
-            return redirect()->intended(route('kms.index'));
+            return redirect()->intended(route('pedoman.index'));
         }
 
         return back()

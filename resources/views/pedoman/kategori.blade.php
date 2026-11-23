@@ -24,7 +24,7 @@
             <div>
                 <p class="font-mono text-xs tracking-widest gold uppercase">Inspektorat Kota Mojokerto</p>
                 <a href="{{ route('kms.index') }}" class="font-display font-semibold text-lg text-white hover:text-[#D4AF6A] transition block">
-                    Knowledge Management System (KMS)
+                    Knowledge Management System
                 </a>
             </div>
         </div>
@@ -35,12 +35,18 @@
 
     <nav class="bg-[#06182E] px-6 md:px-12">
         <div class="flex gap-8">
-            <a href="{{ route('kms.index') }}" class="font-mono text-xs uppercase tracking-widest text-white/70 hover:text-white py-3 border-b-2 border-transparent hover:border-[#B08D57] transition">
-                KMS
+            @auth
+            <form method="POST" action="{{ route('staf.logout') }}" class="ml-auto">
+                @csrf
+                <button type="submit" class="font-mono text-xs uppercase tracking-widest text-white/70 hover:text-white py-3 border-b-2 border-transparent hover:border-[#B08D57] transition">
+                    Keluar ({{ auth()->user()->username ?? auth()->user()->name }})
+                </button>
+            </form>
+        @else
+            <a href="{{ route('staf.login') }}" class="ml-auto font-mono text-xs uppercase tracking-widest text-white/70 hover:text-white py-3 border-b-2 border-transparent hover:border-[#B08D57] transition">
+                Login Staf
             </a>
-            <a href="{{ route('pedoman.index') }}" class="font-mono text-xs uppercase tracking-widest text-white py-3 border-b-2 border-[#B08D57] transition">
-                Pedoman
-            </a>
+        @endauth
         </div>
     </nav>
 

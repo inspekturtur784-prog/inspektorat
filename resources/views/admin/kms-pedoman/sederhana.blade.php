@@ -2,7 +2,7 @@
 @section('title', 'KMS')
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('css/admin-masterweb.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin-masterweb.css') . '?v=' . filemtime(public_path('css/admin-masterweb.css')) }}">
 @if ($errors->any())
 <div class="admin-alert" style="background:#fdecea;color:#a12622;border-color:#f5c6cb">
     @foreach ($errors->all() as $e)<div>{{ $e }}</div>@endforeach
@@ -16,7 +16,7 @@
     .mw-save{background:#5cb85c;color:#fff;border:0;border-radius:4px;padding:10px 22px;font-weight:700;cursor:pointer;font-family:inherit}
     .mw-hint{padding:0 16px 14px;font-size:12px;color:#888}
     .mw-links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-    .mw-links a,.mw-links button{font-size:13px;color:#1c6ea4;background:none;border:0;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline}
+    .mw-links a,.mw-links button{font-size:13px;color:var(--navy-deep);background:none;border:0;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline}
 </style>
 
 <div class="kp-header">
@@ -443,6 +443,92 @@ function mwToggleKat() {
         metode.disabled = false;
         window.scrollTo({ top: 0, behavior: 'smooth' });
         judul.focus();
+    });
+
+    // didaftarkan setelah listener submit bawaan, jadi tujuan form ditimpa di sini
+    form.addEventListener('submit', function () {
+        if (editing) { form.action = urlUpdate; }
+    });
+
+    batal.addEventListener('click', selesai);
+})();
+</script>
+<script>
+/* mwEditKat */
+(function () {
+    var daftar = document.getElementById('mwDaftarKat');
+    var panel = document.getElementById('mwKatPanel');
+    var form = document.getElementById('mwKatForm');
+    if (!daftar || !panel || !form) { return; }
+    var kepala = panel.querySelector('.mw-box-head span');
+    var teksKepala = kepala.textContent;
+    var nama = form.querySelector('input[name="nama"]');
+    var jenis = document.getElementById('mwJenis');
+    var simpan = form.querySelector('.mw-save');
+    var teksSimpan = simpan.textContent;
+    var wrapJenis = jenis.parentNode;
+    var editing = false, urlUpdate = '';
+
+    var metode = document.createElement('input');
+    metode.type = 'hidden'; metode.name = '_method'; metode.value = 'PUT'; metode.disabled = true;
+    form.appendChild(metode);
+
+    var batal = document.createElement('button');
+    batal.type = 'button';
+    batal.textContent = 'Batal';
+    batal.style.cssText = 'display:none;margin-left:8px;background:#999;color:#fff;border:0;border-radius:4px;padding:10px 18px;cursor:pointer;font-family:inherit';
+    simpan.parentNode.appendChild(batal);
+
+    function selesai() {
+        editing = false;
+        form.reset();
+        wrapJenis.style.display = '';
+        kepala.textContent = teksKepala;
+        simpan.textContent = teksSimpan;
+        batal.style.display = 'none';
+        metode.disabled = true;
+        jenis.dispatchEvent(new Event('change'));
+        panel.style.display = 'none';
+    }
+
+    daftar.addEventListener('click', function (e) {
+        var a = e.target.closest('a');
+        if (!a || !a.closest('.row-actions')) { return; }
+        if (e.ctrlKey || e.metaKey || e.shiftKey) { return; }
+        var href = a.getAttribute('href') || '';
+        if (href.indexOf('/edit') === -1) { return; }
+        e.preventDefault();
+
+        var tr = a.closest('tr');
+        var j = tr.children[1].textContent.trim();
+        var teksNama = tr.children[2].textContent.trim().replace(/^[\s\u00a0\u2192]+/, '');
+        if (j === 'Subkategori' && teksNama.indexOf(' / ') !== -1) {
+            teksNama = teksNama.split(' / ').slice(1).join(' / ');
+        }
+
+        editing = true;
+        urlUpdate = href.replace(/\/edit\/?$/, '');
+        kepala.textContent = (j === 'Subkategori') ? 'Edit Subkategori' : (j === 'Pedoman' ? 'Edit Kategori Pedoman' : 'Edit Kategori KMS');
+        simpan.textContent = 'Edit';
+        batal.style.display = 'inline-block';
+        metode.disabled = false;
+        jenis.value = 'kms';
+        jenis.dispatchEvent(new Event('change'));
+        wrapJenis.style.display = 'none';
+        nama.value = teksNama;
+        panel.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        nama.focus();
+
+        // ambil nama persis dari halaman edit lama (kalau gagal, pakai teks dari tabel)
+        fetch(href, { credentials: 'same-origin' })
+            .then(function (r) { return r.text(); })
+            .then(function (h) {
+                var d = new DOMParser().parseFromString(h, 'text/html');
+                var i = d.querySelector('input[name="nama"]');
+                if (i && editing && nama.value === teksNama) { nama.value = i.value; }
+            })
+            .catch(function () {});
     });
 
     // didaftarkan setelah listener submit bawaan, jadi tujuan form ditimpa di sini
