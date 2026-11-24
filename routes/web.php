@@ -117,7 +117,7 @@ Route::get('/informasi/{slug}', [InformasiController::class, 'show'])
 
 // ---------- Knowledge Base & Pedoman (PUBLIK â€” TIDAK DIUBAH) ----------
 Route::get('/knowledge-base', [KmsController::class, 'index'])->name('kms.index');
-Route::get('/knowledge-base/{slug}', [KmsController::class, 'kategori'])->name('kms.kategori');
+Route::get('/knowledge-base/{slug}', [\App\Http\Controllers\KmsKategoriCariController::class, 'kategori'])->name('kms.kategori');
 
 Route::get('/pedoman', [PedomanController::class, 'index'])->name('pedoman.index');
 Route::get('/pedoman/{slug}', [PedomanController::class, 'kategori'])->name('pedoman.kategori');
@@ -333,3 +333,9 @@ Route::get('/login-staf', [\App\Http\Controllers\StafAuthController::class, 'sho
 Route::post('/login-staf', [\App\Http\Controllers\StafAuthController::class, 'login'])->middleware('throttle:5,1')->name('staf.login.submit');
 Route::post('/keluar-staf', [\App\Http\Controllers\StafAuthController::class, 'logout'])->name('staf.logout');
 // === END AKSES STAF ===
+
+// === KATEGORI + SUBKATEGORI SEKALIGUS ===
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    Route::post('/kms/kategori-baru', [\App\Http\Controllers\Admin\KmsKategoriBaruController::class, 'store'])->name('kms.kategori.baru');
+});
+// === END KATEGORI + SUBKATEGORI ===

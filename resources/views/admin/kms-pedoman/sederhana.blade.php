@@ -36,7 +36,6 @@
             <label>Jenis</label>
             <select id="mwJenis">
                 <option value="kms">Kategori KMS</option>
-                <option value="sub">Subkategori KMS</option>
                 <option value="pedoman">Kategori Pedoman</option>
             </select>
         </div>
@@ -50,8 +49,12 @@
             </select>
         </div>
         <div>
-            <label>Nama</label>
+            <label id="mwLblNama">Nama Kategori</label>
             <input type="text" name="nama" required>
+        </div>
+        <div id="mwSubWrap">
+            <label>Subkategori <span style="font-weight:400;color:#888">(opsional, kosong = Umum)</span></label>
+            <input type="text" name="subkategori" id="mwSubInput">
         </div>
         <div><button type="submit" class="mw-save">Simpan</button></div>
     </form>
@@ -342,6 +345,7 @@ function mwToggleKat() {
 }
 (function () {
     var URL_KAT = @json(route('admin.kms.kategori.store'));
+    var URL_KAT_BARU = @json(route('admin.kms.kategori.baru'));
     var URL_SUB = @json(route('admin.kms.subkategori.store', ['kategori' => '__ID__']));
     var URL_PED = @json(route('admin.pedoman.kategori.store'));
     var f = document.getElementById('mwKatForm');
@@ -351,9 +355,16 @@ function mwToggleKat() {
     function atur() {
         var j = jenis.value;
         wrap.style.display = (j === 'sub') ? '' : 'none';
+        var mp = f.querySelector('input[name="_method"]');
+        var ubah = !!(mp && !mp.disabled);
+        var sw = document.getElementById('mwSubWrap'), si = document.getElementById('mwSubInput'), ln = document.getElementById('mwLblNama');
+        var tampil = (j === 'kms' && !ubah);
+        if (sw) { sw.style.display = tampil ? '' : 'none'; }
+        if (si) { si.disabled = !tampil; }
+        if (ln) { ln.textContent = (j === 'sub') ? 'Nama Subkategori' : (j === 'pedoman' ? 'Nama Kategori Pedoman' : 'Nama Kategori'); }
         if (j === 'sub') { f.action = URL_SUB.replace('__ID__', induk.value || '0'); }
         else if (j === 'pedoman') { f.action = URL_PED; }
-        else { f.action = URL_KAT; }
+        else { f.action = URL_KAT_BARU; }
     }
     jenis.addEventListener('change', atur);
     induk.addEventListener('change', atur);
