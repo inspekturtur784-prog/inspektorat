@@ -339,3 +339,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::post('/kms/kategori-baru', [\App\Http\Controllers\Admin\KmsKategoriBaruController::class, 'store'])->name('kms.kategori.baru');
 });
 // === END KATEGORI + SUBKATEGORI ===
+
+// === LIVE CHAT HALAMAN ===
+Route::get('/live-chat', function () { return view('livechat.page'); })->name('livechat.page');
+// === END LIVE CHAT HALAMAN ===

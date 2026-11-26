@@ -21,7 +21,8 @@
 #kns-send{display:flex;gap:6px;padding:8px;border-top:1px solid #e3e6ee}
 #kns-err{color:#c00;font-size:12px;min-height:14px}
 #kns-reset{background:none;border:0;color:#fff;font-size:12px;text-decoration:underline;cursor:pointer;padding:0}
-</style>
+/* LIVECHAT-KARTU */
+@media (min-width: 992px) { .produk-grid { grid-template-columns: repeat(4, 1fr); } }</style>
 
 <button id="kns-btn" type="button" title="Konsultasi dengan Admin" aria-label="Konsultasi">&#128172;</button>
 
@@ -158,6 +159,19 @@
     $('kns-go').onclick = sendMsg;
     $('kns-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') sendMsg(); });
 
+    // Kartu "Live Chat" di bagian Layanan membuka jendela chat
+    var kartuChat = document.querySelectorAll('a[href="#live-chat"]');
+    if (kartuChat.length) {
+        $('kns-btn').style.display = 'none';
+        $('kns-box').style.bottom = '20px';
+        kartuChat.forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                $('kns-box').classList.add('open');
+                if (token) poll();
+            });
+        });
+    }
     // Pulihkan percakapan sebelumnya (riwayat chat pengguna)
     try { token = localStorage.getItem(KEY); } catch (e) {}
     if (token) {

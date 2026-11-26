@@ -9,6 +9,7 @@
         $produk = [
           ['judul' => 'Konsultasi Online',  'desk' => 'Layanan konsultasi pengawasan bersama auditor kami.', 'icon' => 'bi-chat-dots',        'url' => route('konsultasi.index')],
           ['judul' => 'KMS',      'desk' => 'Sistem Manajemen Pengetahuan: pedoman & knowledge base.', 'icon' => 'bi-journal-bookmark', 'url' => route('kms.index')],
+          ['judul' => 'Live Chat', 'desk' => 'Tanya langsung ke admin Inspektorat, balasan juga dikirim ke email Anda.', 'icon' => 'bi-chat-left-dots', 'url' => url('/live-chat')],
           ['judul' => 'Buletin Pengawasan', 'desk' => 'Publikasi & wawasan berkala seputar pengawasan.', 'icon' => 'bi-newspaper',         'url' => route('buletin.index')],
         ];
       @endphp
@@ -24,3 +25,4 @@
     </div>
   </div>
 </section>
+<style>/* LIVECHAT-KARTU-CSS */ @media (min-width: 992px) { .produk-grid { grid-template-columns: repeat(4, 1fr); } }</style>

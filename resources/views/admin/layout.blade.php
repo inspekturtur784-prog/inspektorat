@@ -66,9 +66,6 @@
 <a href="{{ route('admin.kms.index') }}" class="{{ request()->routeIs('admin.kms.*') || request()->routeIs('admin.kmspedoman.*') ? 'active' : '' }}">
     KMS
 </a>
-<a href="{{ route('admin.pengaturan-situs.edit') }}" class="{{ request()->routeIs('admin.pengaturan-situs.*') ? 'active' : '' }}">
-    Pengaturan Situs
-</a>
 {{-- LIVECHAT-MENU --}}
                     <a href="{{ url('/admin/live-chat') }}" class="{{ request()->is('admin/live-chat*') ? 'active' : '' }}" style="display:flex;justify-content:space-between;align-items:center;">
                         <span>Live Chat</span>
@@ -81,6 +78,9 @@
                             <span class="admin-nav-badge">{{ $chatBaru }}</span>
                         @endif
                     </a>
+<a href="{{ route('admin.pengaturan-situs.edit') }}" class="{{ request()->routeIs('admin.pengaturan-situs.*') ? 'active' : '' }}">
+    Pengaturan Situs
+</a>
                 </nav>
             </div>
 
